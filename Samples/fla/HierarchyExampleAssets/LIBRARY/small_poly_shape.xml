@@ -1,0 +1,32 @@
+<DOMSymbolItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://ns.adobe.com/xfl/2008/" name="small_poly_shape" itemID="50a2daf4-00000702" lastModified="1352923314">
+  <timeline>
+    <DOMTimeline name="small_poly_shape">
+      <layers>
+        <DOMLayer name="Layer 2" color="#9933CC" current="true" isSelected="true">
+          <frames>
+            <DOMFrame index="0" keyMode="9728">
+              <elements>
+                <DOMShape>
+                  <fills>
+                    <FillStyle index="1">
+                      <RadialGradient>
+                        <matrix>
+                          <Matrix a="0.01220703125" d="0.01220703125"/>
+                        </matrix>
+                        <GradientEntry color="#FFDB51" ratio="0"/>
+                        <GradientEntry color="#E2AE09" ratio="1"/>
+                      </RadialGradient>
+                    </FillStyle>
+                  </fills>
+                  <edges>
+                    <Edge fillStyle1="1" edges="!35 -85|141 -141!141 -141|85 -35!85 -35|200 0!200 0|85 35!85 35|141 141!141 141|35 85!35 85|0 200!0 200|-35 85!-35 85|-141 141!-141 141|-85 35!-85 35|-200 0!-200 0|-85 -35!-85 -35|-141 -141!-141 -141|-35 -85!-35 -85|0 -200!0 -200|35 -85"/>
+                  </edges>
+                </DOMShape>
+              </elements>
+            </DOMFrame>
+          </frames>
+        </DOMLayer>
+      </layers>
+    </DOMTimeline>
+  </timeline>
+</DOMSymbolItem>

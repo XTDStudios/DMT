@@ -1,0 +1,17 @@
+DMT Library
+Copyright 2012 XTD Studios Ltd.
+
+This product includes software developed at
+XTD Studios Ltd (http://www.xtdstudios.com/).
+
+
+This software contains modified code derived from Rectangle Packer v1.0
+writen by Ville Koskela. The original software is available from 
+   http://villekoskela.org
+ 
+
+This software use XTDCommon library package, which is open source 
+software (Apache Software License 2.0), copyright by XTD Studios. 
+The source of the software is available from
+   https://github.com/XTDStudios/XTDCommon
+

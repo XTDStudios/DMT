@@ -1,0 +1,64 @@
+<DOMSymbolItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://ns.adobe.com/xfl/2008/" name="RootObj" itemID="50a3f55a-000006ac" linkageExportForAS="true" linkageClassName="RootObj" lastModified="1352922465" lastUniqueIdentifier="5">
+  <timeline>
+    <DOMTimeline name="RootObj">
+      <layers>
+        <DOMLayer name="level2" color="#9933CC" current="true" isSelected="true" autoNamed="false">
+          <frames>
+            <DOMFrame index="0" keyMode="9728">
+              <elements>
+                <DOMSymbolInstance libraryItemName="level2" name="north" centerPoint3DX="59" centerPoint3DY="-41">
+                  <matrix>
+                    <Matrix ty="-100"/>
+                  </matrix>
+                  <transformationPoint>
+                    <Point/>
+                  </transformationPoint>
+                </DOMSymbolInstance>
+                <DOMSymbolInstance libraryItemName="level2" name="west" centerPoint3DX="-41" centerPoint3DY="59">
+                  <matrix>
+                    <Matrix tx="-100"/>
+                  </matrix>
+                  <transformationPoint>
+                    <Point/>
+                  </transformationPoint>
+                </DOMSymbolInstance>
+                <DOMSymbolInstance libraryItemName="level2" name="south" selected="true" centerPoint3DX="59" centerPoint3DY="159">
+                  <matrix>
+                    <Matrix ty="100"/>
+                  </matrix>
+                  <transformationPoint>
+                    <Point/>
+                  </transformationPoint>
+                </DOMSymbolInstance>
+                <DOMSymbolInstance libraryItemName="level2" name="east" centerPoint3DX="159" centerPoint3DY="59">
+                  <matrix>
+                    <Matrix tx="100"/>
+                  </matrix>
+                  <transformationPoint>
+                    <Point/>
+                  </transformationPoint>
+                </DOMSymbolInstance>
+              </elements>
+            </DOMFrame>
+          </frames>
+        </DOMLayer>
+        <DOMLayer name="bigX" color="#4FFF4F" locked="true" autoNamed="false">
+          <frames>
+            <DOMFrame index="0" keyMode="9728">
+              <elements>
+                <DOMSymbolInstance libraryItemName="bigX" name="big_X" centerPoint3DX="36.4" centerPoint3DY="36.4">
+                  <transformationPoint>
+                    <Point/>
+                  </transformationPoint>
+                  <filters>
+                    <DropShadowFilter angle="37.0000011383648" blurX="9" blurY="9" distance="-1" quality="3" strength="0.44"/>
+                  </filters>
+                </DOMSymbolInstance>
+              </elements>
+            </DOMFrame>
+          </frames>
+        </DOMLayer>
+      </layers>
+    </DOMTimeline>
+  </timeline>
+</DOMSymbolItem>

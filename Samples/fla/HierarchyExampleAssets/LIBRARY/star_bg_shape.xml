@@ -1,0 +1,39 @@
+<DOMSymbolItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://ns.adobe.com/xfl/2008/" name="star_bg_shape" itemID="50a2da14-000006f9" lastModified="1352849956">
+  <timeline>
+    <DOMTimeline name="star_bg_shape">
+      <layers>
+        <DOMLayer name="Layer 1" color="#4FFF4F" current="true" isSelected="true">
+          <frames>
+            <DOMFrame index="0" keyMode="9728">
+              <elements>
+                <DOMShape selected="true" isFloating="true">
+                  <matrix>
+                    <Matrix tx="-50" ty="-50"/>
+                  </matrix>
+                  <fills>
+                    <FillStyle index="1">
+                      <SolidColor color="#0099FF"/>
+                    </FillStyle>
+                  </fills>
+                  <strokes>
+                    <StrokeStyle index="1">
+                      <SolidStroke scaleMode="normal">
+                        <fill>
+                          <SolidColor/>
+                        </fill>
+                      </SolidStroke>
+                    </StrokeStyle>
+                  </strokes>
+                  <edges>
+                    <Edge fillStyle1="1" strokeStyle="1" edges="!1212 487S6|1707 292!1707 292|1512 787!1512 787|2000 999!2000 999|1512 1212!1512 1212|1707 1707!1707 1707|1212 1512!1212 1512|1000 2000!1000 2000|787 1512!787 1512|292 1707!292 1707|487 1212!487 1212|0 1000!0 1000|487 787!487 787|292
+ 292!292 292|787 487!787 487|1000 0!1000 0|1212 487"/>
+                  </edges>
+                </DOMShape>
+              </elements>
+            </DOMFrame>
+          </frames>
+        </DOMLayer>
+      </layers>
+    </DOMTimeline>
+  </timeline>
+</DOMSymbolItem>

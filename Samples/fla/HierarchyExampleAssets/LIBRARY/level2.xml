@@ -1,0 +1,67 @@
+<DOMSymbolItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://ns.adobe.com/xfl/2008/" name="level2" itemID="50a2dc05-0000072c" lastModified="1352923208" lastUniqueIdentifier="17">
+  <timeline>
+    <DOMTimeline name="level2">
+      <layers>
+        <DOMLayer name="small_poly" color="#9933CC" current="true" isSelected="true" autoNamed="false">
+          <frames>
+            <DOMFrame index="0" keyMode="9728">
+              <elements>
+                <DOMSymbolInstance libraryItemName="small_poly" name="small_poly3" centerPoint3DX="9.7" centerPoint3DY="61.25">
+                  <matrix>
+                    <Matrix tx="-0.25" ty="51.3"/>
+                  </matrix>
+                  <transformationPoint>
+                    <Point x="10" y="10"/>
+                  </transformationPoint>
+                </DOMSymbolInstance>
+                <DOMSymbolInstance libraryItemName="small_poly" name="small_poly2" centerPoint3DX="-40.8" centerPoint3DY="10.35">
+                  <matrix>
+                    <Matrix tx="-50.8" ty="0.35"/>
+                  </matrix>
+                  <transformationPoint>
+                    <Point x="10" y="10"/>
+                  </transformationPoint>
+                </DOMSymbolInstance>
+                <DOMSymbolInstance libraryItemName="small_poly" name="small_poly1" centerPoint3DX="10" centerPoint3DY="-40">
+                  <matrix>
+                    <Matrix ty="-50"/>
+                  </matrix>
+                  <transformationPoint>
+                    <Point x="10" y="10"/>
+                  </transformationPoint>
+                </DOMSymbolInstance>
+                <DOMSymbolInstance libraryItemName="small_poly" name="small_poly4" selected="true" centerPoint3DX="60.45" centerPoint3DY="10.55">
+                  <matrix>
+                    <Matrix tx="50"/>
+                  </matrix>
+                  <transformationPoint>
+                    <Point x="10" y="10"/>
+                  </transformationPoint>
+                </DOMSymbolInstance>
+              </elements>
+            </DOMFrame>
+          </frames>
+        </DOMLayer>
+        <DOMLayer name="star_bg" color="#4FFF4F" autoNamed="false">
+          <frames>
+            <DOMFrame index="0" keyMode="9728">
+              <elements>
+                <DOMSymbolInstance libraryItemName="star_bg_shape">
+                  <transformationPoint>
+                    <Point x="50" y="50"/>
+                  </transformationPoint>
+                  <filters>
+                    <GlowFilter color="#000000" quality="3" strength="0.76"/>
+                  </filters>
+                  <color>
+                    <Color alphaMultiplier="0.69921875"/>
+                  </color>
+                </DOMSymbolInstance>
+              </elements>
+            </DOMFrame>
+          </frames>
+        </DOMLayer>
+      </layers>
+    </DOMTimeline>
+  </timeline>
+</DOMSymbolItem>

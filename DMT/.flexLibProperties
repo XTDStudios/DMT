@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flexLibProperties includeAllClasses="true" useMultiPlatformConfig="false" version="3">
+  <includeClasses>
+    <classEntry path="com.xtdstudios.DMT.AssetsGroupsManager"/>
+    <classEntry path="com.xtdstudios.DMT.AssetsGroup"/>
+    <classEntry path="com.xtdstudios.DMT.Atlas"/>
+    <classEntry path="com.xtdstudios.DMT.AssetsGroupBuilderImpl"/>
+    <classEntry path="com.xtdstudios.DMT.AssetsGroupBuilder"/>
+    <classEntry path="com.xtdstudios.DMT.persistency.PersistencyManager"/>
+    <classEntry path="com.xtdstudios.DMT.persistency.impl.ExternalAssetsGroupPersistencyManager"/>
+    <classEntry path="com.xtdstudios.graphics.raster.RasterizedAssetData"/>
+    <classEntry path="com.xtdstudios.DMT.TextureIDGenerator"/>
+    <classEntry path="com.xtdstudios.DMT.TextureData"/>
+    <classEntry path="com.xtdstudios.DMT.AssetsDefinitonsDictionary"/>
+    <classEntry path="com.xtdstudios.DMT.AssetDef"/>
+    <classEntry path="com.xtdstudios.DMT.starlingConverter.StarlingSpriteProxy"/>
+    <classEntry path="com.xtdstudios.DMT.starlingConverter.StarlingImageProxy"/>
+    <classEntry path="com.xtdstudios.DMT.events.DTMEvent"/>
+    <classEntry path="com.xtdstudios.DMT.events.AssetGroupEvent"/>
+    <classEntry path="com.xtdstudios.DMT.utils.AtlasesDictionary"/>
+    <classEntry path="com.xtdstudios.DMT.utils.Map"/>
+    <classEntry path="com.xtdstudios.DMT.utils.Iterable"/>
+    <classEntry path="com.xtdstudios.DMT.utils.Iterator"/>
+    <classEntry path="com.xtdstudios.DMT.utils.Entry"/>
+    <classEntry path="com.xtdstudios.DMT.utils.Collection"/>
+    <classEntry path="com.xtdstudios.DMT.utils.Set"/>
+    <classEntry path="com.xtdstudios.DMT.utils.AbstractMap"/>
+    <classEntry path="com.xtdstudios.DMT.starlingConverter.StarlingMovieClipProxy"/>
+    <classEntry path="com.xtdstudios.DMT.DMTAbsAPI"/>
+    <classEntry path="com.xtdstudios.DMT.ItemToRaster"/>
+    <classEntry path="com.xtdstudios.DMT.DMTBasic"/>
+    <classEntry path="com.xtdstudios.DMT.AssetGroupConverter"/>
+  </includeClasses>
+  <includeResources/>
+  <namespaceManifests/>
+</flexLibProperties>
