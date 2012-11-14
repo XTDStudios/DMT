@@ -2,15 +2,19 @@ DMT
 ===
 Dynamically Mapping Textures
 
-Using vector images guarantee image sharpness while scaling, moving, etc - but suffer from poorer performance, which mean low FPS.
-Using bitmap images allows the application to reach higher FPS (using 3rd party libs like starling) - but compromises image quality at scaling.
-The DMT library make the best of both world by providing run-time dynamic (and fast) rasterize vector images to bitmaps and generate the atlases.
+Using vector images guarantee image sharpness while scaling, moving, etc - but suffer from poorer performance, which mean low FPS.  
+Using bitmap images allows the application to reach higher FPS (using 3rd party libs like starling) - but compromises image quality at scaling.  
+The DMT library make the best of both world by providing run-time dynamic (and fast) rasterize vector images to bitmaps and generate the atlases. 
 
 This way, images are optimized for each screen resolution, avoiding ugly stretch marks and pixlezation. Having the display object tree allows you to manipulate each sub object separately (as in flash).
 
+
 DMT is Open Source library, released under [Apache License](http://www.apache.org/licenses/LICENSE-2.0.html "Apache License, Version 2.0").
 
-Features:
+===
+
+__Features__
+
 1.  Dynamically generated at run-time
 2.  Storing the original Display Tree  
       a. Display Object manipulations is available as in the original Flash Display Object
@@ -27,6 +31,8 @@ Features:
     a. Save/load all rasterized data to/from cache.
     b. Cache contains all rasterized textures (PNG file format) and all Display Tree data, in one file.
 6.  Asynchronous support using pseudo thread. (Ready for workers when available on mobile.) 
+
+
 
 More information can be found at [XTDStudios](http://www.xtdstudios.com/dmt.html "XTDStudios site") web site.
 
