@@ -2,11 +2,11 @@ DMT Library
 Copyright 2012 XTD Studios Ltd.
 
 This product includes software developed at
-XTD Studios Ltd (http://www.xtdstudios.com/).
+XTD Studios Ltd. (http://www.xtdstudios.com/).
 
 
 This software contains modified code derived from Rectangle Packer v1.0
-writen by Ville Koskela. The original software is available from 
+written by Ville Koskela. The original software is available from 
    http://villekoskela.org
  
 

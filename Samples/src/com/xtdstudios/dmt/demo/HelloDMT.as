@@ -28,7 +28,7 @@ package com.xtdstudios.dmt.demo
 	
 	public class HelloDMT extends starling.display.Sprite
 	{
-		private var dmtBasic: DMTBasic = new DMTBasic("demo.HelloDMT", true, "1");
+		private var dmtBasic: DMTBasic = new DMTBasic("demoHelloDMT", true, "1");
 		
 		private var m_flashSquare			: flash.display.Sprite;
 		private var m_starlingSquare		: starling.display.DisplayObject;

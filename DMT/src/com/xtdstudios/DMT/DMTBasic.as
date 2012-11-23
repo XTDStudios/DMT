@@ -24,13 +24,19 @@ package com.xtdstudios.DMT
 	public class DMTBasic extends DMTAbsAPI
 	{
 		private var m_displayObjects	: Vector.<flash.display.DisplayObject>;
-		private var m_converter 		: AssetGroupConverter; 
+		private var m_converter 		: AssetGroupConverter;
+		private var m_dataName			: String;
 		
 		
-		public function DMTBasic(dataID:String, useCache:Boolean=true, cacheVersion:String="1")
+		public function DMTBasic(dataName:String, useCache:Boolean=true, cacheVersion:String="1")
 		{
 			m_displayObjects = null;
-			super(dataID, useCache, cacheVersion);
+			m_dataName = dataName;
+			super(useCache, cacheVersion);
+		}
+		
+		public function process(isTransparent:Boolean=true, maxDepth:int=-1, matrixAccuracyPercent:Number=1.0):Boolean {
+			return _process(m_dataName, isTransparent, maxDepth, matrixAccuracyPercent);
 		}
 		
 		public function set itemsToRaster(displayObjects:Vector.<flash.display.DisplayObject>):void
@@ -51,7 +57,7 @@ package com.xtdstudios.DMT
 				return null;
 		}
 
-		override protected function getItemsToRaster():Vector.<ItemToRaster>
+		override protected function getItemsToRaster(dn: String):Vector.<ItemToRaster>
 		{
 			if (m_displayObjects==null)
 				return null;

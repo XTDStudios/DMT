@@ -69,6 +69,11 @@ package com.xtdstudios.DMT
 			return m_assetGroupsDict[groupName];
 		}
 		
+		public function get getAssetGroupsDictionary(): Dictionary
+		{
+			return m_assetGroupsDict;
+		}
+		
 		
 		public function loadCache(groupName:String): AssetsGroup {
 			var loadData:AssetsGroup = m_assetsGroupPersistencyManager.loadAssetsGroup(groupName);

@@ -124,8 +124,8 @@ package com.xtdstudios.dmt.demo
 				flashSquare50.parent.removeChild(flashSquare50);
 			if (flashSquare50_r && flashSquare50_r.parent)
 				flashSquare50_r.parent.removeChild(flashSquare50_r);
-			if (flashSquare50_r && flashSquare50_r.parent)
-				flashSquare50_r.parent.removeChild(flashSquare50_r);
+			if (flashSquare50_2 && flashSquare50_2.parent)
+				flashSquare50_2.parent.removeChild(flashSquare50_2);
 			
 			if (starlingSquare)
 				removeChild(starlingSquare);
