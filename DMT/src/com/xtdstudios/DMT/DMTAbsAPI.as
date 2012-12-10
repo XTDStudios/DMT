@@ -25,8 +25,6 @@ package com.xtdstudios.DMT
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.ProgressEvent;
-	import flash.utils.Dictionary;
-	import flash.utils.getTimer;
 
 	public class DMTAbsAPI extends EventDispatcher
 	{
@@ -45,9 +43,16 @@ package com.xtdstudios.DMT
 		{
 			m_useCache = useCache;
 			
-			m_byteArrayPersistencyManager = (byteArrayPersistencyManager) ? byteArrayPersistencyManager : new ByteArrayToFilePersistencyManager(FileUtils.getCacheDir());
+			if (byteArrayPersistencyManager!=null)
+				m_byteArrayPersistencyManager = byteArrayPersistencyManager;
+			else
+				m_byteArrayPersistencyManager = new ByteArrayToFilePersistencyManager(FileUtils.getCacheDir());
+			
 			// Persistency manager
-			m_assetsGroupPersistencyManager = (assetsGroupPersistencyManager) ? assetsGroupPersistencyManager : new ExternalAssetsGroupPersistencyManager(m_byteArrayPersistencyManager, cacheVersion);
+			if (assetsGroupPersistencyManager!=null)
+				m_assetsGroupPersistencyManager = assetsGroupPersistencyManager;
+			else
+				m_assetsGroupPersistencyManager = new ExternalAssetsGroupPersistencyManager(m_byteArrayPersistencyManager, cacheVersion);
 
 			// Assts Groups Manager
 			m_assetsGroupsManager = new AssetsGroupsManager(m_assetsGroupPersistencyManager, m_byteArrayPersistencyManager);

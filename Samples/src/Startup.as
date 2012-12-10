@@ -1,5 +1,7 @@
 package
 {
+    import com.xtdstudios.dmt.demo.ExamplesManager;
+    
     import flash.desktop.NativeApplication;
     import flash.display.Sprite;
     import flash.display.StageAlign;
@@ -9,10 +11,7 @@ package
     import flash.text.TextField;
     import flash.text.TextFormat;
     
-    import flashx.textLayout.formats.TextAlign;
-    
     import starling.core.Starling;
-    import com.xtdstudios.dmt.demo.ExamplesManager;
     
     [SWF(width="480", height="800", frameRate="60", backgroundColor="#dddddd")]
     public class Startup extends Sprite
@@ -46,7 +45,7 @@ package
 			stage.addChild(flashTitle);
             
 			var exampleTitle : TextField = new TextField();
-			exampleTitle.defaultTextFormat = new TextFormat(null, 16, 0x000000, false, null, false, null, null, TextAlign.CENTER);
+			exampleTitle.defaultTextFormat = new TextFormat(null, 16, 0x000000, false, null, false, null, null, "center");
 			exampleTitle.width = stage.stageWidth;
 			exampleTitle.name = "exampleTitle";
 			stage.addChild(exampleTitle);
