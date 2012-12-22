@@ -120,7 +120,6 @@ package com.xtdstudios.DMT.atlas
 				if (!mPacker.insertRectangle(r)) {
 					//rectangles.push(r);
 					unSolvedRectangles.push(r);
-					trace("Fail to insert Rectangle!");
 				} else  {
 					solvedRectangles[r] = r;
 				}
