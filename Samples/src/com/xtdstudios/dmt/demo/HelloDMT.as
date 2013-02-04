@@ -66,7 +66,7 @@ package com.xtdstudios.dmt.demo
 		private function doRasterize(): void {
 			m_displayObjects.push(m_flashSquare);
 			
-			dmtBasic.itemsToRaster = m_displayObjects;
+			dmtBasic.addItemsToRaster(m_displayObjects);
 			
 			dmtBasic.addEventListener(flash.events.Event.COMPLETE, dmtComplete);
 			dmtBasic.process();

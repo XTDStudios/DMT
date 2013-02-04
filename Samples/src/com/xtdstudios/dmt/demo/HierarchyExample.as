@@ -22,7 +22,6 @@ package com.xtdstudios.dmt.demo
 	import flash.events.Event;
 	
 	import starling.core.Starling;
-	import starling.display.DisplayObject;
 	import starling.display.Sprite;
 	import starling.events.Event;
 	
@@ -69,7 +68,7 @@ package com.xtdstudios.dmt.demo
 		private function doRasterize(): void {
 			m_displayObjects.push(m_rootObj);
 			
-			dmtBasic.itemsToRaster = m_displayObjects;
+			dmtBasic.addItemsToRaster(m_displayObjects);
 			
 			dmtBasic.addEventListener(flash.events.Event.COMPLETE,dmtComplete);
 			dmtBasic.process();

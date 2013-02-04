@@ -93,7 +93,7 @@ package com.xtdstudios.dmt.demo
 			m_displayObjects.push(m_flashSquare2);
 			m_displayObjects.push(m_flashSquare3);
 			
-			dmtBasic.itemsToRaster = m_displayObjects;
+			dmtBasic.addItemsToRaster(m_displayObjects);
 			
 			dmtBasic.addEventListener(flash.events.Event.COMPLETE,dmtComplete);
 			dmtBasic.process();
