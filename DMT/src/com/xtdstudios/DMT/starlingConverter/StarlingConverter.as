@@ -94,11 +94,11 @@ package com.xtdstudios.DMT.starlingConverter
 			return m_textureIDs;
 		}
 
-		private function getTextureByID(TextureID:String):Texture
+		public function getTextureByID(textureID:String):Object
 		{
 			for each(var atlas:TextureAtlas in m_starlingTextureAtlases)
 			{
-				var texture : Texture = atlas.getTexture(TextureID);
+				var texture : Texture = atlas.getTexture(textureID);
 				if (texture)
 					return texture;
 			}
@@ -134,7 +134,7 @@ package com.xtdstudios.DMT.starlingConverter
 			else  
 			{
 				if (assetDef.textureID!=null && assetDef.textureID!="")
-					result = new StarlingImageProxy(getTextureByID(assetDef.textureID));
+					result = new StarlingImageProxy(getTextureByID(assetDef.textureID) as Texture);
 				else
 					result = new StarlingSpriteProxy();
 			}

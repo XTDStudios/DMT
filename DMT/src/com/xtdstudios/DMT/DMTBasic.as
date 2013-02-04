@@ -20,6 +20,7 @@ package com.xtdstudios.DMT
 	import flash.display.DisplayObject;
 	
 	import starling.display.DisplayObject;
+	import starling.textures.Texture;
 
 	public class DMTBasic extends DMTAbsAPI
 	{
@@ -66,6 +67,14 @@ package com.xtdstudios.DMT
 		{
 			if (m_converter)
 				return m_converter.textureIDs;
+			else
+				return null;
+		}
+
+		public function getTextureByID(textureID:String):Texture
+		{
+			if (m_converter)
+				return m_converter.getTextureByID(textureID) as Texture;
 			else
 				return null;
 		}

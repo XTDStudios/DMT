@@ -18,6 +18,7 @@ package com.xtdstudios.DMT
 	public interface AssetGroupConverter
 	{
 		function get textureIDs():Vector.<String>;
+		function getTextureByID(textureID:String):Object;
 		function convert(uniqueAlias:String):Object
 		function dispose():void;
 	}
