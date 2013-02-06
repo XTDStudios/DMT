@@ -267,8 +267,39 @@ package com.xtdstudios.DMT.raster
 				currentDispObj.alpha = 1.0;
 				
 				// we know the bitmap size, get some memory for that
-				bitmapData = new BitmapData(bounds.width, bounds.height, m_transparentBitmaps, bitmapBgColor);				
-				bitmapData.draw(currentDispObj, matrix);
+				bitmapData = new BitmapData(bounds.width, bounds.height, m_transparentBitmaps, bitmapBgColor);
+				
+				// in case we have a 9-scale, we MUST use a container to draw the 9-scaled object
+				// and draw the container, and not the 9-scaled.
+				// Note: This will NOT work is the object has rotation, rotation MUST be 0, to make it work (Adobe BUG)
+				if (currentDispObj.scale9Grid!=null)
+				{
+					var saveParent 		: DisplayObjectContainer = currentDispObj.parent;
+					var saveMatrix		: Matrix = currentDispObj.transform.matrix;
+					var tmpContainer 	: Sprite = new Sprite();
+					
+					// making sure that our object is on 0,0
+					currentDispObj.transform.matrix = matrix;
+					
+					// add it to the temp container
+					tmpContainer.addChild(currentDispObj);
+					
+					// and draw the CONTAINER and not the currentDispObj (To see the 9-scale)
+					bitmapData.draw(tmpContainer);
+					
+					// get it back ot its original parent
+					if (saveParent!=null)
+						saveParent.addChild(currentDispObj);
+					else
+						tmpContainer.removeChild(currentDispObj);
+					
+					// get it back to its original matrix
+					currentDispObj.transform.matrix = saveMatrix;
+				}
+				else
+				{
+					bitmapData.draw(currentDispObj, matrix);
+				}
 				
 				// return the alpha to what it was
 				currentDispObj.alpha = savedAlpha; 
