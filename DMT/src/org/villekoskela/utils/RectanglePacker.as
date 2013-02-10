@@ -25,7 +25,6 @@ package org.villekoskela.utils
     public class RectanglePacker
     {
         public static const VERSION:String = "1.0";
-		private var mPadding:int = 0;
         private var mWidth:int = 0;
         private var mHeight:int = 0;
 
@@ -39,11 +38,10 @@ package org.villekoskela.utils
          * @param width the width of the main rectangle
          * @param height the height of the main rectangle
          */
-        public function RectanglePacker(width:int, height:int, padding:int)
+        public function RectanglePacker(width:int, height:int)
         {
             mWidth = width;
             mHeight = height;
-			mPadding = padding;
             mFreeAreas.push(new Rectangle(0, 0, mWidth, mHeight));
         }
 
@@ -83,11 +81,7 @@ package org.villekoskela.utils
 			rectangle.y = freeArea.top;
 
             // Get the new free areas, these are parts of the old ones intersected by the target
-			rectangle.width += mPadding;
-			rectangle.height += mPadding;
             var newFreeAreas:Vector.<Rectangle> = generateNewSubAreas(rectangle, mFreeAreas);
-			rectangle.width -= mPadding;
-			rectangle.height -= mPadding;
             filterSubAreas(newFreeAreas, mFreeAreas, true);
 
             for (var i:int = newFreeAreas.length - 1; i >= 0; i--)
