@@ -267,7 +267,7 @@ package com.xtdstudios.DMT.raster
 				currentDispObj.alpha = 1.0;
 				
 				// we know the bitmap size, get some memory for that
-				bitmapData = new BitmapData(bounds.width, bounds.height, true, bitmapBgColor);
+				bitmapData = new BitmapData(bounds.width, bounds.height, false, bitmapBgColor);
 				
 				// in case we have a 9-scale, we MUST use a container to draw the 9-scaled object
 				// and draw the container, and not the 9-scaled.
