@@ -29,17 +29,11 @@ package com.xtdstudios.dmt.demo
 	
 	public class HierarchyExample extends starling.display.Sprite
 	{
-		[Embed(source="/assets/HierarchyExampleAssets.swf", symbol="small_poly")]				
-		public var small_poly:Class; 
-
-		[Embed(source="/assets/HierarchyExampleAssets.swf", symbol="level2")]				
-		public var level2:Class; 
-
 		[Embed(source="/assets/HierarchyExampleAssets.swf", symbol="RootObj")]				
 		public var RootObj:Class;  
 
 		
-		private var dmtBasic: DMTBasic = new DMTBasic("demo.HierarchyExample", true, "1");
+		private var dmtBasic: DMTBasic = new DMTBasic("demo.HierarchyExample", true, "3");
 		
 		private var m_rootObj			: flash.display.Sprite;
 		private var m_starlingrootObj	: starling.display.Sprite;

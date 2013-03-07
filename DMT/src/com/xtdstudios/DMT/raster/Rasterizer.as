@@ -31,7 +31,7 @@ package com.xtdstudios.DMT.raster
 
 	public class Rasterizer
 	{
-		private static const DEFUALT_BITMAP_BG_COLOR	: int = 0x333333;
+		private static const DEFUALT_BITMAP_BG_COLOR	: int = 0xFF3333;
 		
 		private var m_bitmapBgColor				: int = DEFUALT_BITMAP_BG_COLOR;
 		private var m_transparentBitmaps		: Boolean;
@@ -267,7 +267,7 @@ package com.xtdstudios.DMT.raster
 				currentDispObj.alpha = 1.0;
 				
 				// we know the bitmap size, get some memory for that
-				bitmapData = new BitmapData(bounds.width, bounds.height, m_transparentBitmaps, bitmapBgColor);
+				bitmapData = new BitmapData(bounds.width, bounds.height, true, bitmapBgColor);
 				
 				// in case we have a 9-scale, we MUST use a container to draw the 9-scaled object
 				// and draw the container, and not the 9-scaled.

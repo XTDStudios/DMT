@@ -1,7 +1,9 @@
-<DOMDocument xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://ns.adobe.com/xfl/2008/" width="350" height="350" currentTimeline="1" xflVersion="2.2" creatorInfo="Adobe Flash Professional CS6" platform="Windows" versionInfo="Saved by Adobe Flash Windows 12.0 build 537" majorVersion="12" buildNumber="537" viewAngle3D="36.6569635931076" nextSceneIdentifier="2" playOptionsPlayLoop="false" playOptionsPlayPages="false" playOptionsPlayFrameActions="false" autoSaveHasPrompted="true">
+<DOMDocument xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://ns.adobe.com/xfl/2008/" width="350" height="350" currentTimeline="1" xflVersion="2.2" creatorInfo="Adobe Flash Professional CS6" platform="Windows" versionInfo="Saved by Adobe Flash Windows 12.0 build 537" majorVersion="12" buildNumber="537" timelineLabelWidth="276" viewAngle3D="36.6569635931076" nextSceneIdentifier="2" playOptionsPlayLoop="false" playOptionsPlayPages="false" playOptionsPlayFrameActions="false" autoSaveHasPrompted="true">
      <symbols>
           <Include href="bigX.xml" loadImmediate="false" itemID="50a2daa6-00000700" lastModified="1352850086"/>
           <Include href="level2.xml" loadImmediate="false" itemID="50a2dc05-0000072c" lastModified="1352923208"/>
+          <Include href="MovieClipExample.xml" itemID="5136da43-000001da" lastModified="1362549495"/>
+          <Include href="rectShape.xml" loadImmediate="false" itemID="5136da69-000001dd" lastModified="1362549353"/>
           <Include href="RootObj.xml" itemID="50a3f55a-000006ac" lastModified="1352922465"/>
           <Include href="small_poly.xml" itemID="50a2daf9-00000704" lastModified="1352923319"/>
           <Include href="small_poly_shape.xml" loadImmediate="false" itemID="50a2daf4-00000702" lastModified="1352923314"/>
@@ -14,16 +16,7 @@
                     <DOMLayer name="Layer 1" color="#4FFF4F" current="true" isSelected="true">
                          <frames>
                               <DOMFrame index="0" keyMode="9728">
-                                   <elements>
-                                        <DOMSymbolInstance libraryItemName="RootObj" selected="true" centerPoint3DX="372" centerPoint3DY="374">
-                                             <matrix>
-                                                  <Matrix tx="172" ty="174"/>
-                                             </matrix>
-                                             <transformationPoint>
-                                                  <Point/>
-                                             </transformationPoint>
-                                        </DOMSymbolInstance>
-                                   </elements>
+                                   <elements/>
                               </DOMFrame>
                          </frames>
                     </DOMLayer>
@@ -337,6 +330,8 @@
      </extendedSwatchLists>
      <PrinterSettings/>
      <publishHistory>
+          <PublishItem publishSize="1329" publishTime="1362549529"/>
+          <PublishItem publishSize="1342" publishTime="1362549517"/>
           <PublishItem publishSize="914" publishTime="1352923322"/>
           <PublishItem publishSize="919" publishTime="1352923308"/>
           <PublishItem publishSize="923" publishTime="1352923296"/>
