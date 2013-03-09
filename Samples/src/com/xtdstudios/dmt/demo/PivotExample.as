@@ -19,10 +19,8 @@ package com.xtdstudios.dmt.demo
 	import com.xtdstudios.dmt.demo.assets.Square;
 	
 	import flash.display.DisplayObject;
-	import flash.display.Graphics;
 	import flash.display.Sprite;
 	import flash.events.Event;
-	import flash.filters.DropShadowFilter;
 	import flash.filters.GlowFilter;
 	
 	import starling.core.Starling;
@@ -34,6 +32,7 @@ package com.xtdstudios.dmt.demo
 	
 	public class PivotExample extends starling.display.Sprite
 	{
+		// set useCache to false if you have changed the asset to re-generate the cache
 		private var dmtBasic: DMTBasic = new DMTBasic("demo.PivotExample", true, "1");
 		
 		private var m_flashSquare1				: flash.display.Sprite;

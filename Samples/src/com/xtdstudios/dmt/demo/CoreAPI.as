@@ -19,7 +19,6 @@ package com.xtdstudios.dmt.demo
 	import com.xtdstudios.DMT.AssetsGroup;
 	import com.xtdstudios.DMT.AssetsGroupBuilder;
 	import com.xtdstudios.DMT.AssetsGroupsManager;
-	import com.xtdstudios.DMT.AsyncAssetsGroupBuilderImpl;
 	import com.xtdstudios.DMT.events.AssetGroupEvent;
 	import com.xtdstudios.DMT.persistency.AssetsGroupPersistencyManager;
 	import com.xtdstudios.DMT.persistency.ByteArrayPersistencyManager;
@@ -31,7 +30,6 @@ package com.xtdstudios.dmt.demo
 	
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
-	import flash.events.Event;
 	import flash.events.ProgressEvent;
 	
 	import starling.core.Starling;

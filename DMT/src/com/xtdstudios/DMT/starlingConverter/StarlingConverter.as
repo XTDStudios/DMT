@@ -72,7 +72,8 @@ package com.xtdstudios.DMT.starlingConverter
 					{
 						m_textureIDs.push(textureID);
 						var region : Rectangle = regions[textureID];
-						textureAtlas.addRegion(textureID,region);
+						var frame  : Rectangle = atlas.getFrame(textureID);
+						textureAtlas.addRegion(textureID, region, frame);
 					}
 					m_starlingTextureAtlases.push(textureAtlas);
 				}

@@ -1,6 +1,6 @@
-<DOMSymbolItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://ns.adobe.com/xfl/2008/" name="rectShape" itemID="5136da69-000001dd" lastModified="1362549353">
+<DOMSymbolItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://ns.adobe.com/xfl/2008/" name="rectShape_gfx" itemID="513bbf3f-00000551" lastModified="1362870101">
   <timeline>
-    <DOMTimeline name="rectShape">
+    <DOMTimeline name="rectShape_gfx">
       <layers>
         <DOMLayer name="Layer 1" color="#4FFF4F" current="true" isSelected="true">
           <frames>
@@ -9,11 +9,11 @@
                 <DOMShape>
                   <fills>
                     <FillStyle index="1">
-                      <SolidColor color="#663366"/>
+                      <SolidColor color="#0066FF"/>
                     </FillStyle>
                   </fills>
                   <edges>
-                    <Edge fillStyle1="1" edges="!2000 0S2|2000 2000!2000 2000|0 2000!0 2000|0 0!0 0|2000 0"/>
+                    <Edge fillStyle1="1" edges="!0 0|2000 0!2000 0|2000 2000!2000 2000|0 2000!0 2000|0 0"/>
                   </edges>
                 </DOMShape>
               </elements>

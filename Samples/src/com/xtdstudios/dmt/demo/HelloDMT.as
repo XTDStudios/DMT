@@ -28,6 +28,7 @@ package com.xtdstudios.dmt.demo
 	
 	public class HelloDMT extends starling.display.Sprite
 	{
+		// set useCache to false if you have changed the asset to re-generate the cache
 		private var dmtBasic: DMTBasic = new DMTBasic("demo.HelloDMT", true, "1");
 		
 		private var m_flashSquare			: flash.display.Sprite;

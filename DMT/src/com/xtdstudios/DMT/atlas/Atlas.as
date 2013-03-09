@@ -37,6 +37,7 @@ package com.xtdstudios.DMT.atlas
 		private var m_name			: String;
 		private var m_bitmapData	: BitmapData;
 		private var m_regions		: Dictionary;
+		private var m_frames		: Dictionary;
 		
 		private var width: int;
 		private var height: int;
@@ -50,6 +51,7 @@ package com.xtdstudios.DMT.atlas
 			atlas.m_name = name;
 			atlas.m_bitmapData = bitmapData;
 			atlas.m_regions = new Dictionary();
+			atlas.m_frames = new Dictionary();
 			
 			atlas.width = bitmapData.width;
 			atlas.height = bitmapData.height;
@@ -60,6 +62,7 @@ package com.xtdstudios.DMT.atlas
 		public function writeExternal(output:IDataOutput): void {
 			output.writeUTF(m_name);
 			output.writeObject(m_regions);
+			output.writeObject(m_frames);
 			
 			output.writeInt(width);
 			output.writeInt(height);
@@ -69,6 +72,7 @@ package com.xtdstudios.DMT.atlas
 		public function readExternal(input:IDataInput): void {
 			m_name = input.readUTF();
 			m_regions = input.readObject();
+			m_frames = input.readObject();
 			width = input.readInt();
 			height = input.readInt();
 			transparent = input.readBoolean();
@@ -129,9 +133,16 @@ package com.xtdstudios.DMT.atlas
 			return m_regions;
 		}
 		
-		public function addRegion(textureID:String, rect:Rectangle):void
+		public function getFrame(textureID:String):Rectangle
+		{
+			return m_frames[textureID];
+		}
+		
+		public function addRegion(textureID:String, rect:Rectangle, frame:Rectangle):void
 		{
 			m_regions[textureID] = rect;
+			if (frame)
+				m_frames[textureID] = frame;
 		}
 		
 		public function disposeBitmapData():void
@@ -148,6 +159,7 @@ package com.xtdstudios.DMT.atlas
 			disposeBitmapData();
 			
 			m_regions = null;
+			m_frames = null;
 		}
 		
 	}

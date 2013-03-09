@@ -19,7 +19,6 @@ package com.xtdstudios.DMT
 	import com.xtdstudios.DMT.raster.RasterizedAssetData;
 	
 	import flash.display.BitmapData;
-	import flash.errors.IllegalOperationError;
 	import flash.geom.Matrix;
 
 	public class TextureIDGenerator
@@ -46,9 +45,7 @@ package com.xtdstudios.DMT
 				return null;
 			
 			var rasterizedAssetData : RasterizedAssetData;
-			var bitmapData			: BitmapData;
 			var name				: String;
-			var bitmapSize			: String;
 			
 			rasterizedAssetData = rasterizationResultTree.rasterizedAssetData;
 			
@@ -75,8 +72,6 @@ package com.xtdstudios.DMT
 			}
 			
 			// taking all the parts that makes this asset a unique texture
-			bitmapData = rasterizationResultTree.graphicsBitmapData;
-			
 			var textureID 			: String;
 			var aggregatedMatrix 	: Matrix = rasterizedAssetData.aggregatedMatrix;
 			textureID = name + "_" + 

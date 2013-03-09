@@ -43,7 +43,7 @@ package com.xtdstudios.DMT.atlas
 		private var m_rectanglesToProcess	: int;
 		private var m_itemsToProcess		: int;
 		private var m_extractedRectangles 	: Vector.<Rectangle>;	
-		private var m_sourceTexturesDict 		: Dictionary;
+		private var m_sourceTexturesDict 	: Dictionary;
 		
 		public function AtlasGenerator(atlasName:String, capturedAssets:CapturedAssetsDictionary, itemsToProcess:int)
 		{
@@ -177,10 +177,8 @@ package com.xtdstudios.DMT.atlas
 			return -1;
 		}
 		
-		private var c: int = 0;
 		private function sortOnWidth(a:Rectangle, b:Rectangle):Number
 		{
-//			c++;
 			if (a.width > b.width)
 			{
 				return 1;
@@ -189,21 +187,12 @@ package com.xtdstudios.DMT.atlas
 		}
 		private function sortOnHeight(a:Rectangle, b:Rectangle):Number
 		{
-			c++;
 			if (a.height > b.height)
 			{
 				return 1;
 			}
 			return -1;
 		}
-		
-//		private function nextPowerOfTwo(number:uint, currentPower:uint=1):uint
-//		{
-//			if (number<currentPower)
-//				return currentPower;
-//			else
-//				return nextPowerOfTwo(number, currentPower*2);
-//		}
 		
 		private function nextPowerOfTwo(n: uint): uint {
 			// Divide by 2^k for consecutive doublings of k up to 32,
@@ -259,14 +248,15 @@ package com.xtdstudios.DMT.atlas
 				rect.y = rect.y + TEXTURES_PADDING;
 				rect.width = rect.width-TEXTURES_PADDING;
 				rect.height = rect.height-TEXTURES_PADDING;
-				var bitmapData  : BitmapData = m_sourceTexturesDict[rect].bitmapData;
+				var capturedAsset : CapturedAsset = m_sourceTexturesDict[rect];
+				var bitmapData    : BitmapData = capturedAsset.bitmapData;
 
 				atlasBitmapData.copyPixels(bitmapData, new Rectangle(0, 0, bitmapData.width, bitmapData.height), new Point(rect.x, rect.y));
 				
 				// we've copied the captured image to the atlast, no need for it anymore. dispose!
 				bitmapData.dispose();
 				
-				resultAtlas.addRegion(m_sourceTexturesDict[rect].id, rect);
+				resultAtlas.addRegion(capturedAsset.id, rect, capturedAsset.frame);
 				m_processedRectangles++;
 			}
 			

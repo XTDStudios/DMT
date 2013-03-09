@@ -27,15 +27,16 @@ package com.xtdstudios.dmt.demo
 	
 	public class MovieClipDMT extends starling.display.Sprite
 	{
-		[Embed(source="/assets/HierarchyExampleAssets.swf", symbol="MovieClipExample")]				
+		[Embed(source="/assets/MovieClipExampleAssets5.swf", symbol="MovieClipExample")]				
 		public var MovieClipExampleClass:Class; 
 		
-		private var dmtBasic: DMTBasic = new DMTBasic("demo.MovieClipDMT", false, "1");
+		// set useCache to false if you have changed the asset to re-generate the cache
+		private var dmtBasic: DMTBasic = new DMTBasic("demo.MovieClipDMT", true, "1"); 
 		
 		private var m_flashMC				: flash.display.MovieClip;
 		private var m_starlingMC			: starling.display.MovieClip;
 		private var m_displayObjects		: Vector.<flash.display.DisplayObject>;
-		
+		 
 		public function MovieClipDMT()
 		{
 			super();
@@ -48,8 +49,8 @@ package com.xtdstudios.dmt.demo
 		
 		private function initFlash(): void {
 			m_flashMC = new MovieClipExampleClass();
-			m_flashMC.x=100;
-			m_flashMC.y=100;
+			m_flashMC.x=200;
+			m_flashMC.y=200;
 			m_flashMC.name="flashMC";
 			Starling.current.nativeStage.addChild(m_flashMC);
 		}

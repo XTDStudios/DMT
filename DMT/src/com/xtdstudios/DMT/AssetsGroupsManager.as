@@ -17,11 +17,9 @@ package com.xtdstudios.DMT
 {
 	import com.xtdstudios.DMT.persistency.AssetsGroupPersistencyManager;
 	import com.xtdstudios.DMT.persistency.ByteArrayPersistencyManager;
-	import com.xtdstudios.DMT.persistency.PersistencyManager;
 	
 	import flash.errors.IllegalOperationError;
 	import flash.utils.Dictionary;
-	import flash.utils.getTimer;
 	
 	public class AssetsGroupsManager
 	{

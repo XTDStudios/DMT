@@ -23,6 +23,7 @@ package com.xtdstudios.DMT.raster
 	import flash.display.MovieClip;
 	import flash.display.Shape;
 	import flash.display.Sprite;
+	import flash.errors.IllegalOperationError;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
@@ -202,14 +203,46 @@ package com.xtdstudios.DMT.raster
 				if (m_emptyLastFrameWorkaround)
 					asMovieClip.gotoAndStop(totalFrames);
 				
-				for (var i:uint=1; i<=totalFrames; i++)
+				
+				var frameWidth  : Number = 0;
+				var frameHeight : Number = 0;
+				var i			: uint;
+				for (i=1; i<=totalFrames; i++)
 				{
 					asMovieClip.gotoAndStop(i);
 					// we don't rasterize the last frame (We just gotoAndStop)
 					// This is a workaround for AIR bug
 					if (m_emptyLastFrameWorkaround==false || i<totalFrames)
-						result.addChild(rasterizeWithChildren(asMovieClip, topDispObj, maxDepth, currentDepth, currentMatrix, currentScaleX, currentScaleY, true));
+					{
+						var frameResultData : RasterizationResultTree = rasterizeWithChildren(asMovieClip, topDispObj, maxDepth, currentDepth, currentMatrix, currentScaleX, currentScaleY, true);
+
+						if (frameResultData.graphicsBitmapData==null)
+						{
+							throw new IllegalOperationError("MovieClip " + asMovieClip.name + " has an empty frame at frame " + i.toString());
+						}
+						
+						frameWidth = Math.max(frameWidth, frameResultData.rasterizedAssetData.pivotX+frameResultData.graphicsBitmapData.width);
+						frameHeight = Math.max(frameHeight, frameResultData.rasterizedAssetData.pivotY+frameResultData.graphicsBitmapData.height);
+						
+						frameResultData.rasterizedAssetData.frame = new Rectangle(frameResultData.rasterizedAssetData.pivotX, frameResultData.rasterizedAssetData.pivotY, 0, 0);
+						frameResultData.rasterizedAssetData.x = 0;
+						frameResultData.rasterizedAssetData.pivotX = 0;
+						frameResultData.rasterizedAssetData.y = 0;
+						frameResultData.rasterizedAssetData.pivotY = 0;
+						
+						result.addChild(frameResultData);
+					}
 				}
+				
+				// find out the size of the frame
+				var frame : Rectangle;
+				for (i=0; i<result.numChildren; i++)
+				{
+					frame = result.getChildAt(i).rasterizedAssetData.frame;
+					frame.width = frameWidth;
+					frame.height = frameHeight;
+				}
+				
 			}
 			else
 			{
@@ -267,7 +300,7 @@ package com.xtdstudios.DMT.raster
 				currentDispObj.alpha = 1.0;
 				
 				// we know the bitmap size, get some memory for that
-				bitmapData = new BitmapData(bounds.width, bounds.height, false, bitmapBgColor);
+				bitmapData = new BitmapData(bounds.width, bounds.height, m_transparentBitmaps, bitmapBgColor);
 				
 				// in case we have a 9-scale, we MUST use a container to draw the 9-scaled object
 				// and draw the container, and not the 9-scaled.

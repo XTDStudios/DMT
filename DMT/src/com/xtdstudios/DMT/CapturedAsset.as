@@ -16,16 +16,19 @@ limitations under the License.
 package com.xtdstudios.DMT
 {
 	import flash.display.BitmapData;
+	import flash.geom.Rectangle;
 
 	public class CapturedAsset
 	{
 		private var m_bitmapData	: BitmapData;
 		private var m_id			: String;
+		private var m_frame			: Rectangle;
 		
-		public function CapturedAsset(id:String, bitmapData:BitmapData)
+		public function CapturedAsset(id:String, bitmapData:BitmapData, frame:Rectangle = null)
 		{
 			m_bitmapData = bitmapData;
 			m_id = id;
+			m_frame = frame;
 		}
 
 		public function get id():String
@@ -38,5 +41,9 @@ package com.xtdstudios.DMT
 			return m_bitmapData;
 		}
 
+		public function get frame():Rectangle
+		{
+			return m_frame;
+		}
 	}
 }

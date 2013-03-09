@@ -28,6 +28,7 @@ package com.xtdstudios.DMT.raster
 		public var pivotY 				: Number = 0;
 		public var isCustomClass		: Boolean = false;
 		public var originalPosRectangle : Rectangle;
+		public var frame				: Rectangle;
 		public var aggregatedMatrix		: Matrix = new Matrix();
 		
 		private var m_originalClassName	: String;

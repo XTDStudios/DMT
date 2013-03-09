@@ -33,6 +33,7 @@ package com.xtdstudios.dmt.demo
 		public var RootObj:Class;  
 
 		
+		// set useCache to false if you have changed the asset to re-generate the cache
 		private var dmtBasic: DMTBasic = new DMTBasic("demo.HierarchyExample", true, "3");
 		
 		private var m_rootObj			: flash.display.Sprite;

@@ -17,6 +17,7 @@ package com.xtdstudios.DMT
 {
 	import flash.display.BitmapData;
 	import flash.errors.IllegalOperationError;
+	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
 
 	public class CapturedAssetsDictionary
@@ -45,7 +46,7 @@ package com.xtdstudios.DMT
 			return m_dictionary[textureID] as CapturedAsset;
 		}
 		
-		public function registerCapturedAsset(id:String, capturedAssetBitmap:BitmapData):void
+		public function registerCapturedAsset(id:String, capturedAssetBitmap:BitmapData, frame:Rectangle = null):void
 		{
 			if (id==null || id=="")
 			{
@@ -54,7 +55,7 @@ package com.xtdstudios.DMT
 			
 			if (m_dictionary[id]==null)
 			{
-				var newCapturedAsset : CapturedAsset = new CapturedAsset(id, capturedAssetBitmap);
+				var newCapturedAsset : CapturedAsset = new CapturedAsset(id, capturedAssetBitmap, frame);
 				m_dictionary[id] = newCapturedAsset;		
 				m_count++;
 			}
