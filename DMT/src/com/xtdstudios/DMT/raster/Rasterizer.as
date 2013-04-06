@@ -221,6 +221,9 @@ package com.xtdstudios.DMT.raster
 							throw new IllegalOperationError("MovieClip " + asMovieClip.name + " has an empty frame at frame " + i.toString());
 						}
 						
+						frameResultData.rasterizedAssetData.pivotX = Math.ceil(frameResultData.rasterizedAssetData.pivotX);
+						frameResultData.rasterizedAssetData.pivotY = Math.ceil(frameResultData.rasterizedAssetData.pivotY);
+
 						frameWidth = Math.max(frameWidth, frameResultData.rasterizedAssetData.pivotX+frameResultData.graphicsBitmapData.width);
 						frameHeight = Math.max(frameHeight, frameResultData.rasterizedAssetData.pivotY+frameResultData.graphicsBitmapData.height);
 						
@@ -234,7 +237,11 @@ package com.xtdstudios.DMT.raster
 					}
 				}
 				
-				// find out the size of the frame
+				// round it up
+				frameWidth = Math.ceil(frameWidth);
+				frameHeight = Math.ceil(frameHeight);
+				
+				// set the size of the frame
 				var frame : Rectangle;
 				for (i=0; i<result.numChildren; i++)
 				{
@@ -293,14 +300,17 @@ package com.xtdstudios.DMT.raster
 				assetData.pivotY = posInParentSpace.y-bounds.y;
 				
 				// moving the result rectangle of the displayObject to 0,0 (So the capture will capture the rect)
-				matrix.translate(posInParentSpace.x-bounds.x, posInParentSpace.y-bounds.y);
+				// BUT if the displayObject was at 100.5, we'll move it only -100 pixels, to get the same half pixel (0.5) effect
+				var backToX : Number = Math.ceil(posInParentSpace.x-bounds.x);
+				var backToY : Number = Math.ceil(posInParentSpace.y-bounds.y);
+				matrix.translate(backToX, backToY);
 				
 				// save the alpha
 				var savedAlpha : Number = currentDispObj.alpha;
 				currentDispObj.alpha = 1.0;
 				
 				// we know the bitmap size, get some memory for that
-				bitmapData = new BitmapData(bounds.width, bounds.height, m_transparentBitmaps, bitmapBgColor);
+				bitmapData = new BitmapData(bounds.width+1, bounds.height+1, m_transparentBitmaps, bitmapBgColor);
 				
 				// in case we have a 9-scale, we MUST use a container to draw the 9-scaled object
 				// and draw the container, and not the 9-scaled.
