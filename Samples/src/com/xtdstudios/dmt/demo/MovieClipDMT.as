@@ -27,7 +27,7 @@ package com.xtdstudios.dmt.demo
 	
 	public class MovieClipDMT extends starling.display.Sprite
 	{
-		[Embed(source="/assets/MovieClipExampleAssets5.swf", symbol="MovieClipExample")]				
+		[Embed(source="/assets/MovieClipExampleAssets.swf", symbol="MovieClipExample")]				
 		public var MovieClipExampleClass:Class; 
 		
 		// set useCache to false if you have changed the asset to re-generate the cache

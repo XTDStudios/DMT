@@ -23,7 +23,7 @@ package com.xtdstudios.dmt.demo
 	
 	public class ExamplesManager extends starling.display.Sprite
 	{
-		private var m_examplesClasses	: Array = [MovieClipDMT, HelloDMT, PivotExample, HierarchyExample, CoreAPI];
+		private var m_examplesClasses	: Array = [HelloDMT, PivotExample, HierarchyExample, MovieClipDMT, CoreAPI];
 		private var m_currentExample 	: Sprite;
 		private var m_exampleTitle 		: TextField;
 		private var m_exampleIdx		: int = 0;
