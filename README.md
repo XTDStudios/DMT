@@ -36,6 +36,6 @@ Features
   * Save/load all rasterized data to/from cache.
   * Cache contains all rasterized textures (PNG file format) and all Display Tree data, in one file.
 6.  Asynchronous support using pseudo thread. (Ready for workers when available on mobile.) 
-
+7.  Rasterize MovieClips.
 
 
