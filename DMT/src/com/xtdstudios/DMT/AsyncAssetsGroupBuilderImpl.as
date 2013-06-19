@@ -20,8 +20,6 @@ package com.xtdstudios.DMT
 	import com.xtdstudios.DMT.events.AssetGroupEvent;
 	import com.xtdstudios.DMT.raster.RasterizationResultTree;
 	import com.xtdstudios.DMT.raster.Rasterizer;
-	import com.xtdstudios.DMT.utils.MatrixUtils;
-	import com.xtdstudios.common.FileUtils;
 	import com.xtdstudios.common.threads.FunctionsRunnable;
 	import com.xtdstudios.common.threads.IRunnable;
 	import com.xtdstudios.common.threads.PseudoThread;
@@ -34,7 +32,6 @@ package com.xtdstudios.DMT
 	import flash.events.ProgressEvent;
 	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
-	import flash.utils.getQualifiedClassName;
 	
 	public class AsyncAssetsGroupBuilderImpl extends EventDispatcher implements AssetsGroupBuilder
 	{
@@ -46,7 +43,6 @@ package com.xtdstudios.DMT
 		private var m_capturedAssetsDictionary		: CapturedAssetsDictionary;
 		private var m_atlasGenerator 				: AtlasGenerator;
 		private var m_rasterizePseudoThread 		: PseudoThread;
-		private var m_rasterizedMap					: Dictionary;
 		
 		public function AsyncAssetsGroupBuilderImpl(assetsGroup:AssetsGroup, isTransparent:Boolean=true, matrixAccuracyPercent:Number=1.0)
 		{
@@ -66,7 +62,6 @@ package com.xtdstudios.DMT
 			m_isFinishedRasterizing = false;
 			
 			m_rasterizeCmd = new Vector.<Function>();
-			m_rasterizedMap = new Dictionary(true);
 		}
 		
 		public function get scaleEffects():Boolean
@@ -112,45 +107,32 @@ package com.xtdstudios.DMT
 			}
 		}
 		
-		private function isAlreadyRasterized(displayObject:DisplayObject, uniqueAlias:String=null):Boolean {
-			var className 		: String = getQualifiedClassName(displayObject);
-			var isCustomClass 	: Boolean = className.indexOf("flash.")!=0;
-
-			if (isCustomClass || uniqueAlias) {
-				var matStr : String = MatrixUtils.matrixAsStr(displayObject.transform.matrix);
-			}
-			
-			return false;	
-		}
-		
 		public function rasterize(displayObject:DisplayObject, uniqueAlias:String=null, maxDepth:int=-1, fitToRect:Rectangle=null, bestFitWithoutStretching:Boolean=true):void
 		{ 
-			if (isAlreadyRasterized(displayObject, uniqueAlias)==false) {
-				m_rasterizeCmd.push(function():void
+			m_rasterizeCmd.push(function():void
+			{
+				// can't rasterize if we're done.
+				if (m_isFinishedRasterizing==true)
 				{
-					// can't rasterize if we're done.
-					if (m_isFinishedRasterizing==true)
-					{
-						throw new IllegalOperationError("It is impossible to rasterized into a closed AssetsGroup");
-					}
-					
-					// RASTERIZE!
-					var rasterizationResultTree : RasterizationResultTree = m_rasterizer.rasterize(displayObject, maxDepth);
-					
-					// take out the unique textures, and Build assetDef from it
-					var assetDef : AssetDef = extractTexturesAndBuildAssetDef(rasterizationResultTree);
-					if (assetDef)
-					{
-						if (uniqueAlias)
-							assetDef.uniqueAlias = uniqueAlias;
-						else
-							assetDef.uniqueAlias = displayObject.name;
-					}
-					
-					// put the extracted assetDef into the assetGroup
-					m_assetsGroup.addAssetDef(assetDef);
-				});
-			}
+					throw new IllegalOperationError("It is impossible to rasterized into a closed AssetsGroup");
+				}
+				
+				// RASTERIZE!
+				var rasterizationResultTree : RasterizationResultTree = m_rasterizer.rasterize(displayObject, maxDepth);
+				
+				// take out the unique textures, and Build assetDef from it
+				var assetDef : AssetDef = extractTexturesAndBuildAssetDef(rasterizationResultTree);
+				if (assetDef)
+				{
+					if (uniqueAlias)
+						assetDef.uniqueAlias = uniqueAlias;
+					else
+						assetDef.uniqueAlias = displayObject.name;
+				}
+				
+				// put the extracted assetDef into the assetGroup
+				m_assetsGroup.addAssetDef(assetDef);
+			});
 		}
 		
 		public function generate(): AssetsGroup 
@@ -225,7 +207,6 @@ package com.xtdstudios.DMT
 			m_textureIDGenerator		= null;
 			m_capturedAssetsDictionary	= null;
 			m_atlasGenerator 			= null;
-			m_rasterizedMap				= null;
 		}
 	}
 }
