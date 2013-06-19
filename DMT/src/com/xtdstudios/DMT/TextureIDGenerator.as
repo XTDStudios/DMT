@@ -72,7 +72,6 @@ package com.xtdstudios.DMT
 			var aggregatedMatrix 	: Matrix = rasterizedAssetData.aggregatedMatrix;
 			textureID = name + "_" + MatrixUtils.matrixAsStr(aggregatedMatrix);
 
-			trace(textureID);
 			return textureID;
 		}
 	}
