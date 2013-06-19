@@ -17,24 +17,20 @@ package com.xtdstudios.DMT
 {
 	import com.xtdstudios.DMT.raster.RasterizationResultTree;
 	import com.xtdstudios.DMT.raster.RasterizedAssetData;
+	import com.xtdstudios.DMT.utils.MatrixUtils;
 	
 	import flash.display.BitmapData;
 	import flash.geom.Matrix;
+	
+	import starling.utils.MatrixUtil;
 
 	public class TextureIDGenerator
 	{
-		private static const MATRIX_DIGITS_AFTER_DOT	: int = 3;
 		private var m_matrixAccuracyPercent				: Number;
 		
 		public function TextureIDGenerator(matrixAccuracyPercent:Number=1.0)
 		{
 			m_matrixAccuracyPercent = matrixAccuracyPercent;
-		}
-		
-		private function calculateMatrixField(n: Number):String
-		{
-			// use the m_matrixAccuracyPercent to round up the n number
-			return n.toFixed(MATRIX_DIGITS_AFTER_DOT);
 		}
 		
 		public function generateTextureID(rasterizationResultTree:RasterizationResultTree):String
@@ -74,12 +70,9 @@ package com.xtdstudios.DMT
 			// taking all the parts that makes this asset a unique texture
 			var textureID 			: String;
 			var aggregatedMatrix 	: Matrix = rasterizedAssetData.aggregatedMatrix;
-			textureID = name + "_" + 
-						calculateMatrixField(aggregatedMatrix.a) +	"_" + 
-						calculateMatrixField(aggregatedMatrix.b) + "_" + 
-						calculateMatrixField(aggregatedMatrix.c) + "_" + 
-						calculateMatrixField(aggregatedMatrix.d);
+			textureID = name + "_" + MatrixUtils.matrixAsStr(aggregatedMatrix);
 
+			trace(textureID);
 			return textureID;
 		}
 	}
