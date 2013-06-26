@@ -39,3 +39,4 @@ Features
 7.  Rasterize MovieClips.
 
 
+Follow me on Twitter [@gilamran](https://twitter.com/gilamran) for any news
