@@ -9,6 +9,7 @@ The DMT library make the best of both world by providing run-time dynamic (and f
 
 This way, images are optimized for each screen resolution, avoiding ugly stretch marks and pixlezation. Having the display object tree allows you to manipulate each sub object separately (as in flash).
 
+[Basic Tutorial](http://gilamran.blogspot.com/2013/06/dmt-basic-tutorial.html "Basic Tutorial")
 
 DMT is Open Source library, released under [Apache License](http://www.apache.org/licenses/LICENSE-2.0.html "Apache License, Version 2.0").
 
