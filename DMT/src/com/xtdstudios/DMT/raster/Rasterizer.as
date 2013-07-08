@@ -42,7 +42,7 @@ package com.xtdstudios.DMT.raster
 		
 		public function Rasterizer()
 		{
-			m_emptyLastFrameWorkaround = true;
+			m_emptyLastFrameWorkaround = false; // changed to false, the bug was fixed -> https://bugbase.adobe.com/index.cfm?event=bug&id=3340012
 			m_transparentBitmaps = true;
 			m_scaleEffects = true;
 			m_stopRasterNames = new Dictionary();
@@ -211,7 +211,7 @@ package com.xtdstudios.DMT.raster
 				{
 					asMovieClip.gotoAndStop(i);
 					// we don't rasterize the last frame (We just gotoAndStop)
-					// This is a workaround for AIR bug
+					// This is a workaround for AIR bug: https://bugbase.adobe.com/index.cfm?event=bug&id=3340012
 					if (m_emptyLastFrameWorkaround==false || i<totalFrames)
 					{
 						var frameResultData : RasterizationResultTree = rasterizeWithChildren(asMovieClip, topDispObj, maxDepth, currentDepth, currentMatrix, currentScaleX, currentScaleY, true);
