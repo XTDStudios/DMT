@@ -33,8 +33,8 @@
           <libraryPathEntry kind="3" linkType="1" path="${PROJECT_FRAMEWORKS}/libs/automation_agent.swc" useDefaultLinkType="false"/>
         </excludedEntries>
       </libraryPathEntry>
-      <libraryPathEntry kind="3" linkType="2" path="/Starling/bin-debug/Starling.swc" useDefaultLinkType="false"/>
       <libraryPathEntry kind="3" linkType="2" path="/XTDCommon/bin/XTDCommon.swc" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="3" linkType="2" path="/Starling/bin/Starling.swc" useDefaultLinkType="false"/>
     </libraryPath>
     <sourceAttachmentPath/>
   </compiler>

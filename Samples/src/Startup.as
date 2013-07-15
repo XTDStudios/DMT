@@ -24,7 +24,7 @@ package
             stage.align = StageAlign.TOP_LEFT;
             
             Starling.multitouchEnabled = true;
-            Starling.handleLostContext = false;
+            Starling.handleLostContext = true;
             
             // create a suitable viewport for the screen size
             var viewPort:Rectangle = new Rectangle();

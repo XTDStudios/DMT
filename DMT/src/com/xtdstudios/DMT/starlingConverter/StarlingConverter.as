@@ -22,6 +22,7 @@ package com.xtdstudios.DMT.starlingConverter
 	import com.xtdstudios.DMT.raster.RasterizedAssetData;
 	
 	import flash.errors.IllegalOperationError;
+	import flash.events.Event;
 	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
 	
@@ -50,7 +51,7 @@ package com.xtdstudios.DMT.starlingConverter
 				m_textureIDs = new Vector.<String>;
 	
 				m_starlingTextureAtlases = new Vector.<TextureAtlas>;
-				var atlases : Array = m_assetGroup.atlasesList;
+				var atlases 	: Array = m_assetGroup.atlasesList;
 				var atlasMem	: Number = 0;
 				for (var i:int=0; i<atlases.length; i++)
 				{
@@ -62,6 +63,13 @@ package com.xtdstudios.DMT.starlingConverter
 					
 					texture = Texture.fromBitmapData(atlas.bitmapData, false, false); 
 					atlas.disposeBitmapData();
+					
+					stickAtlasAndTextureTogether(atlas, texture);
+					
+					texture.root.onRestore = function():void 
+					{ 
+						m_assetGroup.loadAtlases();
+					};
 					
 					// now that the atlas bitmap is on the GPU/Starling we can dispose it from 
 					// the asset group atlas.
@@ -88,6 +96,14 @@ package com.xtdstudios.DMT.starlingConverter
 				if (Starling.context && Starling.context.driverInfo != "Disposed")
 					throw e; 
 			}
+		}
+		
+		private function stickAtlasAndTextureTogether(atlas:Atlas, texture:Texture):void {
+			atlas.addEventListener(Event.COMPLETE, function (e:Event):void {
+				texture.root.uploadBitmapData(atlas.bitmapData);						
+				atlas.disposeBitmapData();
+			});
+			
 		}
 		
 		public function get textureIDs():Vector.<String>
@@ -143,6 +159,8 @@ package com.xtdstudios.DMT.starlingConverter
 			if (result)
 			{ 
 				var rasterizedAssetData : RasterizedAssetData = assetDef.rasterizedAssetData;
+				result.scaleX = rasterizedAssetData.textureScaleX;
+				result.scaleY = rasterizedAssetData.textureScaleY;
 				result.x = Math.round(rasterizedAssetData.x);
 				result.y = Math.round(rasterizedAssetData.y);
 				result.alpha = rasterizedAssetData.alpha;
@@ -159,7 +177,7 @@ package com.xtdstudios.DMT.starlingConverter
 			
 			return result;
 		}
-		
+
 		public function convert(uniqueAlias:String):Object
 		{
 			if (! uniqueAlias)
@@ -184,7 +202,7 @@ package com.xtdstudios.DMT.starlingConverter
 				}
 				m_starlingTextureAtlases = null;
 			}
-
+			
 			m_textureIDs = null;
 			m_assetGroup = null;
 		}

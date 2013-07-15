@@ -26,6 +26,8 @@ package com.xtdstudios.DMT.raster
 		public var alpha				: Number = 1;
 		public var pivotX 				: Number = 0;
 		public var pivotY 				: Number = 0;
+		public var textureScaleX 		: Number = 1;
+		public var textureScaleY		: Number = 1;
 		public var isCustomClass		: Boolean = false;
 		public var originalPosRectangle : Rectangle;
 		public var frame				: Rectangle;
