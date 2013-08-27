@@ -101,7 +101,7 @@ package com.xtdstudios.DMT
 		
 		public function cacheExist():Boolean
 		{
-			return m_assetsGroupsManager.isCacheExist(m_dataName);
+			return m_useCache && m_assetsGroupsManager.isCacheExist(m_dataName); 
 		}
 		
 		public function getAssetByUniqueAlias(uniqueAlias:String):starling.display.DisplayObject

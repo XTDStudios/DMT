@@ -30,14 +30,14 @@ package com.xtdstudios.DMT
 	{
 		private var m_progress						: Number;
 		private var m_inProgress					: Boolean;
-		private var m_useCache						: Boolean;
 		private var m_maxDepth						: int;
 		
 		private var m_assetsGroupBuilder  			: AssetsGroupBuilder;
 		
-		protected var m_byteArrayPersistencyManager: ByteArrayPersistencyManager;
-		protected var m_assetsGroupPersistencyManager: ExternalAssetsGroupPersistencyManager;
-		protected var m_assetsGroupsManager			: AssetsGroupsManager;
+		protected var m_byteArrayPersistencyManager		: ByteArrayPersistencyManager;
+		protected var m_assetsGroupPersistencyManager	: ExternalAssetsGroupPersistencyManager;
+		protected var m_assetsGroupsManager				: AssetsGroupsManager;
+		protected var m_useCache						: Boolean;
 
 		public function DMTAbsAPI(useCache:Boolean=true, cacheVersion:String="1", byteArrayPersistencyManager: ByteArrayPersistencyManager = null, assetsGroupPersistencyManager: ExternalAssetsGroupPersistencyManager = null)
 		{
