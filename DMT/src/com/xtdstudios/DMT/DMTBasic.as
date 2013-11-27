@@ -79,6 +79,14 @@ package com.xtdstudios.DMT
 				return null;
 		}
 
+		public function getTexturesByUniqueAlias(uniqueAlias:String):Array
+		{
+			if (m_converter)
+				return m_converter.getTexturesByUniqueAlias(uniqueAlias);
+			else
+				return null;
+		}
+
 		override protected function getItemsToRaster(dn: String):Vector.<ItemToRaster>
 		{
 			var result : Vector.<ItemToRaster> = new Vector.<ItemToRaster>;
