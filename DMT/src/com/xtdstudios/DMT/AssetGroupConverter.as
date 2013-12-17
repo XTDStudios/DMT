@@ -19,6 +19,7 @@ package com.xtdstudios.DMT
 	{
 		function get textureIDs():Vector.<String>;
 		function getTextureByID(textureID:String):Object;
+		function getTexturesByUniqueAlias(uniqueAlias:String):Array
 		function convert(uniqueAlias:String):Object
 		function dispose():void;
 	}

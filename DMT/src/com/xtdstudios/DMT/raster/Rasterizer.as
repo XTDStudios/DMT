@@ -309,8 +309,15 @@ package com.xtdstudios.DMT.raster
 				var savedAlpha : Number = currentDispObj.alpha;
 				currentDispObj.alpha = 1.0;
 				
+				// Add one pixel to the size if we can (To prevent sharp edges)
+				if (bounds.width<2048)
+					bounds.width = bounds.width+1;
+
+				if (bounds.height<2048)
+					bounds.height = bounds.height+1;
+				
 				// we know the bitmap size, get some memory for that
-				bitmapData = new BitmapData(bounds.width+1, bounds.height+1, m_transparentBitmaps, bitmapBgColor);
+				bitmapData = new BitmapData(bounds.width, bounds.height, m_transparentBitmaps, bitmapBgColor);
 				
 				// in case we have a 9-scale, we MUST use a container to draw the 9-scaled object
 				// and draw the container, and not the 9-scaled.

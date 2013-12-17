@@ -57,7 +57,7 @@ package com.xtdstudios.DMT.persistency.impl
 		
 		private function getCacheFileName(assetsGroupName: String): String
 		{
-			return assetsGroupName+".cache";
+			return assetsGroupName+"_version_"+m_version+".cache";
 		}
 		
 		public function saveData(fileName: String, data: Object):void

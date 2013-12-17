@@ -178,6 +178,54 @@ package com.xtdstudios.DMT.starlingConverter
 			return result;
 		}
 
+		private function extractAllTextures(assetDef:AssetDef, extractInto:Array):void
+		{
+			if (assetDef.children.length>0) 
+			{
+				var i:int;
+				if (assetDef.isMovieclip)
+				{
+					for (i=0; i<assetDef.children.length; i++)
+					{
+						extractInto.push(getTextureByID(assetDef.children[i].textureID));
+					}
+				}
+				else
+				{
+					for (i=0; i<assetDef.children.length; i++)
+					{
+						extractAllTextures(assetDef.children[i], extractInto);
+					}
+				}
+				
+			} 
+			else  
+			{
+				if (assetDef.textureID!=null && assetDef.textureID!="")
+					extractInto.push(getTextureByID(assetDef.textureID) as Texture);
+			}
+		}
+		
+		public function getTexturesByUniqueAlias(uniqueAlias:String):Array
+		{
+			if (! uniqueAlias)
+				throw new IllegalOperationError("unable to convert, invalid uniqueAlias");
+			
+			var assetDef 	: AssetDef;
+			assetDef = m_assetGroup.getAssetDef(uniqueAlias);
+			
+			var extractInto : Array = new Array();
+			if (assetDef) 
+			{
+				extractAllTextures(assetDef, extractInto);
+				return extractInto;
+			}
+			else
+			{
+				throw new IllegalOperationError("uniqueAlias was not found, " + uniqueAlias);
+			}
+		}
+		
 		public function convert(uniqueAlias:String):Object
 		{
 			if (! uniqueAlias)
@@ -189,7 +237,7 @@ package com.xtdstudios.DMT.starlingConverter
 			if (assetDef)
 				return convertWithChildren(assetDef);
 			else
-				throw new IllegalOperationError("assetDef was not found, " + uniqueAlias);
+				throw new IllegalOperationError("uniqueAlias was not found, " + uniqueAlias);
 		}
 		
 		public function dispose():void

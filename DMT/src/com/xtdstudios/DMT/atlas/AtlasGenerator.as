@@ -111,7 +111,7 @@ package com.xtdstudios.DMT.atlas
 			var solvedRectangles: Dictionary = new Dictionary;
 			
 			var start:int = flash.utils.getTimer();
-			var mPacker:RectanglePacker = new RectanglePacker(atlasSize.width-TEXTURES_PADDING, atlasSize.height-TEXTURES_PADDING);
+			var mPacker:RectanglePacker = new RectanglePacker(atlasSize.width, atlasSize.height);
 			
 			var r:Rectangle;
 			var unSolvedRectangles :  Vector.<Rectangle> = new Vector.<Rectangle>;
@@ -217,7 +217,13 @@ package com.xtdstudios.DMT.atlas
 			m_extractedRectangles = new Vector.<Rectangle>;
 			for each(var capturedAsset:CapturedAsset in m_capturedAssets.dictionary)
 			{
-				rect = new Rectangle(0, 0, capturedAsset.bitmapData.width+TEXTURES_PADDING, capturedAsset.bitmapData.height+TEXTURES_PADDING);
+				rect = new Rectangle(0, 0, capturedAsset.bitmapData.width, capturedAsset.bitmapData.height);
+				if (rect.width<ATLAS_MAX_WIDTH)
+					rect.width = rect.width+TEXTURES_PADDING;
+				
+				if (rect.height<ATLAS_MAX_HEIGHT)
+					rect.height = rect.height+TEXTURES_PADDING;
+				
 				m_extractedRectangles.push(rect);
 				
 				m_sourceTexturesDict[rect] = capturedAsset;
