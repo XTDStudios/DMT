@@ -31,7 +31,7 @@ package com.xtdstudios.dmt.demo
 		public var MovieClipExampleClass:Class; 
 		
 		// set useCache to false if you have changed the asset to re-generate the cache
-		private var dmtBasic: DMTBasic = new DMTBasic("demo.MovieClipDMT", true, "1"); 
+		private var dmtBasic: DMTBasic = new DMTBasic("demo.MovieClipDMT", GlobalConsts.USE_CACHE, GlobalConsts.CACHE_VERSION); 
 		
 		private var m_flashMC				: flash.display.MovieClip;
 		private var m_starlingMC			: starling.display.MovieClip;

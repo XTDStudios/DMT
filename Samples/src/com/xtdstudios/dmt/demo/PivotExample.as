@@ -33,7 +33,7 @@ package com.xtdstudios.dmt.demo
 	public class PivotExample extends starling.display.Sprite
 	{
 		// set useCache to false if you have changed the asset to re-generate the cache
-		private var dmtBasic: DMTBasic = new DMTBasic("demo.PivotExample", true, "1");
+		private var dmtBasic: DMTBasic = new DMTBasic("demo.PivotExample", GlobalConsts.USE_CACHE, GlobalConsts.CACHE_VERSION);
 		
 		private var m_flashSquare1				: flash.display.Sprite;
 		private var m_flashSquare2				: flash.display.Sprite;

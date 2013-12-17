@@ -74,7 +74,7 @@ package com.xtdstudios.dmt.demo
 		private function initDMT(): void {
 			m_byteArrayPersistencyManager = new ByteArrayToFilePersistencyManager(FileUtils.getCacheDir());
 			// Persistency manager
-			m_assetsGroupPersistencyManager = new ExternalAssetsGroupPersistencyManager(m_byteArrayPersistencyManager, CACHE_ID);
+			m_assetsGroupPersistencyManager = new ExternalAssetsGroupPersistencyManager(m_byteArrayPersistencyManager, GlobalConsts.CACHE_VERSION);
 			
 			// Assts Groups Manager
 			m_assetsGroupsManager = new AssetsGroupsManager(m_assetsGroupPersistencyManager, m_byteArrayPersistencyManager);

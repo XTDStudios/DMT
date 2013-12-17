@@ -105,15 +105,10 @@ package com.xtdstudios.DMT
 				if (!item.indexOf(groupName))
 					m_byteArrayPersistencyManager.deleteData(item);
 			});
-//			var ag:AssetsGroup = get(groupName);
-//			if (ag)
-//				clearCache(ag);
 		}
 		
 		public function clearCache(assetsGroup:AssetsGroup): void {
 			clearCacheByName(assetsGroup.name);
-//			assetsGroup.deleteAtlases();
-//			m_assetsGroupPersistencyManager.deleteData(assetsGroup.name);
 		}
 		
 		
