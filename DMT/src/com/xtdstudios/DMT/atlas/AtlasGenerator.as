@@ -234,6 +234,9 @@ package com.xtdstudios.DMT.atlas
 		
 		private function copyBitmaps():void
 		{
+			if (m_rectanglesToProcess==0)
+				return;
+			
 			var rect 				: Rectangle;
 			var atlasBitmapData		: BitmapData
 			var resultAtlas			: Atlas;
