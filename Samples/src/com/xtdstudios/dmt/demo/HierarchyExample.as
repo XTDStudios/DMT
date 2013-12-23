@@ -38,14 +38,12 @@ package com.xtdstudios.dmt.demo
 		
 		private var m_rootObj			: flash.display.Sprite;
 		private var m_starlingrootObj	: starling.display.Sprite;
-		private var m_displayObjects	: Vector.<flash.display.DisplayObject>;
 		
 		public function HierarchyExample()
 		{
 			super();
 			
 			name = "Hierarchy Example";
-			m_displayObjects = new Vector.<flash.display.DisplayObject>();
 			initFlash();
 			doRasterize();
 		}
@@ -54,16 +52,13 @@ package com.xtdstudios.dmt.demo
 			m_rootObj = new RootObj();
 			m_rootObj.x=200;
 			m_rootObj.y=200;
-			m_rootObj.name="RootObj";
 			
 			Starling.current.nativeStage.addChild(m_rootObj);
 		}
 		
 		
 		private function doRasterize(): void {
-			m_displayObjects.push(m_rootObj);
-			
-			dmtBasic.addItemsToRaster(m_displayObjects);
+			dmtBasic.addItemToRaster(m_rootObj, "RootObj");
 			
 			dmtBasic.addEventListener(flash.events.Event.COMPLETE,dmtComplete);
 			dmtBasic.process();

@@ -18,7 +18,6 @@ package com.xtdstudios.dmt.demo
 	import com.xtdstudios.DMT.DMTBasic;
 	import com.xtdstudios.dmt.demo.assets.Square;
 	
-	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	
@@ -33,14 +32,12 @@ package com.xtdstudios.dmt.demo
 		
 		private var m_flashSquare			: flash.display.Sprite;
 		private var m_starlingSquare		: starling.display.DisplayObject;
-		private var m_displayObjects		: Vector.<flash.display.DisplayObject>;
 		
 		public function HelloDMT()
 		{
 			super();
 			
 			name = "Hello DMT";
-			m_displayObjects = new Vector.<flash.display.DisplayObject>();
 			initFlash();
 			doRasterize();
 		}
@@ -49,7 +46,6 @@ package com.xtdstudios.dmt.demo
 			m_flashSquare = new Square(50,-25,-25);
 			m_flashSquare.x=100;
 			m_flashSquare.y=100;
-			m_flashSquare.name="Square";
 			Starling.current.nativeStage.addChild(m_flashSquare);
 		}
 		
@@ -65,9 +61,7 @@ package com.xtdstudios.dmt.demo
 		}
 		
 		private function doRasterize(): void {
-			m_displayObjects.push(m_flashSquare);
-			
-			dmtBasic.addItemsToRaster(m_displayObjects);
+			dmtBasic.addItemToRaster(m_flashSquare, "Square");
 			
 			dmtBasic.addEventListener(flash.events.Event.COMPLETE, dmtComplete);
 			dmtBasic.process();

@@ -60,21 +60,18 @@ package com.xtdstudios.dmt.demo
 			m_flashSquare1 = new Square(50,0,0);
 			m_flashSquare1.x=100;
 			m_flashSquare1.y=100;
-			m_flashSquare1.name="Square1";
 			m_flashSquare1.filters = [new GlowFilter(0x333333, 1, 14, 14, 0.6)];
 			Starling.current.nativeStage.addChild(m_flashSquare1);
 			
 			m_flashSquare2 = new Square(50,-25,-25);
 			m_flashSquare2.x=250;
 			m_flashSquare2.y=100;
-			m_flashSquare2.name="Square2";
 			m_flashSquare2.filters = [new GlowFilter(0x333333, 1, 14, 14, 0.6)];
 			Starling.current.nativeStage.addChild(m_flashSquare2);
 			
 			m_flashSquare3 = new Square(50,15,15);
 			m_flashSquare3.x=400;
 			m_flashSquare3.y=100;
-			m_flashSquare3.name="Square3";
 			m_flashSquare3.filters = [new GlowFilter(0x333333, 1, 14, 14, 0.6)];
 			Starling.current.nativeStage.addChild(m_flashSquare3);
 			
@@ -88,6 +85,10 @@ package com.xtdstudios.dmt.demo
 		
 		
 		private function doRasterize(): void {
+			m_flashSquare1.name="Square1";
+			m_flashSquare2.name="Square2";
+			m_flashSquare3.name="Square3";
+
 			m_displayObjects.push(m_flashSquare1);
 			m_displayObjects.push(m_flashSquare2);
 			m_displayObjects.push(m_flashSquare3);

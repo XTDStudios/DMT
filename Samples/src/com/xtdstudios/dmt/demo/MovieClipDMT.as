@@ -35,14 +35,12 @@ package com.xtdstudios.dmt.demo
 		
 		private var m_flashMC				: flash.display.MovieClip;
 		private var m_starlingMC			: starling.display.MovieClip;
-		private var m_displayObjects		: Vector.<flash.display.DisplayObject>;
 		 
 		public function MovieClipDMT()
 		{
 			super();
 			
 			name = "MovieClip DMT";
-			m_displayObjects = new Vector.<flash.display.DisplayObject>();
 			initFlash();
 			doRasterize();
 		}
@@ -67,9 +65,7 @@ package com.xtdstudios.dmt.demo
 		}
 		
 		private function doRasterize(): void {
-			m_displayObjects.push(m_flashMC);
-			
-			dmtBasic.addItemsToRaster(m_displayObjects);
+			dmtBasic.addItemToRaster(m_flashMC, "flashMC");
 			
 			dmtBasic.addEventListener(flash.events.Event.COMPLETE, dmtComplete);
 			dmtBasic.process();

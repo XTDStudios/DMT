@@ -24,14 +24,14 @@ package com.xtdstudios.DMT
 
 	public class DMTBasic extends DMTAbsAPI
 	{
-		protected var m_displayObjects	: Vector.<flash.display.DisplayObject>;
+		protected var m_itemsToRaster	: Vector.<ItemToRaster>;
 		protected var m_converter 		: AssetGroupConverter;
 		protected var m_dataName		: String;
 		
 		
 		public function DMTBasic(dataName:String, useCache:Boolean=true, cacheVersion:String="1")
 		{
-			m_displayObjects = new Vector.<flash.display.DisplayObject>;
+			m_itemsToRaster = new Vector.<ItemToRaster>;
 			m_dataName = dataName;
 			super(useCache, cacheVersion);
 		}
@@ -40,27 +40,46 @@ package com.xtdstudios.DMT
 			return _process(m_dataName, isTransparent, maxDepth, matrixAccuracyPercent);
 		}
 		
-		public function addItemToRaster(displayObject:flash.display.DisplayObject):void
+		public function addItemToRaster(displayObject:flash.display.DisplayObject, customUniqueID:String=null):void
 		{
-			m_displayObjects.push(displayObject);
+			var uniqueID : String;
+			if (customUniqueID)
+				uniqueID = customUniqueID;
+			else
+				uniqueID = displayObject.name;
+			
+			m_itemsToRaster.push(new ItemToRaster(displayObject, uniqueID));
 		}
 		
 		public function addItemsToRaster(displayObjects:Vector.<flash.display.DisplayObject>):void
 		{
 			for (var i:int=0; i<displayObjects.length; i++)
-				m_displayObjects.push(displayObjects[i]);
+				addItemToRaster(displayObjects[i]);
 		}
 		
-		public function removeItemToRaster(displayObject:flash.display.DisplayObject):void
+		public function removeItemToRaster(displayObject:flash.display.DisplayObject, customUniqueID:String=null):void
 		{
-			var idx : int = m_displayObjects.indexOf(displayObject);
-			if (idx>-1)
-				m_displayObjects.splice(idx, 1);
+			var uniqueID 		: String;
+			var itemToRaster	: ItemToRaster;
+			for (var i:int=0; i<m_itemsToRaster.length; i++)
+			{
+				itemToRaster = m_itemsToRaster[i];
+				if (customUniqueID)
+					uniqueID = customUniqueID;
+				else
+					uniqueID = displayObject.name;
+				if (itemToRaster.uniqueID == uniqueID)
+				{
+					m_itemsToRaster.splice(i, 1);
+					return;					
+				}
+					
+			}
 		}
 		
 		public function clearItemsToRaster():void
 		{
-			m_displayObjects = new Vector.<flash.display.DisplayObject>;
+			m_itemsToRaster = new Vector.<ItemToRaster>;
 		}
 		
 		public function get textureIDs():Vector.<String>
@@ -89,12 +108,7 @@ package com.xtdstudios.DMT
 
 		override protected function getItemsToRaster(dn: String):Vector.<ItemToRaster>
 		{
-			var result : Vector.<ItemToRaster> = new Vector.<ItemToRaster>;
-			for each(var itemToRaster:flash.display.DisplayObject in m_displayObjects)
-			{
-				result.push(new ItemToRaster(itemToRaster, itemToRaster.name));
-			}
-			return result;
+			return m_itemsToRaster;
 		}
 		
 		override protected function processTextures(assetsGroup:AssetsGroup):void
@@ -124,7 +138,7 @@ package com.xtdstudios.DMT
 		{
 			super.dispose();
 			
-			m_displayObjects = null;
+			m_itemsToRaster = null;
 			
 			if (m_converter)
 			{
