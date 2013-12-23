@@ -26,15 +26,12 @@ package com.xtdstudios.DMT.persistency.impl
 	
 	import flash.display.PNGEncoderOptions;
 	import flash.errors.IllegalOperationError;
-	import flash.filesystem.File;
-	import flash.filesystem.FileMode;
 	import flash.filesystem.FileStream;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.net.registerClassAlias;
 	import flash.utils.ByteArray;
-	import flash.utils.CompressionAlgorithm;
 
 	public class ExternalAssetsGroupPersistencyManager implements AssetsGroupPersistencyManager
 	{

@@ -17,9 +17,9 @@ package com.xtdstudios.DMT
 {
 	import com.xtdstudios.DMT.events.AssetGroupEvent;
 	import com.xtdstudios.DMT.persistency.ByteArrayPersistencyManager;
-	import com.xtdstudios.DMT.persistency.impl.ByteArrayToFilePersistencyManager;
+	import com.xtdstudios.DMT.persistency.impl.ByteArrayToFilePersistencyManagerFactory;
+	import com.xtdstudios.DMT.persistency.impl.DummyByteArrayPersistencyManager;
 	import com.xtdstudios.DMT.persistency.impl.ExternalAssetsGroupPersistencyManager;
-	import com.xtdstudios.common.FileUtils;
 	
 	import flash.errors.IllegalOperationError;
 	import flash.events.Event;
@@ -34,28 +34,27 @@ package com.xtdstudios.DMT
 		
 		private var m_assetsGroupBuilder  			: AssetsGroupBuilder;
 		
-		protected var m_byteArrayPersistencyManager		: ByteArrayPersistencyManager;
-		protected var m_assetsGroupPersistencyManager	: ExternalAssetsGroupPersistencyManager;
-		protected var m_assetsGroupsManager				: AssetsGroupsManager;
-		protected var m_useCache						: Boolean;
+		protected var m_assetsGroupsManager			: AssetsGroupsManager;
+		protected var m_useCache					: Boolean;
 
-		public function DMTAbsAPI(useCache:Boolean=true, cacheVersion:String="1", byteArrayPersistencyManager: ByteArrayPersistencyManager = null, assetsGroupPersistencyManager: ExternalAssetsGroupPersistencyManager = null)
+		public function DMTAbsAPI(useCache:Boolean=true, cacheVersion:String="1", byteArrayPersistencyManager:ByteArrayPersistencyManager = null, assetsGroupPersistencyManager:ExternalAssetsGroupPersistencyManager = null)
 		{
 			m_useCache = useCache;
 			
-			if (byteArrayPersistencyManager!=null)
-				m_byteArrayPersistencyManager = byteArrayPersistencyManager;
-			else
-				m_byteArrayPersistencyManager = new ByteArrayToFilePersistencyManager(FileUtils.getCacheDir());
+			if (byteArrayPersistencyManager==null)
+			{
+				if (useCache)
+					byteArrayPersistencyManager = ByteArrayToFilePersistencyManagerFactory.generate(null); // null means cache directory
+				else
+					byteArrayPersistencyManager = new DummyByteArrayPersistencyManager();
+			}
 			
 			// Persistency manager
-			if (assetsGroupPersistencyManager!=null)
-				m_assetsGroupPersistencyManager = assetsGroupPersistencyManager;
-			else
-				m_assetsGroupPersistencyManager = new ExternalAssetsGroupPersistencyManager(m_byteArrayPersistencyManager, cacheVersion);
-
+			if (assetsGroupPersistencyManager==null)
+				assetsGroupPersistencyManager = new ExternalAssetsGroupPersistencyManager(byteArrayPersistencyManager, cacheVersion);
+			
 			// Assts Groups Manager
-			m_assetsGroupsManager = new AssetsGroupsManager(m_assetsGroupPersistencyManager, m_byteArrayPersistencyManager);
+			m_assetsGroupsManager = new AssetsGroupsManager(assetsGroupPersistencyManager, byteArrayPersistencyManager);
 			
 			m_progress = 0.0;
 			m_inProgress = false;
@@ -215,11 +214,6 @@ package com.xtdstudios.DMT
 			dispatchEvent(new Event(Event.COMPLETE));
 		}
 		
-//		public function get atlasesList():Array
-//		{
-//			return m_assetsGroup.atlasesList;
-//		}
-		
 		public function get progress():Number
 		{
 			return m_progress;
@@ -238,20 +232,12 @@ package com.xtdstudios.DMT
 		
 		public function dispose():void
 		{
-			// TODO: Stop loading is in progress
-			
-//			disposeProcessingElements();
+			// TODO: Stop loading if in progress
 			
 			if (m_assetsGroupsManager)
 			{
 				m_assetsGroupsManager.dispose();
 				m_assetsGroupsManager = null;
-			}
-			
-			if (m_assetsGroupPersistencyManager)
-			{
-				m_assetsGroupPersistencyManager.dispose();		
-				m_assetsGroupPersistencyManager = null;
 			}
 			
 			if (m_assetsGroupBuilder)

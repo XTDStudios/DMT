@@ -15,8 +15,6 @@ limitations under the License.
 */
 package com.xtdstudios.DMT.persistency
 {
-	import com.xtdstudios.DMT.AssetsGroup;
-	
 	import flash.utils.ByteArray;
 
 	public interface ByteArrayPersistencyManager extends PersistencyManager

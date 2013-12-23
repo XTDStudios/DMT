@@ -34,7 +34,7 @@ package com.xtdstudios.dmt.demo
 
 		
 		// set useCache to false if you have changed the asset to re-generate the cache
-		private var dmtBasic: DMTBasic = new DMTBasic("demo.HierarchyExample", true, "3");
+		private var dmtBasic: DMTBasic = new DMTBasic("demo.HierarchyExample", GlobalConsts.USE_CACHE, GlobalConsts.CACHE_VERSION);
 		
 		private var m_rootObj			: flash.display.Sprite;
 		private var m_starlingrootObj	: starling.display.Sprite;
