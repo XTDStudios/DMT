@@ -211,7 +211,6 @@ package com.xtdstudios.DMT
 			if (m_assetsGroup)
 			{
 				m_assetsGroup.removeEventListener(AssetGroupEvent.READY, onAssetsGroupReady);
-				m_assetsGroup.dispose();
 				m_assetsGroup = null;
 			}
 			
