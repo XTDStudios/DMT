@@ -201,9 +201,21 @@ package com.xtdstudios.DMT
 
 		public function dispose():void
 		{
-			m_rasterizePseudoThread		= null;
-			m_assetsGroup 				= null;
-			m_rasterizer				= null;
+			if (m_rasterizePseudoThread) {
+				m_rasterizePseudoThread.removeEventListener(ProgressEvent.PROGRESS, onProgress);
+				m_rasterizePseudoThread.removeEventListener(Event.COMPLETE, processAtlases);
+				m_rasterizePseudoThread.destroy();
+				m_rasterizePseudoThread	= null;
+			}
+			
+			if (m_assetsGroup)
+			{
+				m_assetsGroup.removeEventListener(AssetGroupEvent.READY, onAssetsGroupReady);
+				m_assetsGroup.dispose();
+				m_assetsGroup = null;
+			}
+			
+			m_rasterizer = null;
 			m_textureIDGenerator		= null;
 			m_capturedAssetsDictionary	= null;
 			m_atlasGenerator 			= null;

@@ -19,10 +19,7 @@ package com.xtdstudios.DMT
 	import com.xtdstudios.DMT.raster.RasterizedAssetData;
 	import com.xtdstudios.DMT.utils.MatrixUtils;
 	
-	import flash.display.BitmapData;
 	import flash.geom.Matrix;
-	
-	import starling.utils.MatrixUtil;
 
 	public class TextureIDGenerator
 	{

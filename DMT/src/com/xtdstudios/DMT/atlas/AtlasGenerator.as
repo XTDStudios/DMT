@@ -110,7 +110,6 @@ package com.xtdstudios.DMT.atlas
 		{
 			var solvedRectangles: Dictionary = new Dictionary;
 			
-			var start:int = flash.utils.getTimer();
 			var mPacker:RectanglePacker = new RectanglePacker(atlasSize.width, atlasSize.height);
 			
 			var r:Rectangle;
@@ -133,7 +132,6 @@ package com.xtdstudios.DMT.atlas
 				/* If the atlas not in max size, but there is still unsolved rectangles we took wrong sizes guess
 				 * so we duplicate the size and retry.
 				*/
-				trace("Wrong atlas size guest - retry with duplicate size");
 				if (atlasSize.width > atlasSize.height)
 				{
 					atlasSize.height *= 2;
@@ -148,9 +146,6 @@ package com.xtdstudios.DMT.atlas
 				}
 				return doBinSolving(atlasSize, rectangles);
 			}
-			
-			var end:int = flash.utils.getTimer();
-			trace("BinSolving total time: " + (end - start).toString());
 			
 			return solvedRectangles;
 		}
