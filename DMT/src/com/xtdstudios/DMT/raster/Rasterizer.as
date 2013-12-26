@@ -325,8 +325,13 @@ package com.xtdstudios.DMT.raster
 				if (currentDispObj.scale9Grid!=null)
 				{
 					var saveParent 		: DisplayObjectContainer = currentDispObj.parent;
+					var saveIdx			: int;
 					var saveMatrix		: Matrix = currentDispObj.transform.matrix;
 					var tmpContainer 	: Sprite = new Sprite();
+					
+					// if we have a parent, save the index of this child, so we can return it to where it was
+					if (saveParent)
+						saveIdx = saveParent.getChildIndex(currentDispObj);
 					
 					// making sure that our object is on 0,0
 					currentDispObj.transform.matrix = matrix;
@@ -339,7 +344,7 @@ package com.xtdstudios.DMT.raster
 					
 					// get it back ot its original parent
 					if (saveParent!=null)
-						saveParent.addChild(currentDispObj);
+						saveParent.addChildAt(currentDispObj, saveIdx);
 					else
 						tmpContainer.removeChild(currentDispObj);
 					
