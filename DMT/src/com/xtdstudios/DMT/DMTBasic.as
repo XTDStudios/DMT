@@ -114,6 +114,7 @@ package com.xtdstudios.DMT
 		override protected function processTextures(assetsGroup:AssetsGroup):void
 		{
 			m_converter = new StarlingConverter(assetsGroup);
+			m_converter.init(m_useCache);
 		}		
 		
 		public function get atlasesList():Array

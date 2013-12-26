@@ -17,6 +17,7 @@ package com.xtdstudios.DMT
 {
 	public interface AssetGroupConverter
 	{
+		function init(reLoadWhenContextLost:Boolean = true):void;
 		function get textureIDs():Vector.<String>;
 		function getTextureByID(textureID:String):Object;
 		function getTexturesByUniqueAlias(uniqueAlias:String):Array

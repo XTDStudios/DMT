@@ -140,7 +140,7 @@ package com.xtdstudios.DMT
 			if (! m_rasterizePseudoThread)
 			{
 				var rasterizeRunnable 	: IRunnable = new FunctionsRunnable(m_rasterizeCmd);
-				m_atlasGenerator = new AtlasGenerator(m_assetsGroup.name, m_capturedAssetsDictionary, 1000); // I estimate how many items to render
+				m_atlasGenerator = new AtlasGenerator(m_assetsGroup.name, m_capturedAssetsDictionary, 40); // I estimate how many items to render
 				var runnablesVector		: Vector.<IRunnable> = new Vector.<IRunnable>;
 				
 				runnablesVector.push(rasterizeRunnable);

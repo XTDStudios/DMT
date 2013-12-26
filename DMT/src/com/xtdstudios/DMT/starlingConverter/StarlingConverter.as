@@ -41,10 +41,9 @@ package com.xtdstudios.DMT.starlingConverter
 		public function StarlingConverter(assetGroup:AssetsGroup)
 		{
 			m_assetGroup = assetGroup;
-			prepare();
 		}
 		
-		private function prepare(): void
+		public function init(reLoadWhenContextLost:Boolean = true): void
 		{
 			try
 			{
@@ -61,15 +60,17 @@ package com.xtdstudios.DMT.starlingConverter
 					atlas = atlases[i];
 					atlasMem = atlasMem + atlas.bitmapData.width*atlas.bitmapData.height*4;
 					
-					texture = Texture.fromBitmapData(atlas.bitmapData, false, false); 
-					atlas.disposeBitmapData();
+					texture = Texture.fromBitmapData(atlas.bitmapData, false, false);
 					
-					stickAtlasAndTextureTogether(atlas, texture);
-					
-					texture.root.onRestore = function():void 
-					{ 
-						m_assetGroup.loadAtlases();
-					};
+					if (reLoadWhenContextLost && Starling.handleLostContext)
+					{
+						atlas.disposeBitmapData();
+						stickAtlasAndTextureTogether(atlas, texture);
+						texture.root.onRestore = function():void 
+						{ 
+							m_assetGroup.loadAtlases();
+						};
+					}
 					
 					// now that the atlas bitmap is on the GPU/Starling we can dispose it from 
 					// the asset group atlas.
