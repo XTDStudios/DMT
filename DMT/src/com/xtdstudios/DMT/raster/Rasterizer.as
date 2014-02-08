@@ -181,7 +181,7 @@ package com.xtdstudios.DMT.raster
 					
 					// if we have only ONE child and it's a shape that was not trasformed
 					// we can capture its parent
-					if (numChildren!=1 || (child is Shape)==false || (DisplayObjectUtils.isIdentmatrix(child.transform.matrix)==false))
+					if (numChildren!=1 || (child is Shape)==false || (DisplayObjectUtils.isIdentMatrix(child.transform.matrix)==false))
 					{
 						while (dispObjCont.numChildren>0) 
 						{
