@@ -5,14 +5,14 @@
       <configuration name="DMT" target-platform="Desktop" pure-as="true" output-type="Library" output-file="DMT.swc" output-folder="$MODULE_DIR$/bin">
         <dependencies>
           <entries>
-            <entry module-name="XTDCommon" build-configuration-name="XTDCommon">
+            <entry library-name="XTDCommon" library-level="project">
               <dependency linkage="External" />
             </entry>
-            <entry module-name="Starling" build-configuration-name="Starling">
+            <entry library-name="Starling" library-level="project">
               <dependency linkage="External" />
             </entry>
           </entries>
-          <sdk name="AIRSDK" />
+          <sdk name="adobe-air-sdk-4.0" />
         </dependencies>
         <compiler-options>
           <map>
@@ -32,10 +32,10 @@
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
     </content>
-    <orderEntry type="jdk" jdkName="AIRSDK" jdkType="Flex SDK Type (new)" />
+    <orderEntry type="jdk" jdkName="adobe-air-sdk-4.0" jdkType="Flex SDK Type (new)" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="XTDCommon" exported="" />
-    <orderEntry type="module" module-name="Starling" exported="" />
+    <orderEntry type="library" exported="" name="XTDCommon" level="project" />
+    <orderEntry type="library" exported="" name="Starling" level="project" />
   </component>
 </module>
 
