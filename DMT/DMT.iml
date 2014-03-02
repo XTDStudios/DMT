@@ -12,7 +12,7 @@
               <dependency linkage="External" />
             </entry>
           </entries>
-          <sdk name="adobe-air-sdk-4.0" />
+          <sdk name="air-sdk-4.0" />
         </dependencies>
         <compiler-options>
           <map>
