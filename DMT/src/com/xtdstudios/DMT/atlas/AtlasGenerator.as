@@ -30,8 +30,8 @@ package com.xtdstudios.DMT.atlas
 	public class AtlasGenerator implements IRunnable
 	{
 		private static const TEXTURES_PADDING 	: int = 2;
-		private static const ATLAS_MAX_WIDTH	: int = 2048;
-		private static const ATLAS_MAX_HEIGHT	: int = 2048;
+		private var m_atlasMaxWidth	            : int;
+		private var m_atlasMaxHeight	        : int;
 		
 		public var nameExt: String = ".png";
 		
@@ -44,8 +44,8 @@ package com.xtdstudios.DMT.atlas
 		private var m_itemsToProcess		: int;
 		private var m_extractedRectangles 	: Vector.<Rectangle>;	
 		private var m_sourceTexturesDict 	: Dictionary;
-		
-		public function AtlasGenerator(atlasName:String, capturedAssets:CapturedAssetsDictionary, itemsToProcess:int)
+
+		public function AtlasGenerator(atlasName:String, capturedAssets:CapturedAssetsDictionary, allow4096Textures:Boolean, itemsToProcess:int)
 		{
 			m_atlasName = atlasName;
 			m_capturedAssets = capturedAssets;
@@ -54,6 +54,17 @@ package com.xtdstudios.DMT.atlas
 			m_rectanglesToProcess = 0;
 			m_itemsToProcess = itemsToProcess;
 			m_generatedResult = new Vector.<Atlas>;
+
+            if (allow4096Textures)
+            {
+                m_atlasMaxWidth = 4096;
+                m_atlasMaxHeight = 4096;
+            }
+            else
+            {
+                m_atlasMaxWidth = 2048;
+                m_atlasMaxHeight = 2048;
+            }
 		}
 		
 		public function get generatedResult():Vector.<Atlas>
@@ -71,10 +82,10 @@ package com.xtdstudios.DMT.atlas
 				mostWidth = Math.max(mostWidth,r.width);
 				mostHeight = Math.max(mostHeight,r.height);
 			}
-			if (mostWidth>ATLAS_MAX_WIDTH || mostHeight>ATLAS_MAX_HEIGHT)
+			if (mostWidth>m_atlasMaxWidth || mostHeight>m_atlasMaxHeight)
 			{
 				var m : int = Math.max(mostWidth,mostHeight);
-				throw new IllegalOperationError("Can't use bitmaps larger than " + ATLAS_MAX_WIDTH.toString() + " (found size of "+m+")");
+				throw new IllegalOperationError("Can't use bitmaps larger than " + m_atlasMaxWidth.toString() + " (found size of "+m+")");
 			}
 			
 			var width: int = nextPowerOfTwo(Math.sqrt(area));
@@ -84,20 +95,20 @@ package com.xtdstudios.DMT.atlas
 			if (mostWidth > mostHeight) {
 				width=nextPowerOfTwo(mostWidth);
 				height=nextPowerOfTwo(Math.max(mostHeight, area / width));
-				while (height > ATLAS_MAX_HEIGHT) {
+				while (height > m_atlasMaxHeight) {
 					width*=2;
 					height=nextPowerOfTwo(area / width);
 				}
-				width = Math.min(width,ATLAS_MAX_WIDTH); 
+				width = Math.min(width,m_atlasMaxWidth);
 				sorter=sortOnWidth;
 			} else {
 				height=nextPowerOfTwo(mostHeight);
 				width=nextPowerOfTwo(Math.max(mostWidth, area / height));
-				while (width > ATLAS_MAX_WIDTH) {
+				while (width > m_atlasMaxWidth) {
 					height*=2;
 					width=nextPowerOfTwo(area / height);
 				}
-				height = Math.min(height,ATLAS_MAX_HEIGHT); 
+				height = Math.min(height,m_atlasMaxHeight);
 				sorter=sortOnHeight;
 			}
 			
@@ -127,7 +138,7 @@ package com.xtdstudios.DMT.atlas
 			{
 				rectangles.push(r);
 			}
-			if (rectangles.length > 0 && (atlasSize.width < ATLAS_MAX_WIDTH || atlasSize.height < ATLAS_MAX_HEIGHT))
+			if (rectangles.length > 0 && (atlasSize.width < m_atlasMaxWidth || atlasSize.height < m_atlasMaxHeight))
 			{
 				/* If the atlas not in max size, but there is still unsolved rectangles we took wrong sizes guess
 				 * so we duplicate the size and retry.
@@ -213,10 +224,10 @@ package com.xtdstudios.DMT.atlas
 			for each(var capturedAsset:CapturedAsset in m_capturedAssets.dictionary)
 			{
 				rect = new Rectangle(0, 0, capturedAsset.bitmapData.width, capturedAsset.bitmapData.height);
-				if (rect.width<ATLAS_MAX_WIDTH)
+				if (rect.width<m_atlasMaxWidth)
 					rect.width = rect.width+TEXTURES_PADDING;
 				
-				if (rect.height<ATLAS_MAX_HEIGHT)
+				if (rect.height<m_atlasMaxHeight)
 					rect.height = rect.height+TEXTURES_PADDING;
 				
 				m_extractedRectangles.push(rect);

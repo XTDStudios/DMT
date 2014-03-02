@@ -37,7 +37,7 @@ package com.xtdstudios.DMT
 		
 // ----------------------------- PUBLIC FUNCTIONS ----------------------------------------------
 		
-		public function build(groupName:String, isGroupTransparent:Boolean=true, matrixAccuracyPercent:Number=1.0):AssetsGroupBuilder
+		public function build(groupName:String, isGroupTransparent:Boolean=true, allow4096Textures:Boolean=false, matrixAccuracyPercent:Number=1.0):AssetsGroupBuilder
 		{
 			if (!groupName)
 			{
@@ -53,7 +53,7 @@ package com.xtdstudios.DMT
 			newGroup = AssetsGroup.getAssetsGroup(groupName, m_byteArrayPersistencyManager);
 			m_assetGroupsDict[groupName]=newGroup;
 			
-			return new AsyncAssetsGroupBuilderImpl(newGroup, isGroupTransparent, matrixAccuracyPercent);
+			return new AsyncAssetsGroupBuilderImpl(newGroup, isGroupTransparent, allow4096Textures, matrixAccuracyPercent);
 		}
 
 		

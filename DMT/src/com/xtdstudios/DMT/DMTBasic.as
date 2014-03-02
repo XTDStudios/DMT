@@ -36,8 +36,8 @@ package com.xtdstudios.DMT
 			super(useCache, cacheVersion);
 		}
 		
-		public function process(isTransparent:Boolean=true, maxDepth:int=-1, matrixAccuracyPercent:Number=1.0):Boolean {
-			return _process(m_dataName, isTransparent, maxDepth, matrixAccuracyPercent);
+		public function process(isTransparent:Boolean=true, maxDepth:int=-1, allow4096Textures:Boolean=false, matrixAccuracyPercent:Number=1.0):Boolean {
+			return _process(m_dataName, isTransparent, maxDepth, allow4096Textures, matrixAccuracyPercent);
 		}
 		
 		public function addItemToRaster(displayObject:flash.display.DisplayObject, customUniqueID:String=null):void

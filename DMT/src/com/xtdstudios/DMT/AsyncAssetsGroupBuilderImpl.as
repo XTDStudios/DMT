@@ -43,8 +43,9 @@ package com.xtdstudios.DMT
 		private var m_capturedAssetsDictionary		: CapturedAssetsDictionary;
 		private var m_atlasGenerator 				: AtlasGenerator;
 		private var m_rasterizePseudoThread 		: PseudoThread;
-		
-		public function AsyncAssetsGroupBuilderImpl(assetsGroup:AssetsGroup, isTransparent:Boolean=true, matrixAccuracyPercent:Number=1.0)
+		private var m_allow4096Textures 		    : Boolean;
+
+		public function AsyncAssetsGroupBuilderImpl(assetsGroup:AssetsGroup, isTransparent:Boolean=true, allow4096Textures:Boolean=false, matrixAccuracyPercent:Number=1.0)
 		{
 			super();
 			m_assetsGroup = assetsGroup;
@@ -55,10 +56,12 @@ package com.xtdstudios.DMT
 			stopNames['stop_raster'] = true;
 			m_rasterizer.stopRasterNames = stopNames;
 			m_rasterizer.transparentBitmaps = isTransparent;
-			
+			m_rasterizer.allow4096Textures = allow4096Textures;
+
 			m_textureIDGenerator = new TextureIDGenerator(matrixAccuracyPercent);
 			m_capturedAssetsDictionary = new CapturedAssetsDictionary();
-			 
+
+            m_allow4096Textures = allow4096Textures;
 			m_isFinishedRasterizing = false;
 			
 			m_rasterizeCmd = new Vector.<Function>();
@@ -140,7 +143,7 @@ package com.xtdstudios.DMT
 			if (! m_rasterizePseudoThread)
 			{
 				var rasterizeRunnable 	: IRunnable = new FunctionsRunnable(m_rasterizeCmd);
-				m_atlasGenerator = new AtlasGenerator(m_assetsGroup.name, m_capturedAssetsDictionary, 40); // I estimate how many items to render
+				m_atlasGenerator = new AtlasGenerator(m_assetsGroup.name, m_capturedAssetsDictionary, m_allow4096Textures, 40); // I estimate how many items to render
 				var runnablesVector		: Vector.<IRunnable> = new Vector.<IRunnable>;
 				
 				runnablesVector.push(rasterizeRunnable);

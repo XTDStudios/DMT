@@ -74,7 +74,7 @@ package com.xtdstudios.DMT
 		}
 		
 		/* API */
-		protected function _process(assetsGroupName: String, isTransparent:Boolean=true, maxDepth:int=-1, matrixAccuracyPercent:Number=1.0):Boolean //Think about feature & prommis instead of boolean
+		protected function _process(assetsGroupName: String, isTransparent:Boolean=true, maxDepth:int=-1, allow4096Textures:Boolean=false, matrixAccuracyPercent:Number=1.0):Boolean //Think about feature & prommis instead of boolean
 		{
 			var assetsGroup:AssetsGroup = m_assetsGroupsManager.get(assetsGroupName);
 			
@@ -100,7 +100,7 @@ package com.xtdstudios.DMT
 				} catch (e: Error) {
 					//If the cache loading failed - recover by rasterizing again
 					m_assetsGroupsManager.clearCacheByName(assetsGroupName);
-					processVectors(assetsGroupName, isTransparent, matrixAccuracyPercent);
+					processVectors(assetsGroupName, isTransparent, allow4096Textures, matrixAccuracyPercent);
 					return false;
 				}
 				loadAtlases(assetsGroupName);
@@ -108,7 +108,7 @@ package com.xtdstudios.DMT
 			}
 			else
 			{
-				processVectors(assetsGroupName, isTransparent, matrixAccuracyPercent);
+				processVectors(assetsGroupName, isTransparent, allow4096Textures, matrixAccuracyPercent);
 				return false;
 			}
 		}
@@ -176,10 +176,10 @@ package com.xtdstudios.DMT
 			return m_assetsGroupsManager.isCacheExist(assetsGroupName);
 		}
 		
-		private function processVectors(assetsGroupName: String, isTransparent:Boolean, matrixAccuracyPercent:Number):void
+		private function processVectors(assetsGroupName: String, isTransparent:Boolean, allow4096Textures:Boolean, matrixAccuracyPercent:Number):void
 		{
 			// Assets Group Builder
-			m_assetsGroupBuilder = m_assetsGroupsManager.build(assetsGroupName, isTransparent, matrixAccuracyPercent);
+			m_assetsGroupBuilder = m_assetsGroupsManager.build(assetsGroupName, isTransparent, allow4096Textures, matrixAccuracyPercent);
 			m_assetsGroupBuilder.scaleEffects = true;
 			
 			for each(var itemToRaster:ItemToRaster in getItemsToRaster(assetsGroupName))
