@@ -43,7 +43,7 @@ package com.xtdstudios.DMT
 			rasterizedAssetData = rasterizationResultTree.rasterizedAssetData;
 			
 			// we look at the class name of the captued object, 
-			// if it's just a MovieClip or Shape, we can't tell if it's uniqe
+			// if it's just a MovieClip or Shape, we can't tell if it's unique
 			// so we generate a unique ID
 			if (rasterizedAssetData.isCustomClass==true)
 			{
@@ -61,7 +61,8 @@ package com.xtdstudios.DMT
 					name = name + "ch" + tmpItem.parent.getChildIndex(tmpItem);
 					tmpItem = tmpItem.parent;
 				}
-				name = "c_" + tmpItem.rasterizedAssetData.originalClassName + "_" + name;
+				// Generate a robust decorated name
+				name = "c_" + tmpItem.rasterizedAssetData.originalClassName + "_i_" + tmpItem.rasterizedAssetData.originalInstanceName + "_" + name;
 			}
 			
 			// taking all the parts that makes this asset a unique texture
