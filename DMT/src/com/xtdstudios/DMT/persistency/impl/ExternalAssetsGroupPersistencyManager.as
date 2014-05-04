@@ -21,6 +21,7 @@ package com.xtdstudios.DMT.persistency.impl
 	import com.xtdstudios.DMT.atlas.Atlas;
 	import com.xtdstudios.DMT.persistency.AssetsGroupPersistencyManager;
 	import com.xtdstudios.DMT.persistency.ByteArrayPersistencyManager;
+	import com.xtdstudios.DMT.persistency.ExRectangle;
 	import com.xtdstudios.DMT.raster.RasterizedAssetData;
 	import com.xtdstudios.DMT.utils.AtlasesDictionary;
 	
@@ -52,6 +53,7 @@ package com.xtdstudios.DMT.persistency.impl
 			registerClassAlias("RasterizedAssetData", RasterizedAssetData);
 			registerClassAlias("Point", Point);
 			registerClassAlias("Rectangle", Rectangle);
+			registerClassAlias("ExRectangle", ExRectangle);
 			registerClassAlias("Matrix", Matrix);
 		}
 		

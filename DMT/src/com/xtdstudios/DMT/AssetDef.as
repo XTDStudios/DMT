@@ -53,7 +53,7 @@ package com.xtdstudios.DMT
 		
 		public function writeExternal(output:IDataOutput): void {
 			output.writeUTF(m_uniqueAlias);
-			output.writeUTF((m_textureID)?m_textureID:"");
+			output.writeUTF(m_textureID ? m_textureID : "");
 			output.writeBoolean(m_isMovieclip);
 			output.writeObject(m_children);
 			output.writeObject(m_rasterizedAssetData);

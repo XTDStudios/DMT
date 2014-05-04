@@ -15,6 +15,8 @@ limitations under the License.
 */
 package com.xtdstudios.DMT.atlas
 {
+	import com.xtdstudios.DMT.persistency.ExRectangle;
+
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Loader;
@@ -63,7 +65,7 @@ package com.xtdstudios.DMT.atlas
 			output.writeUTF(m_name);
 			output.writeObject(m_regions);
 			output.writeObject(m_frames);
-			
+
 			output.writeInt(width);
 			output.writeInt(height);
 			output.writeBoolean(transparent);
@@ -130,19 +132,36 @@ package com.xtdstudios.DMT.atlas
 
 		public function get regions():Dictionary
 		{
-			return m_regions;
+			var result : Dictionary = new Dictionary(true);
+			for (var key:String in m_regions)
+			{
+				result[key] = (m_regions[key] as ExRectangle).rectangle;
+			}
+			return result;
 		}
 		
 		public function getFrame(textureID:String):Rectangle
 		{
-			return m_frames[textureID];
+			var exRect : ExRectangle = m_frames[textureID];
+			if (exRect)
+				return exRect.rectangle;
+			else
+				return null;
 		}
-		
+
 		public function addRegion(textureID:String, rect:Rectangle, frame:Rectangle):void
 		{
-			m_regions[textureID] = rect;
-			if (frame)
-				m_frames[textureID] = frame;
+			var exRect : ExRectangle;
+
+			exRect = new ExRectangle();
+			exRect.rectangle = rect;
+			m_regions[textureID] = exRect;
+
+			if (frame) {
+				exRect = new ExRectangle();
+				exRect.rectangle = frame;
+				m_frames[textureID] = exRect;
+			}
 		}
 		
 		public function disposeBitmapData():void
