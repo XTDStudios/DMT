@@ -36,7 +36,15 @@ package com.xtdstudios.DMT
 				
 		
 // ----------------------------- PUBLIC FUNCTIONS ----------------------------------------------
-		
+
+		public function set byteArrayPersistencyManager(value:ByteArrayPersistencyManager):void {
+			m_byteArrayPersistencyManager = value;
+			for (var key:Object in m_assetGroupsDict)
+			{
+				m_assetGroupsDict[key].persistencyManager = value;
+			}
+		}
+
 		public function build(groupName:String, isGroupTransparent:Boolean=true, allow4096Textures:Boolean=false, matrixAccuracyPercent:Number=1.0):AssetsGroupBuilder
 		{
 			if (!groupName)
@@ -75,7 +83,7 @@ package com.xtdstudios.DMT
 		
 		public function loadCache(groupName:String): AssetsGroup {
 			var loadData:AssetsGroup = m_assetsGroupPersistencyManager.loadAssetsGroup(groupName);
-			loadData.persistencyManager = m_byteArrayPersistencyManager;
+			loadData.byteArrayPersistencyManager = m_byteArrayPersistencyManager;
 			m_assetGroupsDict[groupName]=loadData;
 			
 			return loadData;

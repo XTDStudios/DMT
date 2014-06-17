@@ -16,6 +16,7 @@ limitations under the License.
 package com.xtdstudios.DMT
 {
 	import com.xtdstudios.DMT.events.AssetGroupEvent;
+	import com.xtdstudios.DMT.persistency.AssetsGroupPersistencyManager;
 	import com.xtdstudios.DMT.persistency.ByteArrayPersistencyManager;
 	import com.xtdstudios.DMT.persistency.impl.ByteArrayToFilePersistencyManagerFactory;
 	import com.xtdstudios.DMT.persistency.impl.DummyByteArrayPersistencyManager;
@@ -33,34 +34,48 @@ package com.xtdstudios.DMT
 		private var m_maxDepth						: int;
 		
 		private var m_assetsGroupBuilder  			: AssetsGroupBuilder;
-		
+		private var m_byteArrayPersistencyManager   : ByteArrayPersistencyManager;
+		private var m_assetsGroupPersistencyManager : ExternalAssetsGroupPersistencyManager;
+
 		protected var m_assetsGroupsManager			: AssetsGroupsManager;
 		protected var m_useCache					: Boolean;
 
 		public function DMTAbsAPI(useCache:Boolean=true, cacheVersion:String="1", byteArrayPersistencyManager:ByteArrayPersistencyManager = null, assetsGroupPersistencyManager:ExternalAssetsGroupPersistencyManager = null)
 		{
 			m_useCache = useCache;
-			
-			if (byteArrayPersistencyManager==null)
+			m_byteArrayPersistencyManager = byteArrayPersistencyManager;
+			m_assetsGroupPersistencyManager = assetsGroupPersistencyManager;
+
+			if (m_byteArrayPersistencyManager==null)
 			{
 				if (useCache)
-					byteArrayPersistencyManager = ByteArrayToFilePersistencyManagerFactory.generate(null); // null means cache directory
+					m_byteArrayPersistencyManager = ByteArrayToFilePersistencyManagerFactory.generate(null); // null means cache directory
 				else
-					byteArrayPersistencyManager = new DummyByteArrayPersistencyManager();
+					m_byteArrayPersistencyManager = new DummyByteArrayPersistencyManager();
 			}
 			
 			// Persistency manager
-			if (assetsGroupPersistencyManager==null)
-				assetsGroupPersistencyManager = new ExternalAssetsGroupPersistencyManager(byteArrayPersistencyManager, cacheVersion);
+			if (m_assetsGroupPersistencyManager==null)
+				m_assetsGroupPersistencyManager = new ExternalAssetsGroupPersistencyManager(m_byteArrayPersistencyManager, cacheVersion);
 			
 			// Assts Groups Manager
-			m_assetsGroupsManager = new AssetsGroupsManager(assetsGroupPersistencyManager, byteArrayPersistencyManager);
+			m_assetsGroupsManager = new AssetsGroupsManager(m_assetsGroupPersistencyManager, m_byteArrayPersistencyManager);
 			
 			m_progress = 0.0;
 			m_inProgress = false;
 			super();
 		}
-		
+
+		public function set byteArrayPersistencyManager(value:ByteArrayPersistencyManager):void {
+			m_byteArrayPersistencyManager = value;
+
+			if (m_assetsGroupPersistencyManager is ExternalAssetsGroupPersistencyManager) {
+				(m_assetsGroupPersistencyManager as ExternalAssetsGroupPersistencyManager).byteArrayPersistencyManager = m_byteArrayPersistencyManager;
+			}
+
+			m_assetsGroupsManager.byteArrayPersistencyManager = m_byteArrayPersistencyManager;
+		}
+
 		public function get inProgress():Boolean
 		{
 			return m_inProgress;

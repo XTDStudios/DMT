@@ -33,12 +33,12 @@ package com.xtdstudios.DMT
 
 	public class AssetsGroup extends EventDispatcher implements IExternalizable
 	{
-		private var m_name					: String;
-		private var m_atlases				: AtlasesDictionary;
-		private var m_assetsDefinitions		: AssetsDefinitonsDictionary;
-		private var m_ready					: Boolean;
-		private var m_isLoading				: Boolean;
-		private var m_persistencyManager	: ByteArrayPersistencyManager;
+		private var m_name					        : String;
+		private var m_atlases				        : AtlasesDictionary;
+		private var m_assetsDefinitions		        : AssetsDefinitonsDictionary;
+		private var m_ready					        : Boolean;
+		private var m_isLoading				        : Boolean;
+		private var m_byteArrayPersistencyManager	: ByteArrayPersistencyManager;
 		
 		public function AssetsGroup() {
 			m_ready = false;
@@ -47,11 +47,11 @@ package com.xtdstudios.DMT
 			m_assetsDefinitions = new AssetsDefinitonsDictionary();
 		}
 		
-		static public function getAssetsGroup(groupName : String, persistencyManager:ByteArrayPersistencyManager): AssetsGroup
+		static public function getAssetsGroup(groupName : String, byteArrayPersistencyManager:ByteArrayPersistencyManager): AssetsGroup
 		{
 			var assetsGroup: AssetsGroup = new AssetsGroup();
 			assetsGroup.m_name = groupName;
-			assetsGroup.m_persistencyManager = persistencyManager;
+			assetsGroup.m_byteArrayPersistencyManager = byteArrayPersistencyManager;
 			
 			return assetsGroup;
 		}
@@ -84,14 +84,14 @@ package com.xtdstudios.DMT
 		}
 		
 		
-		internal function get persistencyManager():ByteArrayPersistencyManager
+		internal function get byteArrayPersistencyManager():ByteArrayPersistencyManager
 		{
-			return m_persistencyManager;
+			return m_byteArrayPersistencyManager;
 		}
 		
-		internal function set persistencyManager(value:ByteArrayPersistencyManager):void
+		internal function set byteArrayPersistencyManager(value:ByteArrayPersistencyManager):void
 		{
-			m_persistencyManager = value;
+			m_byteArrayPersistencyManager = value;
 		}
 		
 // ----------------------------- SERIALIZE FUNCTIONS ----------------------------------------------				
@@ -133,7 +133,7 @@ package com.xtdstudios.DMT
 			for each (var atlas:Atlas in atlasesVector) {
 //				atlas.addEventListener(Event.COMPLETE, onAtlasReady);
 //				atlas.addEventListener(ProgressEvent.PROGRESS, onProgress);
-				m_persistencyManager.deleteData(atlas.name);
+				m_byteArrayPersistencyManager.deleteData(atlas.name);
 			}	
 		}
 		
@@ -150,7 +150,7 @@ package com.xtdstudios.DMT
 			for each (var atlas:Atlas in atlasesVector) {
 //				atlas.addEventListener(Event.COMPLETE, onAtlasReady);
 //				atlas.addEventListener(ProgressEvent.PROGRESS, onProgress);
-				m_persistencyManager.saveByteArray(atlas.name,atlas.encodeBitmap());
+				m_byteArrayPersistencyManager.saveByteArray(atlas.name,atlas.encodeBitmap());
 			}			
 		}
 		
@@ -167,7 +167,7 @@ package com.xtdstudios.DMT
 			for each (var atlas:Atlas in atlasesVector) {
 				atlas.addEventListener(Event.COMPLETE, onAtlasReady);
 //				atlas.addEventListener(ProgressEvent.PROGRESS, onProgress);
-				atlas.decodeBitmap(m_persistencyManager.loadByteArray(atlas.name));
+				atlas.decodeBitmap(m_byteArrayPersistencyManager.loadByteArray(atlas.name));
 			}			
 		}
 		

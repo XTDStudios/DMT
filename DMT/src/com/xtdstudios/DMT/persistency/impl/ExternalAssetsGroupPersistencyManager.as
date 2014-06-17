@@ -56,7 +56,11 @@ package com.xtdstudios.DMT.persistency.impl
 			registerClassAlias("ExRectangle", ExRectangle);
 			registerClassAlias("Matrix", Matrix);
 		}
-		
+
+		public function set byteArrayPersistencyManager(value:ByteArrayPersistencyManager):void {
+			m_persistencyManager = value;
+		}
+
 		private function getCacheFileName(assetsGroupName: String): String
 		{
 			return assetsGroupName+"_version_"+m_version+".cache";
