@@ -196,16 +196,23 @@ package com.xtdstudios.DMT
 			// Assets Group Builder
 			m_assetsGroupBuilder = m_assetsGroupsManager.build(assetsGroupName, isTransparent, allow4096Textures, matrixAccuracyPercent);
 			m_assetsGroupBuilder.scaleEffects = true;
-			
-			for each(var itemToRaster:ItemToRaster in getItemsToRaster(assetsGroupName))
-			{
-				m_assetsGroupBuilder.rasterize(itemToRaster.displayObject, itemToRaster.uniqueID, m_maxDepth);
+
+			var itemsToRaster : Vector.<ItemToRaster> = getItemsToRaster(assetsGroupName);
+			if (itemsToRaster.length == 0) {
+				throw new IllegalOperationError("No items to rasterize");
 			}
-			
-			m_assetsGroupBuilder.addEventListener(ProgressEvent.PROGRESS, onProgress);
-			m_assetsGroupBuilder.addEventListener(AssetGroupEvent.READY, onGenerateComplete);
-			
-			var assetsGroup:AssetsGroup = m_assetsGroupBuilder.generate();
+			else
+			{
+				for each(var itemToRaster:ItemToRaster in itemsToRaster)
+				{
+					m_assetsGroupBuilder.rasterize(itemToRaster.displayObject, itemToRaster.uniqueID, m_maxDepth);
+				}
+
+				m_assetsGroupBuilder.addEventListener(ProgressEvent.PROGRESS, onProgress);
+				m_assetsGroupBuilder.addEventListener(AssetGroupEvent.READY, onGenerateComplete);
+
+				var assetsGroup:AssetsGroup = m_assetsGroupBuilder.generate();
+			}
 		}
 		
 		protected function onGenerateComplete(event:AssetGroupEvent):void
