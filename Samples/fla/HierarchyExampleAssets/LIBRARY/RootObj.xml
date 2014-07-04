@@ -22,7 +22,7 @@
                     <Point/>
                   </transformationPoint>
                 </DOMSymbolInstance>
-                <DOMSymbolInstance libraryItemName="level2" name="south" selected="true" centerPoint3DX="59" centerPoint3DY="159">
+                <DOMSymbolInstance libraryItemName="level2" name="south" centerPoint3DX="59" centerPoint3DY="159">
                   <matrix>
                     <Matrix ty="100"/>
                   </matrix>
@@ -30,7 +30,7 @@
                     <Point/>
                   </transformationPoint>
                 </DOMSymbolInstance>
-                <DOMSymbolInstance libraryItemName="level2" name="east" centerPoint3DX="159" centerPoint3DY="59">
+                <DOMSymbolInstance libraryItemName="level2" name="east" selected="true" centerPoint3DX="159" centerPoint3DY="59">
                   <matrix>
                     <Matrix tx="100"/>
                   </matrix>
