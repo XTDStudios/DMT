@@ -109,7 +109,7 @@ package com.xtdstudios.DMT
 		 * to delete all the cache items that start with that prefix.  This logic should be delegate.
 		 */
 		public function clearCacheByName(groupName:String): void {
-			m_assetsGroupPersistencyManager.list().forEach(function(item:String,...ignore:*):void {
+			m_assetsGroupPersistencyManager.list().forEach(function(item:String):void {
 				if (!item.indexOf(groupName))
 					m_byteArrayPersistencyManager.deleteData(item);
 			});
