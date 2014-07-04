@@ -286,14 +286,14 @@ package com.xtdstudios.DMT.raster
 
 			// get bouds
 			bounds = DisplayObjectUtils.getBoundsRect(currentDispObj, topDispObj);
-			if (bounds.width>=1 && bounds.height>=1)
+			if (bounds.width>0 && bounds.height>0)
 			{ 
 				var zeroInParentSpace		: Point;
 				var posInParentSpace		: Point;
 				var parentSpaceMatrix		: Matrix;
 				
-				bounds.width = bounds.width>=0 ? Math.ceil(bounds.width) : Math.floor(bounds.width);
-				bounds.height = bounds.height>=0 ? Math.ceil(bounds.height) : Math.floor(bounds.height);
+				bounds.width = Math.ceil(bounds.width);
+				bounds.height = Math.ceil(bounds.height);
 				
 				parentSpaceMatrix = DisplayObjectUtils.transformUpToParent(currentDispObj.parent, topDispObj);
 				zeroInParentSpace = parentSpaceMatrix.transformPoint(new Point(0, 0)); 
