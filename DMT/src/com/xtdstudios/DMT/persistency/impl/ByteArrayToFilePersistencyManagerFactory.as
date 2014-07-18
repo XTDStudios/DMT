@@ -1,12 +1,13 @@
 package com.xtdstudios.DMT.persistency.impl
 {
+	import com.xtdstudios.DMT.persistency.IByteArrayPersistencyManager;
 	import com.xtdstudios.common.FileUtils;
-	
+
 	import flash.filesystem.File;
 
 	public class ByteArrayToFilePersistencyManagerFactory
 	{
-		public static function generate(filePath:String=null):ByteArrayToFilePersistencyManager
+		public static function generate(filePath:String=null):IByteArrayPersistencyManager
 		{
 			var baseDir : File;
 			

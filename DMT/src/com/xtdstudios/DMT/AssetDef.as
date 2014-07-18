@@ -16,12 +16,9 @@ limitations under the License.
 package com.xtdstudios.DMT
 {
 	import com.xtdstudios.DMT.raster.RasterizedAssetData;
-	
-	import flash.utils.IDataInput;
-	import flash.utils.IDataOutput;
-	import flash.utils.IExternalizable;
+	import com.xtdstudios.DMT.serialization.ISerializable;
 
-	public class AssetDef implements IExternalizable
+	public class AssetDef implements ISerializable
 	{
 		private var m_uniqueAlias			: String;
 		private var m_textureID				: String;
@@ -31,9 +28,13 @@ package com.xtdstudios.DMT
 		private var m_rasterizedAssetData  	: RasterizedAssetData;
 		
 		public function AssetDef() {
-			m_children = new Vector.<AssetDef>
+			init();
 		}
-		
+
+		private function init():void {
+			m_children = new Vector.<AssetDef>;
+		}
+
 		public function get isMovieclip():Boolean
 		{
 			return m_isMovieclip;
@@ -50,24 +51,41 @@ package com.xtdstudios.DMT
 		}
 		
 		// ----------------------------- SERIALIZE FUNCTIONS ----------------------------------------------				
-		
-		public function writeExternal(output:IDataOutput): void {
-			output.writeUTF(m_uniqueAlias);
-			output.writeUTF(m_textureID ? m_textureID : "");
-			output.writeBoolean(m_isMovieclip);
-			output.writeObject(m_children);
-			output.writeObject(m_rasterizedAssetData);
+
+		public function toJson():Object {
+			var children : Array = [];
+			for (var i:int=0; i<m_children.length; i++)
+			{
+				children.push( m_children[i].toJson() );
+			}
+
+			return {
+				uniqueAlias: m_uniqueAlias,
+				textureID: m_textureID ? m_textureID : "",
+				isMovieclip: m_isMovieclip,
+				children: children,
+				rasterizedAssetData: m_rasterizedAssetData.toJson()
+			}
 		}
-		
-		public function readExternal(input:IDataInput): void {
-			m_uniqueAlias = input.readUTF();
-			m_textureID = input.readUTF();
-			m_isMovieclip = input.readBoolean();
-			m_children = input.readObject();
-			m_rasterizedAssetData = input.readObject();
+
+		public function fromJson(jsonData:Object):void {
+			dispose();
+			init();
+			m_uniqueAlias = jsonData.uniqueAlias;
+			m_textureID = jsonData.textureID;
+			m_isMovieclip = jsonData.isMovieclip;
+			m_rasterizedAssetData = new RasterizedAssetData();
+			m_rasterizedAssetData.fromJson(jsonData.rasterizedAssetData);
+
+			var children : Array = (jsonData.children as Array);
+			for (var i:int=0; i<children.length; i++) {
+				var childData : Object = children[i];
+				var assetDef : AssetDef = new AssetDef();
+				assetDef.fromJson(childData);
+				m_children.push(assetDef);
+			}
 		}
-		
-		
+
 		public function get uniqueAlias():String
 		{
 			return m_uniqueAlias;

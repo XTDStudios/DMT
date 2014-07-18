@@ -15,19 +15,19 @@ limitations under the License.
 */
 package com.xtdstudios.DMT
 {
-	import com.xtdstudios.DMT.persistency.AssetsGroupPersistencyManager;
-	import com.xtdstudios.DMT.persistency.ByteArrayPersistencyManager;
-	
+	import com.xtdstudios.DMT.persistency.IAssetsGroupPersistencyManager;
+	import com.xtdstudios.DMT.persistency.IByteArrayPersistencyManager;
+
 	import flash.errors.IllegalOperationError;
 	import flash.utils.Dictionary;
 	
 	public class AssetsGroupsManager
 	{
 		private var m_assetGroupsDict 				: Dictionary;
-		private var m_assetsGroupPersistencyManager	: AssetsGroupPersistencyManager;
-		private var m_byteArrayPersistencyManager	: ByteArrayPersistencyManager;
+		private var m_assetsGroupPersistencyManager	: IAssetsGroupPersistencyManager;
+		private var m_byteArrayPersistencyManager	: IByteArrayPersistencyManager;
 		
-		public function AssetsGroupsManager(assetGroupPersistencyManager:AssetsGroupPersistencyManager, byteArrayPersistencyManager:ByteArrayPersistencyManager)
+		public function AssetsGroupsManager(assetGroupPersistencyManager:IAssetsGroupPersistencyManager, byteArrayPersistencyManager:IByteArrayPersistencyManager)
 		{
 			m_assetsGroupPersistencyManager = assetGroupPersistencyManager;
 			m_byteArrayPersistencyManager = byteArrayPersistencyManager;
@@ -37,11 +37,15 @@ package com.xtdstudios.DMT
 		
 // ----------------------------- PUBLIC FUNCTIONS ----------------------------------------------
 
-		public function set byteArrayPersistencyManager(value:ByteArrayPersistencyManager):void {
+		public function set assetsGroupPersistencyManager(value:IAssetsGroupPersistencyManager):void {
+			m_assetsGroupPersistencyManager = value;
+		}
+
+		public function set byteArrayPersistencyManager(value:IByteArrayPersistencyManager):void {
 			m_byteArrayPersistencyManager = value;
 			for (var key:Object in m_assetGroupsDict)
 			{
-				m_assetGroupsDict[key].persistencyManager = value;
+				m_assetGroupsDict[key].byteArrayPersistencyManager = value;
 			}
 		}
 
@@ -81,12 +85,12 @@ package com.xtdstudios.DMT
 		}
 		
 		
-		public function loadCache(groupName:String): AssetsGroup {
-			var loadData:AssetsGroup = m_assetsGroupPersistencyManager.loadAssetsGroup(groupName);
-			loadData.byteArrayPersistencyManager = m_byteArrayPersistencyManager;
-			m_assetGroupsDict[groupName]=loadData;
+		public function loadFromCache(groupName:String): AssetsGroup {
+			var assetsGroup:AssetsGroup = m_assetsGroupPersistencyManager.loadAssetsGroup(groupName);
+			assetsGroup.byteArrayPersistencyManager = m_byteArrayPersistencyManager;
+			m_assetGroupsDict[groupName]=assetsGroup;
 			
-			return loadData;
+			return assetsGroup;
 		}
 		
 		public function saveCacheByName(groupName:String): void {
@@ -103,16 +107,10 @@ package com.xtdstudios.DMT
 			return m_assetsGroupPersistencyManager.isExist(groupName);
 		}
 		
-		/**
-		 * This should be refactored.
-		 * currently it "know" that the AssetGroup data and the images are start with the same prefix (the groupName), so it use that
-		 * to delete all the cache items that start with that prefix.  This logic should be delegate.
-		 */
 		public function clearCacheByName(groupName:String): void {
-			m_assetsGroupPersistencyManager.list().forEach(function(item:String):void {
-				if (!item.indexOf(groupName))
-					m_byteArrayPersistencyManager.deleteData(item);
-			});
+			var assetsGroup:AssetsGroup = get(groupName);
+			assetsGroup.deleteAtlases();
+			m_assetsGroupPersistencyManager.deleteAssetsGroup(groupName);
 		}
 		
 		public function clearCache(assetsGroup:AssetsGroup): void {

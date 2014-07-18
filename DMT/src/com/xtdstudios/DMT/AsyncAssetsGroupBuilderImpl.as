@@ -31,8 +31,7 @@ package com.xtdstudios.DMT
 	import flash.events.EventDispatcher;
 	import flash.events.ProgressEvent;
 	import flash.geom.Rectangle;
-	import flash.utils.Dictionary;
-	
+
 	public class AsyncAssetsGroupBuilderImpl extends EventDispatcher implements AssetsGroupBuilder
 	{
 		private var m_rasterizeCmd					: Vector.<Function>;

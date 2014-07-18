@@ -16,32 +16,48 @@ limitations under the License.
 package com.xtdstudios.DMT.utils
 {
 	import com.xtdstudios.DMT.atlas.Atlas;
-	
+	import com.xtdstudios.DMT.serialization.ISerializable;
+
 	import flash.utils.Dictionary;
-	import flash.utils.IDataInput;
-	import flash.utils.IDataOutput;
-	import flash.utils.IExternalizable;
-	
-	public class AtlasesDictionary implements IExternalizable
+
+	public class AtlasesDictionary implements ISerializable
 	{
 		private var m_dictionary		: Dictionary;
 		private var m_length			: int;
 		
 		public function AtlasesDictionary()
 		{
+			init();
+		}
+
+		private function init():void {
 			m_length = 0;
 			m_dictionary = new Dictionary();
 		}
-		
-		
-		public function writeExternal(output:IDataOutput): void {
-			output.writeObject(m_dictionary);
+
+
+		public function toJson():Object {
+			var result : Object = {};
+			for (var name:String in m_dictionary)
+			{
+				var atlas : Atlas = m_dictionary[name];
+				result[name] = atlas.toJson();
+			}
+			return result;
 		}
-		
-		public function readExternal(input:IDataInput): void {
-			m_dictionary = input.readObject();
-			m_length = toArray().length;
+
+		public function fromJson(jsonData:Object):void {
+			dispose();
+			init();
+
+			for(var name:String in jsonData) {
+				var atlasData : Object = jsonData[name];
+				var atlas     : Atlas = new Atlas();
+				atlas.fromJson(atlasData);
+				addAtlas(atlas, name);
+			}
 		}
+
 		public function get length():int
 		{
 			return m_length;
@@ -99,7 +115,7 @@ package com.xtdstudios.DMT.utils
 				var atlas : Atlas = m_dictionary[name];
 				atlas.dispose();
 			}
-			
+			m_dictionary = null;
 			m_length = 0;
 		}
 		

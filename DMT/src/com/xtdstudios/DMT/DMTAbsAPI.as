@@ -16,12 +16,11 @@ limitations under the License.
 package com.xtdstudios.DMT
 {
 	import com.xtdstudios.DMT.events.AssetGroupEvent;
-	import com.xtdstudios.DMT.persistency.AssetsGroupPersistencyManager;
-	import com.xtdstudios.DMT.persistency.ByteArrayPersistencyManager;
+	import com.xtdstudios.DMT.persistency.IAssetsGroupPersistencyManager;
+	import com.xtdstudios.DMT.persistency.IByteArrayPersistencyManager;
+	import com.xtdstudios.DMT.persistency.impl.AssetGroupToFilePersistencyManagerFactory;
 	import com.xtdstudios.DMT.persistency.impl.ByteArrayToFilePersistencyManagerFactory;
-	import com.xtdstudios.DMT.persistency.impl.DummyByteArrayPersistencyManager;
-	import com.xtdstudios.DMT.persistency.impl.ExternalAssetsGroupPersistencyManager;
-	
+
 	import flash.errors.IllegalOperationError;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
@@ -35,48 +34,41 @@ package com.xtdstudios.DMT
 		private var m_stopRasterNames				: Vector.<String>;
 
 		private var m_assetsGroupBuilder  			: AssetsGroupBuilder;
-		private var m_byteArrayPersistencyManager   : ByteArrayPersistencyManager;
-		private var m_assetsGroupPersistencyManager : ExternalAssetsGroupPersistencyManager;
 
 		protected var m_assetsGroupsManager			: AssetsGroupsManager;
 		protected var m_useCache					: Boolean;
 
-		public function DMTAbsAPI(useCache:Boolean=true, cacheVersion:String="1", byteArrayPersistencyManager:ByteArrayPersistencyManager = null, assetsGroupPersistencyManager:ExternalAssetsGroupPersistencyManager = null)
+		public function DMTAbsAPI(useCache:Boolean=true, cacheVersion:String="1", byteArrayPersistencyManager:IByteArrayPersistencyManager = null, assetsGroupPersistencyManager:IAssetsGroupPersistencyManager = null)
 		{
 			m_useCache = useCache;
 			m_stopRasterNames = new Vector.<String>;
 			m_stopRasterNames.push('stop_raster');
-			m_byteArrayPersistencyManager = byteArrayPersistencyManager;
-			m_assetsGroupPersistencyManager = assetsGroupPersistencyManager;
 
-			if (m_byteArrayPersistencyManager==null)
+			// Byte Array Persistency manager
+			if (byteArrayPersistencyManager==null)
 			{
 				if (useCache)
-					m_byteArrayPersistencyManager = ByteArrayToFilePersistencyManagerFactory.generate(null); // null means cache directory
-				else
-					m_byteArrayPersistencyManager = new DummyByteArrayPersistencyManager();
+					byteArrayPersistencyManager = ByteArrayToFilePersistencyManagerFactory.generate(null); // null means cache directory
 			}
-			
-			// Persistency manager
-			if (m_assetsGroupPersistencyManager==null)
-				m_assetsGroupPersistencyManager = new ExternalAssetsGroupPersistencyManager(m_byteArrayPersistencyManager, cacheVersion);
-			
-			// Assts Groups Manager
-			m_assetsGroupsManager = new AssetsGroupsManager(m_assetsGroupPersistencyManager, m_byteArrayPersistencyManager);
+
+			// Assets Groups Persistency manager
+			if (assetsGroupPersistencyManager==null)
+				assetsGroupPersistencyManager = AssetGroupToFilePersistencyManagerFactory.generate(cacheVersion, null);
+
+			// Assets Groups Manager
+			m_assetsGroupsManager = new AssetsGroupsManager(assetsGroupPersistencyManager, byteArrayPersistencyManager);
 			
 			m_progress = 0.0;
 			m_inProgress = false;
 			super();
 		}
 
-		public function set byteArrayPersistencyManager(value:ByteArrayPersistencyManager):void {
-			m_byteArrayPersistencyManager = value;
+		public function set byteArrayPersistencyManager(value:IByteArrayPersistencyManager):void {
+			m_assetsGroupsManager.byteArrayPersistencyManager = value;
+		}
 
-			if (m_assetsGroupPersistencyManager is ExternalAssetsGroupPersistencyManager) {
-				(m_assetsGroupPersistencyManager as ExternalAssetsGroupPersistencyManager).byteArrayPersistencyManager = m_byteArrayPersistencyManager;
-			}
-
-			m_assetsGroupsManager.byteArrayPersistencyManager = m_byteArrayPersistencyManager;
+		public function set assetsGroupPersistencyManager(value:IAssetsGroupPersistencyManager):void {
+			m_assetsGroupsManager.assetsGroupPersistencyManager = value;
 		}
 
 		public function get inProgress():Boolean
@@ -119,7 +111,7 @@ package com.xtdstudios.DMT
 			{
 				trace("=== USING CACHE ===");
 				try {
-					assetsGroup = m_assetsGroupsManager.loadCache(assetsGroupName);
+					assetsGroup = m_assetsGroupsManager.loadFromCache(assetsGroupName);
 				} catch (e: Error) {
 					//If the cache loading failed - recover by rasterizing again
 					m_assetsGroupsManager.clearCacheByName(assetsGroupName);

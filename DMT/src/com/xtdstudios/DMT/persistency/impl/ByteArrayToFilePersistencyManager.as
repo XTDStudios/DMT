@@ -15,7 +15,7 @@ limitations under the License.
 */
 package com.xtdstudios.DMT.persistency.impl
 {
-	import com.xtdstudios.DMT.persistency.ByteArrayPersistencyManager;
+	import com.xtdstudios.DMT.persistency.IByteArrayPersistencyManager;
 	
 	import flash.errors.IllegalOperationError;
 	import flash.filesystem.File;
@@ -23,7 +23,7 @@ package com.xtdstudios.DMT.persistency.impl
 	import flash.filesystem.FileStream;
 	import flash.utils.ByteArray;
 
-	public class ByteArrayToFilePersistencyManager implements ByteArrayPersistencyManager
+	public class ByteArrayToFilePersistencyManager implements IByteArrayPersistencyManager
 	{
 		private var m_baseDir	: File;
 		
@@ -34,21 +34,7 @@ package com.xtdstudios.DMT.persistency.impl
 		
 		private function getCacheFile(fileName: String): File
 		{
-			var file : File = m_baseDir.resolvePath(fileName);
-			return file;
-		}
-		
-		public function saveData(fileName: String, data: Object):void
-		{
-			if (data is ByteArray)
-				saveByteArray(fileName,data as ByteArray);
-			else
-				new IllegalOperationError("ByteArrayToFilePersistencyManager:saveData accepts only ByteArray types");
-		}
-		
-		public function loadData(fileName: String): Object
-		{
-			return loadByteArray(fileName);
+			return m_baseDir.resolvePath(fileName);
 		}
 		
 		public function saveByteArray(fileName: String, data: ByteArray):void
@@ -81,22 +67,14 @@ package com.xtdstudios.DMT.persistency.impl
 		}
 		
 		
-		public function isExist(groupName:String): Boolean
+		public function isExist(fileName:String): Boolean
 		{
-			return getCacheFile(groupName).exists;
+			return getCacheFile(fileName).exists;
 		}
 		
-		public function deleteData(groupName:String): void
+		public function deleteByteArray(fileName:String): void
 		{
-			getCacheFile(groupName).deleteFile();
-		}
-		
-		public function list(): Array
-		{
-			var directoryListing:Array = m_baseDir.getDirectoryListing();
-			return directoryListing.map(function(element:File,...ignore:*):String {
-				return element.name;
-			});
+			getCacheFile(fileName).deleteFile();
 		}
 		
 		public function dispose():void

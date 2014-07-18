@@ -15,7 +15,7 @@ limitations under the License.
 */
 package com.xtdstudios.DMT.atlas
 {
-	import com.xtdstudios.DMT.persistency.ExRectangle;
+	import com.xtdstudios.DMT.serialization.ISerializable;
 
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
@@ -30,56 +30,87 @@ package com.xtdstudios.DMT.atlas
 	import flash.system.LoaderContext;
 	import flash.utils.ByteArray;
 	import flash.utils.Dictionary;
-	import flash.utils.IDataInput;
-	import flash.utils.IDataOutput;
-	import flash.utils.IExternalizable;
 
-	public class Atlas extends EventDispatcher implements IExternalizable
+	public class Atlas extends EventDispatcher implements ISerializable
 	{
 		private var m_name			: String;
 		private var m_bitmapData	: BitmapData;
 		private var m_regions		: Dictionary;
 		private var m_frames		: Dictionary;
 		
-		private var width: int;
-		private var height: int;
-		private var transparent: Boolean;
+		private var m_width         : int;
+		private var m_height        : int;
+		private var m_transparent   : Boolean;
 		
-		public function Atlas() {}
-		
+		public function Atlas() {
+			init();
+		}
+
+		private function init():void {
+			m_regions = new Dictionary();
+			m_frames = new Dictionary();
+		}
+
 		static public function getAtlas(name:String, bitmapData:BitmapData): Atlas
 		{
 			var atlas: Atlas = new Atlas();
 			atlas.m_name = name;
 			atlas.m_bitmapData = bitmapData;
-			atlas.m_regions = new Dictionary();
-			atlas.m_frames = new Dictionary();
-			
-			atlas.width = bitmapData.width;
-			atlas.height = bitmapData.height;
-			atlas.transparent = bitmapData.transparent;
+
+			atlas.m_width = bitmapData.width;
+			atlas.m_height = bitmapData.height;
+			atlas.m_transparent = bitmapData.transparent;
 			return atlas;
 		}
-		
-		public function writeExternal(output:IDataOutput): void {
-			output.writeUTF(m_name);
-			output.writeObject(m_regions);
-			output.writeObject(m_frames);
 
-			output.writeInt(width);
-			output.writeInt(height);
-			output.writeBoolean(transparent);
+		public function toJson():Object {
+			var regions : Object = {};
+			for (var textureId:String in m_regions)
+			{
+				var regionRect : Rectangle = m_regions[textureId];
+				regions[textureId] = { x:regionRect.x, y:regionRect.y, w:regionRect.width, h:regionRect.height };
+				if (m_frames[textureId]) {
+					var frameRect : Rectangle = m_frames[textureId];
+					regions[textureId].frame = {x:frameRect.x, y:frameRect.y, w:frameRect.width, h:frameRect.height};
+				}
+			}
+
+			return {
+				name: m_name,
+				width: m_width,
+				height: m_height,
+				transparent: m_transparent,
+				regions: regions
+			};
 		}
-		
-		public function readExternal(input:IDataInput): void {
-			m_name = input.readUTF();
-			m_regions = input.readObject();
-			m_frames = input.readObject();
-			width = input.readInt();
-			height = input.readInt();
-			transparent = input.readBoolean();
+
+		public function fromJson(jsonData:Object):void {
+			dispose();
+			init();
+
+			m_name = jsonData.name;
+			m_width = jsonData.width;
+			m_height = jsonData.height;
+			m_transparent = jsonData.transparent;
+
+
+			var regionRect : Rectangle;
+			var frameRect  : Rectangle;
+			var regions    : Object = jsonData.regions;
+			for (var textureId:String in regions) {
+				var regionData : Object = regions[textureId];
+				regionRect = new Rectangle(regionData.x, regionData.y, regionData.w, regionData.h);
+				if (regionData.hasOwnProperty('frame')) {
+					var frameData : Object = regionData.frame;
+					frameRect = new Rectangle(frameData.x, frameData.y, frameData.w, frameData.h);
+				}
+				else {
+					frameRect = null;
+				}
+				addRegion(textureId, regionRect, frameRect);
+			}
 		}
-		
+
 		public function encodeBitmap(): ByteArray
 		{
 			var result : ByteArray = bitmapData.encode(new Rectangle(0, 0, bitmapData.width, bitmapData.height), new PNGEncoderOptions(true));
@@ -132,35 +163,20 @@ package com.xtdstudios.DMT.atlas
 
 		public function get regions():Dictionary
 		{
-			var result : Dictionary = new Dictionary(true);
-			for (var key:String in m_regions)
-			{
-				result[key] = (m_regions[key] as ExRectangle).rectangle;
-			}
-			return result;
+			return m_regions;
 		}
 		
 		public function getFrame(textureID:String):Rectangle
 		{
-			var exRect : ExRectangle = m_frames[textureID];
-			if (exRect)
-				return exRect.rectangle;
-			else
-				return null;
+			return m_frames[textureID];
 		}
 
 		public function addRegion(textureID:String, rect:Rectangle, frame:Rectangle):void
 		{
-			var exRect : ExRectangle;
-
-			exRect = new ExRectangle();
-			exRect.rectangle = rect;
-			m_regions[textureID] = exRect;
+			m_regions[textureID] = rect;
 
 			if (frame) {
-				exRect = new ExRectangle();
-				exRect.rectangle = frame;
-				m_frames[textureID] = exRect;
+				m_frames[textureID] = frame;
 			}
 		}
 		
