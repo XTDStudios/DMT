@@ -52,9 +52,6 @@ package com.xtdstudios.DMT
 			
 			// make sure we have a rasterizer
 			m_rasterizer = new Rasterizer();
-			var stopNames : Dictionary = new Dictionary();
-			stopNames['stop_raster'] = true;
-			m_rasterizer.stopRasterNames = stopNames;
 			m_rasterizer.transparentBitmaps = isTransparent;
 			m_rasterizer.allow4096Textures = allow4096Textures;
 
@@ -66,7 +63,17 @@ package com.xtdstudios.DMT
 			
 			m_rasterizeCmd = new Vector.<Function>();
 		}
-		
+
+		public function set stopRasterNames(value:Vector.<String>):void
+		{
+			m_rasterizer.stopRasterNames = value;
+		}
+
+		public function get stopRasterNames():Vector.<String>
+		{
+			return m_rasterizer.stopRasterNames;
+		}
+
 		public function get scaleEffects():Boolean
 		{
 			return m_rasterizer.scaleEffects;

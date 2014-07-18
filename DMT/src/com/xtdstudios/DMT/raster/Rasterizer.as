@@ -38,15 +38,15 @@ package com.xtdstudios.DMT.raster
 		private var m_transparentBitmaps		: Boolean;
 		private var m_allow4096Textures 		: Boolean;
 		private var m_scaleEffects				: Boolean;
-		private var m_stopRasterNames			: Dictionary;
 		private var m_emptyLastFrameWorkaround	: Boolean;
-		
+
+		public var stopRasterNames			    : Vector.<String>;
+
 		public function Rasterizer()
 		{
 			m_emptyLastFrameWorkaround = false; // changed to false, the bug was fixed -> https://bugbase.adobe.com/index.cfm?event=bug&id=3340012
 			m_transparentBitmaps = true;
 			m_scaleEffects = true;
-			m_stopRasterNames = new Dictionary();
 		}
 		
 		public function set emptyLastFrameWorkaround(value:Boolean):void
@@ -62,11 +62,6 @@ package com.xtdstudios.DMT.raster
 		public function set scaleEffects(value:Boolean):void
 		{
 			m_scaleEffects = value;
-		}
-
-		public function set stopRasterNames(value:Dictionary):void
-		{
-			m_stopRasterNames = value;
 		}
 
 		public function get bitmapBgColor():int
@@ -96,7 +91,7 @@ package com.xtdstudios.DMT.raster
 
 		private function checkIfShouldStop(instanceName:String):Boolean
 		{
-			return m_stopRasterNames[instanceName]!=null;
+			return (stopRasterNames==null) || (stopRasterNames.indexOf(instanceName)>-1);
 		}
 
 		public function rasterize(dispObj:DisplayObject, maxDepth:int=-1):RasterizationResultTree

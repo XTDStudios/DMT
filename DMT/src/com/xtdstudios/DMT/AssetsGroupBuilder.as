@@ -23,6 +23,8 @@ package com.xtdstudios.DMT
 	{
 		function get scaleEffects():Boolean;
 		function set scaleEffects(value:Boolean):void;
+		function get stopRasterNames():Vector.<String>;
+		function set stopRasterNames(value:Vector.<String>):void;
 		function rasterize(displayObject:DisplayObject, uniqueAlias:String=null, maxDepth:int=-1, fitToRect:Rectangle=null, bestFitWithoutStretching:Boolean=true):void;
 		function rasterizeVector(displayObjects:Vector.<DisplayObject>, maxDepth:int=-1, fitToRect:Rectangle=null, bestFitWithoutStretching:Boolean=true):void;
 		function generate():AssetsGroup;

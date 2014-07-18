@@ -32,7 +32,8 @@ package com.xtdstudios.DMT
 		private var m_progress						: Number;
 		private var m_inProgress					: Boolean;
 		private var m_maxDepth						: int;
-		
+		private var m_stopRasterNames				: Vector.<String>;
+
 		private var m_assetsGroupBuilder  			: AssetsGroupBuilder;
 		private var m_byteArrayPersistencyManager   : ByteArrayPersistencyManager;
 		private var m_assetsGroupPersistencyManager : ExternalAssetsGroupPersistencyManager;
@@ -43,6 +44,8 @@ package com.xtdstudios.DMT
 		public function DMTAbsAPI(useCache:Boolean=true, cacheVersion:String="1", byteArrayPersistencyManager:ByteArrayPersistencyManager = null, assetsGroupPersistencyManager:ExternalAssetsGroupPersistencyManager = null)
 		{
 			m_useCache = useCache;
+			m_stopRasterNames = new Vector.<String>;
+			m_stopRasterNames.push('stop_raster');
 			m_byteArrayPersistencyManager = byteArrayPersistencyManager;
 			m_assetsGroupPersistencyManager = assetsGroupPersistencyManager;
 
@@ -80,7 +83,12 @@ package com.xtdstudios.DMT
 		{
 			return m_inProgress;
 		}
-		
+
+		public function get stopRasterNames():Vector.<String>
+		{
+			return m_stopRasterNames;
+		}
+
 		protected function getAssetsGroup(assetsGroupName: String): AssetsGroup {
 			var assetsGroup:AssetsGroup = m_assetsGroupsManager.get(assetsGroupName);
 			if (!assetsGroup)
@@ -195,6 +203,7 @@ package com.xtdstudios.DMT
 		{
 			// Assets Group Builder
 			m_assetsGroupBuilder = m_assetsGroupsManager.build(assetsGroupName, isTransparent, allow4096Textures, matrixAccuracyPercent);
+			m_assetsGroupBuilder.stopRasterNames = m_stopRasterNames;
 			m_assetsGroupBuilder.scaleEffects = true;
 
 			var itemsToRaster : Vector.<ItemToRaster> = getItemsToRaster(assetsGroupName);
