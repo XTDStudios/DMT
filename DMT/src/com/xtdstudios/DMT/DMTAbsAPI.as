@@ -44,16 +44,16 @@ package com.xtdstudios.DMT
 			m_stopRasterNames = new Vector.<String>;
 			m_stopRasterNames.push('stop_raster');
 
-			// Byte Array Persistency manager
-			if (byteArrayPersistencyManager==null)
+			if (useCache)
 			{
-				if (useCache)
+				// Byte Array Persistency manager
+				if (byteArrayPersistencyManager==null)
 					byteArrayPersistencyManager = ByteArrayToFilePersistencyManagerFactory.generate(null); // null means cache directory
-			}
 
-			// Assets Groups Persistency manager
-			if (assetsGroupPersistencyManager==null)
-				assetsGroupPersistencyManager = AssetGroupToFilePersistencyManagerFactory.generate(cacheVersion, null);
+				// Assets Groups Persistency manager
+				if (assetsGroupPersistencyManager==null)
+					assetsGroupPersistencyManager = AssetGroupToFilePersistencyManagerFactory.generate(cacheVersion, null);
+			}
 
 			// Assets Groups Manager
 			m_assetsGroupsManager = new AssetsGroupsManager(assetsGroupPersistencyManager, byteArrayPersistencyManager);

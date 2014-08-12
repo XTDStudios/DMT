@@ -86,6 +86,9 @@ package com.xtdstudios.DMT
 		
 		
 		public function loadFromCache(groupName:String): AssetsGroup {
+			if (!m_assetsGroupPersistencyManager)
+				throw new IllegalOperationError("It is not possible to load cache, because the cache is OFF");
+
 			var assetsGroup:AssetsGroup = m_assetsGroupPersistencyManager.loadAssetsGroup(groupName);
 			assetsGroup.byteArrayPersistencyManager = m_byteArrayPersistencyManager;
 			m_assetGroupsDict[groupName]=assetsGroup;
@@ -100,17 +103,19 @@ package com.xtdstudios.DMT
 		
 		public function saveCache(assetsGroup:AssetsGroup): void {
 			assetsGroup.saveAtlases();
-			m_assetsGroupPersistencyManager.saveAssetsGroup(assetsGroup);
+			if (m_assetsGroupPersistencyManager)
+				m_assetsGroupPersistencyManager.saveAssetsGroup(assetsGroup);
 		}
 		
 		public function isCacheExist(groupName:String): Boolean {
-			return m_assetsGroupPersistencyManager.isExist(groupName);
+			return (m_assetsGroupPersistencyManager && m_assetsGroupPersistencyManager.isExist(groupName));
 		}
 		
 		public function clearCacheByName(groupName:String): void {
 			var assetsGroup:AssetsGroup = get(groupName);
 			assetsGroup.deleteAtlases();
-			m_assetsGroupPersistencyManager.deleteAssetsGroup(groupName);
+			if (m_assetsGroupPersistencyManager)
+				m_assetsGroupPersistencyManager.deleteAssetsGroup(groupName);
 		}
 		
 		public function clearCache(assetsGroup:AssetsGroup): void {
