@@ -316,11 +316,11 @@ package com.xtdstudios.DMT.raster
 				currentDispObj.alpha = 1.0;
 				
 				// Add one pixel to the size if we can (To prevent sharp edges)
-				if (bounds.width<2048 || (m_allow4096Textures && bounds.width<4096))
-					bounds.width = bounds.width+1;
+				//if (bounds.width<2048 || (m_allow4096Textures && bounds.width<4096))
+				//	bounds.width = bounds.width+1;
 
-				if (bounds.height<2048 || (m_allow4096Textures && bounds.height<4096))
-					bounds.height = bounds.height+1;
+				//if (bounds.height<2048 || (m_allow4096Textures && bounds.height<4096))
+				//	bounds.height = bounds.height+1;
 				
 				// we know the bitmap size, get some memory for that
 				bitmapData = new BitmapData(bounds.width, bounds.height, m_transparentBitmaps, bitmapBgColor);
