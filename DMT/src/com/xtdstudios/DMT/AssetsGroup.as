@@ -17,41 +17,40 @@ package com.xtdstudios.DMT
 {
 	import com.xtdstudios.DMT.atlas.Atlas;
 	import com.xtdstudios.DMT.events.AssetGroupEvent;
-	import com.xtdstudios.DMT.persistency.ByteArrayPersistencyManager;
-	import com.xtdstudios.DMT.persistency.PersistencyManager;
+	import com.xtdstudios.DMT.persistency.IByteArrayPersistencyManager;
+	import com.xtdstudios.DMT.serialization.ISerializable;
 	import com.xtdstudios.DMT.utils.AtlasesDictionary;
-	
+
 	import flash.errors.IllegalOperationError;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.ProgressEvent;
-	import flash.utils.Dictionary;
-	import flash.utils.IDataInput;
-	import flash.utils.IDataOutput;
-	import flash.utils.IExternalizable;
-	import flash.utils.getTimer;
 
-	public class AssetsGroup extends EventDispatcher implements IExternalizable
+	public class AssetsGroup extends EventDispatcher implements ISerializable
 	{
-		private var m_name					: String;
-		private var m_atlases				: AtlasesDictionary;
-		private var m_assetsDefinitions		: AssetsDefinitonsDictionary;
-		private var m_ready					: Boolean;
-		private var m_isLoading				: Boolean;
-		private var m_persistencyManager	: ByteArrayPersistencyManager;
+		private var m_name					        : String;
+		private var m_atlases				        : AtlasesDictionary;
+		private var m_assetsDefinitions		        : AssetsDefinitionsDictionary;
+		private var m_ready					        : Boolean;
+		private var m_isLoading				        : Boolean;
+		private var m_byteArrayPersistencyManager	: IByteArrayPersistencyManager;
 		
 		public function AssetsGroup() {
+			init();
+		}
+
+		private function init():void {
 			m_ready = false;
 			m_isLoading = false;
 			m_atlases = new AtlasesDictionary();
-			m_assetsDefinitions = new AssetsDefinitonsDictionary();
+			m_assetsDefinitions = new AssetsDefinitionsDictionary();
 		}
-		
-		static public function getAssetsGroup(groupName : String, persistencyManager:ByteArrayPersistencyManager): AssetsGroup
+
+		static public function getAssetsGroup(groupName : String, byteArrayPersistencyManager:IByteArrayPersistencyManager): AssetsGroup
 		{
 			var assetsGroup: AssetsGroup = new AssetsGroup();
 			assetsGroup.m_name = groupName;
-			assetsGroup.m_persistencyManager = persistencyManager;
+			assetsGroup.m_byteArrayPersistencyManager = byteArrayPersistencyManager;
 			
 			return assetsGroup;
 		}
@@ -84,31 +83,35 @@ package com.xtdstudios.DMT
 		}
 		
 		
-		internal function get persistencyManager():ByteArrayPersistencyManager
+		internal function get byteArrayPersistencyManager():IByteArrayPersistencyManager
 		{
-			return m_persistencyManager;
+			return m_byteArrayPersistencyManager;
 		}
 		
-		internal function set persistencyManager(value:ByteArrayPersistencyManager):void
+		internal function set byteArrayPersistencyManager(value:IByteArrayPersistencyManager):void
 		{
-			m_persistencyManager = value;
+			m_byteArrayPersistencyManager = value;
 		}
 		
 // ----------------------------- SERIALIZE FUNCTIONS ----------------------------------------------				
 
-		public function writeExternal(output:IDataOutput): void {
-			output.writeUTF(m_name);
-			output.writeObject(m_atlases);
-			output.writeObject(m_assetsDefinitions);
+		public function toJson():Object {
+			return {
+				name: m_name,
+				atlases: m_atlases.toJson(),
+				assetsDefinitions: m_assetsDefinitions.toJson()
+			};
 		}
-		
-		private var m_atlasesToLoad : int;
-		public function readExternal(input:IDataInput): void {
-			m_name = input.readUTF();
-			m_atlases = input.readObject();
-			m_assetsDefinitions = input.readObject();
+
+		public function fromJson(jsonData:Object):void {
+			dispose();
+			init();
+
+			m_name = jsonData.name;
+			m_atlases.fromJson(jsonData.atlases);
+			m_assetsDefinitions.fromJson(jsonData.assetsDefinitions);
 		}
-		
+
 		public function disposeAtlases():void
 		{
 			if (m_isLoading)
@@ -122,70 +125,42 @@ package com.xtdstudios.DMT
 		
 		public function deleteAtlases():void
 		{
-			if (m_isLoading)
+			if (!m_byteArrayPersistencyManager || m_isLoading)
 				return;
 			
-//			totalLoaded = 0;
-//			totalAtlasesToLoadDic = new Dictionary;
 			m_isLoading = true;
-//			m_atlasesToLoad = m_atlases.length;
 			var atlasesVector : Array = m_atlases.toArray();
 			for each (var atlas:Atlas in atlasesVector) {
-//				atlas.addEventListener(Event.COMPLETE, onAtlasReady);
-//				atlas.addEventListener(ProgressEvent.PROGRESS, onProgress);
-				m_persistencyManager.deleteData(atlas.name);
+				m_byteArrayPersistencyManager.deleteByteArray(atlas.name);
 			}	
 		}
 		
 		public function saveAtlases():void
 		{
-			if (m_isLoading)
+			if (!m_byteArrayPersistencyManager || m_isLoading)
 				return;
-			
-//			totalLoaded = 0;
-//			totalAtlasesToLoadDic = new Dictionary;
+
 			m_isLoading = true;
-//			m_atlasesToLoad = m_atlases.length;
 			var atlasesVector : Array = m_atlases.toArray();
 			for each (var atlas:Atlas in atlasesVector) {
-//				atlas.addEventListener(Event.COMPLETE, onAtlasReady);
-//				atlas.addEventListener(ProgressEvent.PROGRESS, onProgress);
-				m_persistencyManager.saveByteArray(atlas.name,atlas.encodeBitmap());
+				m_byteArrayPersistencyManager.saveByteArray(atlas.name,atlas.encodeBitmap());
 			}			
 		}
-		
+
+		private var m_atlasesToLoad : int;
 		public function loadAtlases():void
 		{
-			if (m_isLoading)
+			if (!m_byteArrayPersistencyManager || m_isLoading)
 				return;
 			
-//			totalLoaded = 0;
-//			totalAtlasesToLoadDic = new Dictionary;
 			m_isLoading = true;
 			m_atlasesToLoad = m_atlases.length;
 			var atlasesVector : Array = m_atlases.toArray();
 			for each (var atlas:Atlas in atlasesVector) {
 				atlas.addEventListener(Event.COMPLETE, onAtlasReady);
-//				atlas.addEventListener(ProgressEvent.PROGRESS, onProgress);
-				atlas.decodeBitmap(m_persistencyManager.loadByteArray(atlas.name));
+				atlas.decodeBitmap(m_byteArrayPersistencyManager.loadByteArray(atlas.name));
 			}			
 		}
-		
-//		private var totalLoaded	: Number;
-//		private var totalAtlasesToLoadDic : Dictionary;
-		
-//		protected function onProgress(event:ProgressEvent):void
-//		{
-//			if (! totalAtlasesToLoadDic[event.currentTarget])
-//			{
-//				totalAtlasesToLoadDic[event.currentTarget] =  0;
-//			}
-//			var prog: Number = event.bytesLoaded / event.bytesTotal * 100 / m_atlases.length;
-//			totalLoaded += ((-totalAtlasesToLoadDic[event.currentTarget]) +  prog);
-//			totalAtlasesToLoadDic[event.currentTarget] = prog;
-//			// calculate the right progress to fire
-//			dispatchEvent(new ProgressEvent(ProgressEvent.PROGRESS, false, false, totalLoaded, 100));
-//		}
 		
 		internal function onAtlasReady(e:Event) : void
 		{

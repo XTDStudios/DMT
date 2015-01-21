@@ -16,56 +16,83 @@ limitations under the License.
 package com.xtdstudios.DMT
 {
 	import com.xtdstudios.DMT.events.AssetGroupEvent;
-	import com.xtdstudios.DMT.persistency.ByteArrayPersistencyManager;
-	import com.xtdstudios.DMT.persistency.impl.ByteArrayToFilePersistencyManager;
-	import com.xtdstudios.DMT.persistency.impl.ExternalAssetsGroupPersistencyManager;
-	import com.xtdstudios.common.FileUtils;
-	
+	import com.xtdstudios.DMT.persistency.IAssetsGroupPersistencyManager;
+	import com.xtdstudios.DMT.persistency.IByteArrayPersistencyManager;
+	import com.xtdstudios.DMT.persistency.impl.AssetGroupToFilePersistencyManagerFactory;
+	import com.xtdstudios.DMT.persistency.impl.ByteArrayToFilePersistencyManagerFactory;
+
 	import flash.errors.IllegalOperationError;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.ProgressEvent;
-	import flash.utils.getTimer;
 
 	public class DMTAbsAPI extends EventDispatcher
 	{
 		private var m_progress						: Number;
 		private var m_inProgress					: Boolean;
-		private var m_useCache						: Boolean;
-		private var m_dataID						: String;
 		private var m_maxDepth						: int;
-		
-		private var m_assetsGroup 					: AssetsGroup;
-		private var m_assetsGroupBuilder  			: AssetsGroupBuilder;
-		
-		protected var m_byteArrayPersistencyManager: ByteArrayPersistencyManager;
-		protected var m_assetsGroupPersistencyManager: ExternalAssetsGroupPersistencyManager;
-		protected var m_assetsGroupsManager			: AssetsGroupsManager;
+		private var m_stopRasterNames				: Vector.<String>;
 
-		public function DMTAbsAPI(dataID:String, useCache:Boolean=true, cacheVersion:String="1")
+		private var m_assetsGroupBuilder  			: AssetsGroupBuilder;
+
+		protected var m_assetsGroupsManager			: AssetsGroupsManager;
+		protected var m_useCache					: Boolean;
+
+		public function DMTAbsAPI(useCache:Boolean=true, cacheVersion:String="1", byteArrayPersistencyManager:IByteArrayPersistencyManager = null, assetsGroupPersistencyManager:IAssetsGroupPersistencyManager = null)
 		{
 			m_useCache = useCache;
-			m_dataID = dataID;
-			
-			m_byteArrayPersistencyManager = new ByteArrayToFilePersistencyManager(FileUtils.getCacheDir());
-			// Persistency manager
-			m_assetsGroupPersistencyManager = new ExternalAssetsGroupPersistencyManager(m_byteArrayPersistencyManager, cacheVersion);
-			
-			// Assts Groups Manager
-			m_assetsGroupsManager = new AssetsGroupsManager(m_assetsGroupPersistencyManager, m_byteArrayPersistencyManager);
+			m_stopRasterNames = new Vector.<String>;
+			m_stopRasterNames.push('stop_raster');
+
+			if (useCache)
+			{
+				// Byte Array Persistency manager
+				if (byteArrayPersistencyManager==null)
+					byteArrayPersistencyManager = ByteArrayToFilePersistencyManagerFactory.generate(null); // null means cache directory
+
+				// Assets Groups Persistency manager
+				if (assetsGroupPersistencyManager==null)
+					assetsGroupPersistencyManager = AssetGroupToFilePersistencyManagerFactory.generate(cacheVersion, null);
+			}
+
+			// Assets Groups Manager
+			m_assetsGroupsManager = new AssetsGroupsManager(assetsGroupPersistencyManager, byteArrayPersistencyManager);
 			
 			m_progress = 0.0;
 			m_inProgress = false;
 			super();
 		}
-		
+
+		public function set byteArrayPersistencyManager(value:IByteArrayPersistencyManager):void {
+			m_assetsGroupsManager.byteArrayPersistencyManager = value;
+		}
+
+		public function set assetsGroupPersistencyManager(value:IAssetsGroupPersistencyManager):void {
+			m_assetsGroupsManager.assetsGroupPersistencyManager = value;
+		}
+
 		public function get inProgress():Boolean
 		{
 			return m_inProgress;
 		}
 
-		public function process(isTransparent:Boolean=true, maxDepth:int=-1, matrixAccuracyPercent:Number=1.0):Boolean
+		public function get stopRasterNames():Vector.<String>
 		{
+			return m_stopRasterNames;
+		}
+
+		protected function getAssetsGroup(assetsGroupName: String): AssetsGroup {
+			var assetsGroup:AssetsGroup = m_assetsGroupsManager.get(assetsGroupName);
+			if (!assetsGroup)
+				throw new IllegalOperationError("Group not exist");
+			return assetsGroup;
+		}
+		
+		/* API */
+		protected function _process(assetsGroupName: String, isTransparent:Boolean=true, maxDepth:int=-1, allow4096Textures:Boolean=false, matrixAccuracyPercent:Number=1.0):Boolean //Think about feature & prommis instead of boolean
+		{
+			var assetsGroup:AssetsGroup = m_assetsGroupsManager.get(assetsGroupName);
+			
 			if (m_inProgress)
 				throw new IllegalOperationError("Load already in progress");
 			else
@@ -75,43 +102,50 @@ package com.xtdstudios.DMT
 			m_progress = 0.0;
 			
 			// if it's not the first time, we have to relase the previous processing elements
-			disposeProcessingElements();
+			if (assetsGroup)
+				disposeGroup(assetsGroupName);
+	//			throw new IllegalOperationError("Group already exist");
 			
 			// do we have cache?
-			if (m_useCache && m_assetsGroupsManager.isCacheExist(m_dataID)==true)
+			if (m_useCache && m_assetsGroupsManager.isCacheExist(assetsGroupName)==true)
 			{
 				trace("=== USING CACHE ===");
 				try {
-					m_assetsGroup = m_assetsGroupsManager.loadCache(m_dataID);
+					assetsGroup = m_assetsGroupsManager.loadFromCache(assetsGroupName);
 				} catch (e: Error) {
 					//If the cache loading failed - recover by rasterizing again
-					m_assetsGroupsManager.clearCacheByName(m_dataID);
-					processVectors(isTransparent, matrixAccuracyPercent);
+					m_assetsGroupsManager.clearCacheByName(assetsGroupName);
+					processVectors(assetsGroupName, isTransparent, allow4096Textures, matrixAccuracyPercent);
 					return false;
 				}
-				loadAtlases();
+				loadAtlases(assetsGroupName);
 				return true;
 			}
 			else
 			{
-				processVectors(isTransparent, matrixAccuracyPercent);
+				processVectors(assetsGroupName, isTransparent, allow4096Textures, matrixAccuracyPercent);
 				return false;
 			}
 		}
+
 		
-		public function loadAtlases():void
+		/* API */
+		protected function loadAtlases(assetsGroupName: String):void
 		{
-			m_assetsGroup.addEventListener(AssetGroupEvent.READY, onAtlasesLoadingComplete);
-			m_assetsGroup.addEventListener(ProgressEvent.PROGRESS, onProgress);
-			m_assetsGroup.loadAtlases();
+			var assetsGroup:AssetsGroup = getAssetsGroup(assetsGroupName);
+			assetsGroup.addEventListener(AssetGroupEvent.READY, onAtlasesLoadingComplete);
+			assetsGroup.addEventListener(ProgressEvent.PROGRESS, onProgress);
+			assetsGroup.loadAtlases();
 		}
 		
 		protected function onAtlasesLoadingComplete(event:AssetGroupEvent):void
 		{
-			m_assetsGroup.removeEventListener(AssetGroupEvent.READY, onAtlasesLoadingComplete);
-			m_assetsGroup.removeEventListener(ProgressEvent.PROGRESS, onProgress);
-			processTextures(m_assetsGroup);
+			var assetsGroup:AssetsGroup = event.assetGroup;
+			assetsGroup.removeEventListener(AssetGroupEvent.READY, onAtlasesLoadingComplete);
+			assetsGroup.removeEventListener(ProgressEvent.PROGRESS, onProgress);
+			processTextures(assetsGroup);
 			
+			//TODO: use aggrigated process of all assets groups
 			m_inProgress = false;
 			m_progress = 1.0;
 			dispatchEvent(new Event(Event.COMPLETE));
@@ -119,50 +153,67 @@ package com.xtdstudios.DMT
 		
 		protected function onProgress(event:ProgressEvent):void
 		{
+			//TODO: use aggrigated process of all assets groups
 			m_progress = event.bytesLoaded/event.bytesTotal;
 			dispatchEvent(event);
 		}
 		
-		protected function getItemsToRaster():Vector.<ItemToRaster>
+		protected /* abstract */ function getItemsToRaster(assetsGroupName: String):Vector.<ItemToRaster>
 		{
 			// MUST override
 			return null;
 		}
 		
-		protected function processTextures(assetsGroup:AssetsGroup):void
+		protected  /* abstract */ function processTextures(assetsGroup:AssetsGroup):void
 		{
 			// Override to use the loaded/created textures
 		}		
 		
-		public function clearCache(): void
+		/* API */
+		protected function clearCache(assetsGroupName: String): void
 		{
-			if (m_assetsGroupsManager.isCacheExist(m_dataID)==true)
-			{
-				trace("=== Clearing cache ===");
-				m_assetsGroupsManager.clearCacheByName(m_dataID);
+			if (!assetsGroupName) {
+				if (m_assetsGroupsManager.isCacheExist(assetsGroupName)==true)
+				{
+					trace("=== Clearing cache ===");
+					m_assetsGroupsManager.clearCacheByName(assetsGroupName);
+				}
+			} else {
+				for (var k:String in m_assetsGroupsManager.getAssetGroupsDictionary) {
+					clearCache(k);
+				}
 			}
 		}
 		
-		public function cacheExist():Boolean
+		/* API */
+		protected function _cacheExist(assetsGroupName: String):Boolean
 		{
-			return m_assetsGroupsManager.isCacheExist(m_dataID);
+			return m_assetsGroupsManager.isCacheExist(assetsGroupName);
 		}
 		
-		private function processVectors(isTransparent:Boolean, matrixAccuracyPercent:Number):void
+		private function processVectors(assetsGroupName: String, isTransparent:Boolean, allow4096Textures:Boolean, matrixAccuracyPercent:Number):void
 		{
 			// Assets Group Builder
-			m_assetsGroupBuilder = m_assetsGroupsManager.build(m_dataID, isTransparent, matrixAccuracyPercent);
+			m_assetsGroupBuilder = m_assetsGroupsManager.build(assetsGroupName, isTransparent, allow4096Textures, matrixAccuracyPercent);
+			m_assetsGroupBuilder.stopRasterNames = m_stopRasterNames;
 			m_assetsGroupBuilder.scaleEffects = true;
-			
-			for each(var itemToRaster:ItemToRaster in getItemsToRaster())
-			{
-				m_assetsGroupBuilder.rasterize(itemToRaster.displayObject, itemToRaster.uniqueID, m_maxDepth);
+
+			var itemsToRaster : Vector.<ItemToRaster> = getItemsToRaster(assetsGroupName);
+			if (itemsToRaster.length == 0) {
+				throw new IllegalOperationError("No items to rasterize");
 			}
-			
-			m_assetsGroupBuilder.addEventListener(ProgressEvent.PROGRESS, onProgress);
-			m_assetsGroupBuilder.addEventListener(AssetGroupEvent.READY, onGenerateComplete);
-			
-			m_assetsGroup = m_assetsGroupBuilder.generate();
+			else
+			{
+				for each(var itemToRaster:ItemToRaster in itemsToRaster)
+				{
+					m_assetsGroupBuilder.rasterize(itemToRaster.displayObject, itemToRaster.uniqueID, m_maxDepth);
+				}
+
+				m_assetsGroupBuilder.addEventListener(ProgressEvent.PROGRESS, onProgress);
+				m_assetsGroupBuilder.addEventListener(AssetGroupEvent.READY, onGenerateComplete);
+
+				var assetsGroup:AssetsGroup = m_assetsGroupBuilder.generate();
+			}
 		}
 		
 		protected function onGenerateComplete(event:AssetGroupEvent):void
@@ -172,23 +223,18 @@ package com.xtdstudios.DMT
 			m_assetsGroupBuilder.removeEventListener(AssetGroupEvent.READY, onGenerateComplete);
 			m_assetsGroupBuilder.dispose();
 			
-			m_assetsGroup = event.assetGroup;
+			var assetsGroup:AssetsGroup = event.assetGroup;
 			if (m_useCache==true)
-				m_assetsGroupsManager.saveCache(m_assetsGroup);
-			onTexturesReady();
+				m_assetsGroupsManager.saveCache(assetsGroup);
+			onTexturesReady(assetsGroup);
 		}
 		
-		private function onTexturesReady():void
+		private function onTexturesReady(assetsGroup:AssetsGroup):void
 		{
-			processTextures(m_assetsGroup);
+			processTextures(assetsGroup);
 			
 			m_inProgress = false;
 			dispatchEvent(new Event(Event.COMPLETE));
-		}
-		
-		public function get atlasesList():Array
-		{
-			return m_assetsGroup.atlasesList;
 		}
 		
 		public function get progress():Number
@@ -196,31 +242,25 @@ package com.xtdstudios.DMT
 			return m_progress;
 		}
 		
-		protected function disposeProcessingElements():void
+		/* API */
+		protected function disposeGroup(assetsGroupName: String):void
 		{
-			if (m_assetsGroup)
+			var assetsGroup:AssetsGroup = getAssetsGroup(assetsGroupName);
+			if (assetsGroup)
 			{
-				m_assetsGroup.dispose();
-				m_assetsGroup = null;
+				assetsGroup.dispose();
+				assetsGroup = null;
 			}
 		}
 		
 		public function dispose():void
 		{
-			// TODO: Stop loading is in progress
-			
-			disposeProcessingElements();
+			// TODO: Stop loading if in progress
 			
 			if (m_assetsGroupsManager)
 			{
-				m_assetsGroupsManager.get(m_dataID).dispose();
+				m_assetsGroupsManager.dispose();
 				m_assetsGroupsManager = null;
-			}
-			
-			if (m_assetsGroupPersistencyManager)
-			{
-				m_assetsGroupPersistencyManager.dispose();		
-				m_assetsGroupPersistencyManager = null;
 			}
 			
 			if (m_assetsGroupBuilder)

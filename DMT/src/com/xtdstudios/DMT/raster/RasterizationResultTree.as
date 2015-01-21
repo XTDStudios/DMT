@@ -25,6 +25,7 @@ package com.xtdstudios.DMT.raster
 		public var rasterizedAssetData	: RasterizedAssetData;
 		public var parent				: RasterizationResultTree;
 		public var isMovieClip			: Boolean;
+		public var isButton				: Boolean;
 		
 		public function RasterizationResultTree()
 		{

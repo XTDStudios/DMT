@@ -20,7 +20,6 @@ package com.xtdstudios.DMT
 	import com.xtdstudios.DMT.events.AssetGroupEvent;
 	import com.xtdstudios.DMT.raster.RasterizationResultTree;
 	import com.xtdstudios.DMT.raster.Rasterizer;
-	import com.xtdstudios.common.FileUtils;
 	import com.xtdstudios.common.threads.FunctionsRunnable;
 	import com.xtdstudios.common.threads.IRunnable;
 	import com.xtdstudios.common.threads.PseudoThread;
@@ -32,8 +31,7 @@ package com.xtdstudios.DMT
 	import flash.events.EventDispatcher;
 	import flash.events.ProgressEvent;
 	import flash.geom.Rectangle;
-	import flash.utils.Dictionary;
-	
+
 	public class AsyncAssetsGroupBuilderImpl extends EventDispatcher implements AssetsGroupBuilder
 	{
 		private var m_rasterizeCmd					: Vector.<Function>;
@@ -44,27 +42,37 @@ package com.xtdstudios.DMT
 		private var m_capturedAssetsDictionary		: CapturedAssetsDictionary;
 		private var m_atlasGenerator 				: AtlasGenerator;
 		private var m_rasterizePseudoThread 		: PseudoThread;
-		
-		public function AsyncAssetsGroupBuilderImpl(assetsGroup:AssetsGroup, isTransparent:Boolean=true, matrixAccuracyPercent:Number=1.0)
+		private var m_allow4096Textures 		    : Boolean;
+
+		public function AsyncAssetsGroupBuilderImpl(assetsGroup:AssetsGroup, isTransparent:Boolean=true, allow4096Textures:Boolean=false, matrixAccuracyPercent:Number=1.0)
 		{
 			super();
 			m_assetsGroup = assetsGroup;
 			
 			// make sure we have a rasterizer
 			m_rasterizer = new Rasterizer();
-			var stopNames : Dictionary = new Dictionary();
-			stopNames['stop_raster'] = true;
-			m_rasterizer.stopRasterNames = stopNames;
 			m_rasterizer.transparentBitmaps = isTransparent;
-			
+			m_rasterizer.allow4096Textures = allow4096Textures;
+
 			m_textureIDGenerator = new TextureIDGenerator(matrixAccuracyPercent);
 			m_capturedAssetsDictionary = new CapturedAssetsDictionary();
-			 
+
+            m_allow4096Textures = allow4096Textures;
 			m_isFinishedRasterizing = false;
 			
 			m_rasterizeCmd = new Vector.<Function>();
 		}
-		
+
+		public function set stopRasterNames(value:Vector.<String>):void
+		{
+			m_rasterizer.stopRasterNames = value;
+		}
+
+		public function get stopRasterNames():Vector.<String>
+		{
+			return m_rasterizer.stopRasterNames;
+		}
+
 		public function get scaleEffects():Boolean
 		{
 			return m_rasterizer.scaleEffects;
@@ -78,24 +86,24 @@ package com.xtdstudios.DMT
 		private function extractTexturesAndBuildAssetDef(rasterizationResultTree : RasterizationResultTree):AssetDef
 		{
 			var resultAssetDef : AssetDef;
-			resultAssetDef = AssetDef.createAssetDef(rasterizationResultTree.isMovieClip, rasterizationResultTree.rasterizedAssetData);
+			resultAssetDef = AssetDef.createAssetDef(rasterizationResultTree.isMovieClip, rasterizationResultTree.isButton, rasterizationResultTree.rasterizedAssetData);
 			
 			// convert it to Captured Asset 
 			var textureID : String = m_textureIDGenerator.generateTextureID(rasterizationResultTree);
 			if (textureID!=null)
 			{
 				// the texture will be registered ONLY if it's not in the dictionary
-				m_capturedAssetsDictionary.registerCapturedAsset(textureID, rasterizationResultTree.graphicsBitmapData); 
+				m_capturedAssetsDictionary.registerCapturedAsset(textureID, rasterizationResultTree.graphicsBitmapData, rasterizationResultTree.rasterizedAssetData.frame); 
 			}
 			
 			// put this texture ID into the assetDef (It's ok to put null, this way we know there's no texture for this asset)
 			resultAssetDef.textureID = textureID;
 			
 			// extracting all the children's textures too
-			for (var i:int=0; i<rasterizationResultTree.numChildren; i++)
-			{
-				resultAssetDef.children.push(extractTexturesAndBuildAssetDef(rasterizationResultTree.getChildAt(i)));
-			}
+			var counter:uint = rasterizationResultTree.numChildren;
+			var children:Vector.<AssetDef> = resultAssetDef.children;
+			for (var i:int=0; i<counter; i++)
+				children.push(extractTexturesAndBuildAssetDef(rasterizationResultTree.getChildAt(i)));
 			
 			return resultAssetDef;
 		}
@@ -130,7 +138,7 @@ package com.xtdstudios.DMT
 					else
 						assetDef.uniqueAlias = displayObject.name;
 				}
-	
+				
 				// put the extracted assetDef into the assetGroup
 				m_assetsGroup.addAssetDef(assetDef);
 			});
@@ -141,7 +149,7 @@ package com.xtdstudios.DMT
 			if (! m_rasterizePseudoThread)
 			{
 				var rasterizeRunnable 	: IRunnable = new FunctionsRunnable(m_rasterizeCmd);
-				m_atlasGenerator = new AtlasGenerator(m_assetsGroup.name, m_capturedAssetsDictionary, 1000); // I estimate how many items to render
+				m_atlasGenerator = new AtlasGenerator(m_assetsGroup.name, m_capturedAssetsDictionary, m_allow4096Textures, 40); // I estimate how many items to render
 				var runnablesVector		: Vector.<IRunnable> = new Vector.<IRunnable>;
 				
 				runnablesVector.push(rasterizeRunnable);
@@ -202,9 +210,20 @@ package com.xtdstudios.DMT
 
 		public function dispose():void
 		{
-			m_rasterizePseudoThread		= null;
-			m_assetsGroup 				= null;
-			m_rasterizer				= null;
+			if (m_rasterizePseudoThread) {
+				m_rasterizePseudoThread.removeEventListener(ProgressEvent.PROGRESS, onProgress);
+				m_rasterizePseudoThread.removeEventListener(Event.COMPLETE, processAtlases);
+				m_rasterizePseudoThread.destroy();
+				m_rasterizePseudoThread	= null;
+			}
+			
+			if (m_assetsGroup)
+			{
+				m_assetsGroup.removeEventListener(AssetGroupEvent.READY, onAssetsGroupReady);
+				m_assetsGroup = null;
+			}
+			
+			m_rasterizer = null;
 			m_textureIDGenerator		= null;
 			m_capturedAssetsDictionary	= null;
 			m_atlasGenerator 			= null;

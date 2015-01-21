@@ -15,21 +15,19 @@ limitations under the License.
 */
 package com.xtdstudios.DMT
 {
-	import com.xtdstudios.DMT.persistency.AssetsGroupPersistencyManager;
-	import com.xtdstudios.DMT.persistency.ByteArrayPersistencyManager;
-	import com.xtdstudios.DMT.persistency.PersistencyManager;
-	
+	import com.xtdstudios.DMT.persistency.IAssetsGroupPersistencyManager;
+	import com.xtdstudios.DMT.persistency.IByteArrayPersistencyManager;
+
 	import flash.errors.IllegalOperationError;
 	import flash.utils.Dictionary;
-	import flash.utils.getTimer;
 	
 	public class AssetsGroupsManager
 	{
 		private var m_assetGroupsDict 				: Dictionary;
-		private var m_assetsGroupPersistencyManager	: AssetsGroupPersistencyManager;
-		private var m_byteArrayPersistencyManager	: ByteArrayPersistencyManager;
+		private var m_assetsGroupPersistencyManager	: IAssetsGroupPersistencyManager;
+		private var m_byteArrayPersistencyManager	: IByteArrayPersistencyManager;
 		
-		public function AssetsGroupsManager(assetGroupPersistencyManager:AssetsGroupPersistencyManager, byteArrayPersistencyManager:ByteArrayPersistencyManager)
+		public function AssetsGroupsManager(assetGroupPersistencyManager:IAssetsGroupPersistencyManager, byteArrayPersistencyManager:IByteArrayPersistencyManager)
 		{
 			m_assetsGroupPersistencyManager = assetGroupPersistencyManager;
 			m_byteArrayPersistencyManager = byteArrayPersistencyManager;
@@ -38,8 +36,20 @@ package com.xtdstudios.DMT
 				
 		
 // ----------------------------- PUBLIC FUNCTIONS ----------------------------------------------
-		
-		public function build(groupName:String, isGroupTransparent:Boolean=true, matrixAccuracyPercent:Number=1.0):AssetsGroupBuilder
+
+		public function set assetsGroupPersistencyManager(value:IAssetsGroupPersistencyManager):void {
+			m_assetsGroupPersistencyManager = value;
+		}
+
+		public function set byteArrayPersistencyManager(value:IByteArrayPersistencyManager):void {
+			m_byteArrayPersistencyManager = value;
+			for (var key:Object in m_assetGroupsDict)
+			{
+				m_assetGroupsDict[key].byteArrayPersistencyManager = value;
+			}
+		}
+
+		public function build(groupName:String, isGroupTransparent:Boolean=true, allow4096Textures:Boolean=false, matrixAccuracyPercent:Number=1.0):AssetsGroupBuilder
 		{
 			if (!groupName)
 			{
@@ -55,7 +65,7 @@ package com.xtdstudios.DMT
 			newGroup = AssetsGroup.getAssetsGroup(groupName, m_byteArrayPersistencyManager);
 			m_assetGroupsDict[groupName]=newGroup;
 			
-			return new AsyncAssetsGroupBuilderImpl(newGroup, isGroupTransparent, matrixAccuracyPercent);
+			return new AsyncAssetsGroupBuilderImpl(newGroup, isGroupTransparent, allow4096Textures, matrixAccuracyPercent);
 		}
 
 		
@@ -69,13 +79,21 @@ package com.xtdstudios.DMT
 			return m_assetGroupsDict[groupName];
 		}
 		
+		public function get getAssetGroupsDictionary(): Dictionary
+		{
+			return m_assetGroupsDict;
+		}
 		
-		public function loadCache(groupName:String): AssetsGroup {
-			var loadData:AssetsGroup = m_assetsGroupPersistencyManager.loadAssetsGroup(groupName);
-			loadData.persistencyManager = m_byteArrayPersistencyManager;
-			m_assetGroupsDict[groupName]=loadData;
+		
+		public function loadFromCache(groupName:String): AssetsGroup {
+			if (!m_assetsGroupPersistencyManager)
+				throw new IllegalOperationError("It is not possible to load cache, because the cache is OFF");
+
+			var assetsGroup:AssetsGroup = m_assetsGroupPersistencyManager.loadAssetsGroup(groupName);
+			assetsGroup.byteArrayPersistencyManager = m_byteArrayPersistencyManager;
+			m_assetGroupsDict[groupName]=assetsGroup;
 			
-			return loadData;
+			return assetsGroup;
 		}
 		
 		public function saveCacheByName(groupName:String): void {
@@ -85,32 +103,23 @@ package com.xtdstudios.DMT
 		
 		public function saveCache(assetsGroup:AssetsGroup): void {
 			assetsGroup.saveAtlases();
-			m_assetsGroupPersistencyManager.saveAssetsGroup(assetsGroup);
+			if (m_assetsGroupPersistencyManager)
+				m_assetsGroupPersistencyManager.saveAssetsGroup(assetsGroup);
 		}
 		
 		public function isCacheExist(groupName:String): Boolean {
-			return m_assetsGroupPersistencyManager.isExist(groupName);
+			return (m_assetsGroupPersistencyManager && m_assetsGroupPersistencyManager.isExist(groupName));
 		}
 		
-		/**
-		 * This should be refactored.
-		 * currently it "know" that the AssetGroup data and the images are start with the same prefix (the groupName), so it use that
-		 * to delete all the cache items that start with that prefix.  This logic should be delegate.
-		 */
 		public function clearCacheByName(groupName:String): void {
-			m_assetsGroupPersistencyManager.list().forEach(function(item:String,...ignore:*):void {
-				if (!item.indexOf(groupName))
-					m_byteArrayPersistencyManager.deleteData(item);
-			});
-//			var ag:AssetsGroup = get(groupName);
-//			if (ag)
-//				clearCache(ag);
+			var assetsGroup:AssetsGroup = get(groupName);
+			assetsGroup.deleteAtlases();
+			if (m_assetsGroupPersistencyManager)
+				m_assetsGroupPersistencyManager.deleteAssetsGroup(groupName);
 		}
 		
 		public function clearCache(assetsGroup:AssetsGroup): void {
 			clearCacheByName(assetsGroup.name);
-//			assetsGroup.deleteAtlases();
-//			m_assetsGroupPersistencyManager.deleteData(assetsGroup.name);
 		}
 		
 		

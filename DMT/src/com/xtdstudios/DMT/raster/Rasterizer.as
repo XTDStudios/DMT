@@ -22,29 +22,31 @@ package com.xtdstudios.DMT.raster
 	import flash.display.DisplayObjectContainer;
 	import flash.display.MovieClip;
 	import flash.display.Shape;
+	import flash.display.SimpleButton;
 	import flash.display.Sprite;
+	import flash.errors.IllegalOperationError;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	import flash.utils.Dictionary;
 	import flash.utils.getQualifiedClassName;
 
 	public class Rasterizer
 	{
-		private static const DEFUALT_BITMAP_BG_COLOR	: int = 0x333333;
+		private static const DEFUALT_BITMAP_BG_COLOR	: int = 0xFF3333;
 		
 		private var m_bitmapBgColor				: int = DEFUALT_BITMAP_BG_COLOR;
 		private var m_transparentBitmaps		: Boolean;
+		private var m_allow4096Textures 		: Boolean;
 		private var m_scaleEffects				: Boolean;
-		private var m_stopRasterNames			: Dictionary;
 		private var m_emptyLastFrameWorkaround	: Boolean;
-		
+
+		public var stopRasterNames			    : Vector.<String>;
+
 		public function Rasterizer()
 		{
-			m_emptyLastFrameWorkaround = true;
+			m_emptyLastFrameWorkaround = false; // changed to false, the bug was fixed -> https://bugbase.adobe.com/index.cfm?event=bug&id=3340012
 			m_transparentBitmaps = true;
 			m_scaleEffects = true;
-			m_stopRasterNames = new Dictionary();
 		}
 		
 		public function set emptyLastFrameWorkaround(value:Boolean):void
@@ -60,11 +62,6 @@ package com.xtdstudios.DMT.raster
 		public function set scaleEffects(value:Boolean):void
 		{
 			m_scaleEffects = value;
-		}
-
-		public function set stopRasterNames(value:Dictionary):void
-		{
-			m_stopRasterNames = value;
 		}
 
 		public function get bitmapBgColor():int
@@ -87,9 +84,14 @@ package com.xtdstudios.DMT.raster
 			m_transparentBitmaps = value;
 		}
 		
+		public function set allow4096Textures(value:Boolean):void
+		{
+            m_allow4096Textures = value;
+		}
+
 		private function checkIfShouldStop(instanceName:String):Boolean
 		{
-			return m_stopRasterNames[instanceName]!=null;
+			return (stopRasterNames==null) || (stopRasterNames.indexOf(instanceName)>-1);
 		}
 
 		public function rasterize(dispObj:DisplayObject, maxDepth:int=-1):RasterizationResultTree
@@ -110,6 +112,7 @@ package com.xtdstudios.DMT.raster
 				fakeParent.addChild(dispObj);
 				result = rasterizeWithChildren(dispObj, fakeParent, maxDepth);
 				fakeParent.removeChild(dispObj);
+				fakeParent = null;
 			}
 
 			// scaling BACK the effects according to the dispObj's scaling
@@ -119,14 +122,15 @@ package com.xtdstudios.DMT.raster
 			return result;
 		}
 		
-		private function rasterizeWithChildren( currentDispObj:DisplayObject, 
-												topDispObj:DisplayObject, 
-												maxDepth:int=-1, 
-												currentDepth:int=-1, 
-												currentMatrix:Matrix = null, 
-												currentScaleX:Number=1.0, 
-												currentScaleY:Number=1.0,
-												isFramesMode:Boolean=false):RasterizationResultTree
+		private function rasterizeWithChildren( currentDispObj	:DisplayObject, 
+												topDispObj		:DisplayObject, 
+												maxDepth		:int=-1, 
+												currentDepth	:int=-1, 
+												currentMatrix	:Matrix = null, 
+												currentScaleX	:Number=1.0, 
+												currentScaleY	:Number=1.0,
+												isFramesMode	:Boolean=false
+												):RasterizationResultTree
 		{
 			var result			: RasterizationResultTree;
 			var resultData		: RasterizedAssetData;
@@ -136,11 +140,9 @@ package com.xtdstudios.DMT.raster
 			
 			currentDepth++;
 			
-			if (currentMatrix==null)
-				currentMatrix = new Matrix();
+			if (currentMatrix==null) currentMatrix = new Matrix();
 
-			if (isFramesMode==false)
-			{
+			if (isFramesMode==false) {
 				currentScaleX = currentScaleX * currentDispObj.scaleX;
 				currentScaleY = currentScaleY * currentDispObj.scaleY;
 				
@@ -169,7 +171,10 @@ package com.xtdstudios.DMT.raster
 			var hasFilters		: Boolean = currentDispObj.filters.length>0;
 			var inDepthRange	: Boolean = (maxDepth==-1 || currentDepth<maxDepth);
 			var asMovieClip		: MovieClip = currentDispObj as MovieClip;
+			var asSimpleButton	: SimpleButton = currentDispObj as SimpleButton;
 			var totalFrames		: int = asMovieClip ? asMovieClip.totalFrames : 1;
+			
+			trace(currentDispObj.name, currentDispObj, asMovieClip, asSimpleButton);
 			
 			if (isFramesMode==false && totalFrames==1 && dispObjCont!=null && inDepthRange && hasFilters==false && (checkIfShouldStop(dispObjCont.name)==false))
 			{
@@ -180,7 +185,7 @@ package com.xtdstudios.DMT.raster
 					
 					// if we have only ONE child and it's a shape that was not trasformed
 					// we can capture its parent
-					if (numChildren!=1 || (child is Shape)==false || (DisplayObjectUtils.isIdentmatrix(child.transform.matrix)==false))
+					if (numChildren!=1 || (child is Shape)==false || (DisplayObjectUtils.isIdentMatrix(child.transform.matrix)==false))
 					{
 						while (dispObjCont.numChildren>0) 
 						{
@@ -194,29 +199,85 @@ package com.xtdstudios.DMT.raster
 			} 
 			
 			// ********** DRAW ***********
-			if (totalFrames>1 && isFramesMode==false)
+			if (asMovieClip && asSimpleButton==null && totalFrames>1 && isFramesMode==false)
 			{
 				result.isMovieClip = true;
+				result.isButton = false;
 				// first part of the AIR bug fix, We must go to the empty frame 
 				// at the end to prevent miss drawing the frames
 				if (m_emptyLastFrameWorkaround)
 					asMovieClip.gotoAndStop(totalFrames);
 				
-				for (var i:uint=1; i<=totalFrames; i++)
+				var frameWidth  : Number = 0;
+				var frameHeight : Number = 0;
+				var i			: uint;
+				
+				var rasterizedAssetData : RasterizedAssetData;
+				var frameResultData : RasterizationResultTree;
+				
+				for (i=1; i<=totalFrames; i++)
 				{
 					asMovieClip.gotoAndStop(i);
 					// we don't rasterize the last frame (We just gotoAndStop)
-					// This is a workaround for AIR bug
+					// This is a workaround for AIR bug: https://bugbase.adobe.com/index.cfm?event=bug&id=3340012
 					if (m_emptyLastFrameWorkaround==false || i<totalFrames)
-						result.addChild(rasterizeWithChildren(asMovieClip, topDispObj, maxDepth, currentDepth, currentMatrix, currentScaleX, currentScaleY, true));
+					{
+						frameResultData = rasterizeWithChildren(asMovieClip, topDispObj, maxDepth, currentDepth, currentMatrix, currentScaleX, currentScaleY, true);
+
+						if (frameResultData.graphicsBitmapData==null) throw new IllegalOperationError("MovieClip " + asMovieClip.name + " has an empty frame at frame " + i.toString());
+						
+						rasterizedAssetData = frameResultData.rasterizedAssetData;
+						
+						rasterizedAssetData.pivotX = Math.ceil(rasterizedAssetData.pivotX);
+						rasterizedAssetData.pivotY = Math.ceil(rasterizedAssetData.pivotY);
+
+						frameWidth = Math.max(frameWidth, rasterizedAssetData.pivotX+frameResultData.graphicsBitmapData.width);
+						frameHeight = Math.max(frameHeight, rasterizedAssetData.pivotY+frameResultData.graphicsBitmapData.height);
+						
+						rasterizedAssetData.frame = new Rectangle(rasterizedAssetData.pivotX, rasterizedAssetData.pivotY, 0, 0);
+						rasterizedAssetData.x = 0;
+						rasterizedAssetData.pivotX = 0;
+						rasterizedAssetData.y = 0;
+						rasterizedAssetData.pivotY = 0;
+						
+						result.addChild(frameResultData);
+					}
 				}
+				
+				// round it up
+				frameWidth = Math.ceil(frameWidth);
+				frameHeight = Math.ceil(frameHeight);
+				
+				// set the size of the frame
+				var frame : Rectangle;
+				var count : uint = result.numChildren;
+				for (i=0; i<count; i++)
+				{
+					rasterizedAssetData = result.getChildAt(i).rasterizedAssetData;
+					frame = rasterizedAssetData.frame;
+					frame.width = frameWidth;
+					frame.height = frameHeight;
+				}
+			}
+			else if(asSimpleButton && asMovieClip == null && isFramesMode==false) 
+			{
+				result.isMovieClip = false;
+				result.isButton = true;
+				
+				// UP STATE
+				frameResultData = rasterize(asSimpleButton.upState, 1);
+				result.addChild(frameResultData);
+				
+				// DOWN STATE
+				frameResultData = rasterize(asSimpleButton.downState, 1);
+				result.addChild(frameResultData);
 			}
 			else
 			{
 				result.isMovieClip = false;
+				result.isButton = false;
 				result.graphicsBitmapData = draw(currentDispObj, topDispObj, resultData, currentMatrix);
 			}
-			
 			
 			// return all the children
 			if (dispObjCont)
@@ -240,14 +301,14 @@ package com.xtdstudios.DMT.raster
 
 			// get bouds
 			bounds = DisplayObjectUtils.getBoundsRect(currentDispObj, topDispObj);
-			if (bounds.width>=1 && bounds.height>=1)
+			if (bounds.width>0 && bounds.height>0)
 			{ 
 				var zeroInParentSpace		: Point;
 				var posInParentSpace		: Point;
 				var parentSpaceMatrix		: Matrix;
 				
-				bounds.width = bounds.width>=0 ? Math.ceil(bounds.width) : Math.floor(bounds.width);
-				bounds.height = bounds.height>=0 ? Math.ceil(bounds.height) : Math.floor(bounds.height);
+				bounds.width = Math.ceil(bounds.width);
+				bounds.height = Math.ceil(bounds.height);
 				
 				parentSpaceMatrix = DisplayObjectUtils.transformUpToParent(currentDispObj.parent, topDispObj);
 				zeroInParentSpace = parentSpaceMatrix.transformPoint(new Point(0, 0)); 
@@ -260,15 +321,61 @@ package com.xtdstudios.DMT.raster
 				assetData.pivotY = posInParentSpace.y-bounds.y;
 				
 				// moving the result rectangle of the displayObject to 0,0 (So the capture will capture the rect)
-				matrix.translate(posInParentSpace.x-bounds.x, posInParentSpace.y-bounds.y);
+				// BUT if the displayObject was at 100.5, we'll move it only -100 pixels, to get the same half pixel (0.5) effect
+				var backToX : Number = Math.ceil(posInParentSpace.x-bounds.x);
+				var backToY : Number = Math.ceil(posInParentSpace.y-bounds.y);
+				matrix.translate(backToX, backToY);
 				
 				// save the alpha
 				var savedAlpha : Number = currentDispObj.alpha;
 				currentDispObj.alpha = 1.0;
 				
+				// Add one pixel to the size if we can (To prevent sharp edges)
+				if (bounds.width<2048 || (m_allow4096Textures && bounds.width<4096))
+					bounds.width = bounds.width+1;
+
+				if (bounds.height<2048 || (m_allow4096Textures && bounds.height<4096))
+					bounds.height = bounds.height+1;
+				
 				// we know the bitmap size, get some memory for that
-				bitmapData = new BitmapData(bounds.width, bounds.height, m_transparentBitmaps, bitmapBgColor);				
-				bitmapData.draw(currentDispObj, matrix);
+				bitmapData = new BitmapData(bounds.width, bounds.height, m_transparentBitmaps, bitmapBgColor);
+				
+				// in case we have a 9-scale, we MUST use a container to draw the 9-scaled object
+				// and draw the container, and not the 9-scaled.
+				// Note: This will NOT work is the object has rotation, rotation MUST be 0, to make it work (Adobe BUG)
+				if (currentDispObj.scale9Grid!=null)
+				{
+					var saveParent 		: DisplayObjectContainer = currentDispObj.parent;
+					var saveIdx			: int;
+					var saveMatrix		: Matrix = currentDispObj.transform.matrix;
+					var tmpContainer 	: Sprite = new Sprite();
+					
+					// if we have a parent, save the index of this child, so we can return it to where it was
+					if (saveParent)
+						saveIdx = saveParent.getChildIndex(currentDispObj);
+					
+					// making sure that our object is on 0,0
+					currentDispObj.transform.matrix = matrix;
+					
+					// add it to the temp container
+					tmpContainer.addChild(currentDispObj);
+					
+					// and draw the CONTAINER and not the currentDispObj (To see the 9-scale)
+					bitmapData.draw(tmpContainer);
+					
+					// get it back ot its original parent
+					if (saveParent!=null)
+						saveParent.addChildAt(currentDispObj, saveIdx);
+					else
+						tmpContainer.removeChild(currentDispObj);
+					
+					// get it back to its original matrix
+					currentDispObj.transform.matrix = saveMatrix;
+				}
+				else
+				{
+					bitmapData.draw(currentDispObj, matrix);
+				}
 				
 				// return the alpha to what it was
 				currentDispObj.alpha = savedAlpha; 

@@ -21,7 +21,9 @@ package com.xtdstudios.DMT.starlingConverter
 	import com.xtdstudios.DMT.atlas.Atlas;
 	import com.xtdstudios.DMT.raster.RasterizedAssetData;
 	
+	import flash.display.BitmapData;
 	import flash.errors.IllegalOperationError;
+	import flash.events.Event;
 	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
 	
@@ -40,28 +42,39 @@ package com.xtdstudios.DMT.starlingConverter
 		public function StarlingConverter(assetGroup:AssetsGroup)
 		{
 			m_assetGroup = assetGroup;
-			prepare();
 		}
 		
-		private function prepare(): void
+		public function init(reLoadWhenContextLost:Boolean = true): void
 		{
 			try
 			{
 				m_textureIDs = new Vector.<String>;
 	
 				m_starlingTextureAtlases = new Vector.<TextureAtlas>;
-				var atlases : Array = m_assetGroup.atlasesList;
+				var atlases 	: Array = m_assetGroup.atlasesList;
 				var atlasMem	: Number = 0;
-				for (var i:int=0; i<atlases.length; i++)
+				var atlasBD		: BitmapData;
+				var length		: uint = atlases.length;
+				for (var i:int=0; i<length; i++)
 				{
 					var texture 				: Texture;
 					var atlas 					: Atlas;
 					
 					atlas = atlases[i];
-					atlasMem = atlasMem + atlas.bitmapData.width*atlas.bitmapData.height*4;
+					atlasBD = atlas.bitmapData;
+					atlasMem = atlasMem + atlasBD.width*atlasBD.height*4;
 					
-					texture = Texture.fromBitmapData(atlas.bitmapData, false, false); 
-					atlas.disposeBitmapData();
+					texture = Texture.fromBitmapData(atlasBD, false, false);
+					
+					if (reLoadWhenContextLost && Starling.handleLostContext)
+					{
+						atlas.disposeBitmapData();
+						stickAtlasAndTextureTogether(atlas, texture);
+						texture.root.onRestore = function():void 
+						{ 
+							m_assetGroup.loadAtlases();
+						};
+					}
 					
 					// now that the atlas bitmap is on the GPU/Starling we can dispose it from 
 					// the asset group atlas.
@@ -72,7 +85,8 @@ package com.xtdstudios.DMT.starlingConverter
 					{
 						m_textureIDs.push(textureID);
 						var region : Rectangle = regions[textureID];
-						textureAtlas.addRegion(textureID,region);
+						var frame  : Rectangle = atlas.getFrame(textureID);
+						textureAtlas.addRegion(textureID, region, frame);
 					}
 					m_starlingTextureAtlases.push(textureAtlas);
 				}
@@ -89,16 +103,24 @@ package com.xtdstudios.DMT.starlingConverter
 			}
 		}
 		
+		private function stickAtlasAndTextureTogether(atlas:Atlas, texture:Texture):void {
+			atlas.addEventListener(Event.COMPLETE, function (e:Event):void {
+				texture.root.uploadBitmapData(atlas.bitmapData);						
+				atlas.disposeBitmapData();
+			});
+			
+		}
+		
 		public function get textureIDs():Vector.<String>
 		{
 			return m_textureIDs;
 		}
 
-		private function getTextureByID(TextureID:String):Texture
+		public function getTextureByID(textureID:String):Object
 		{
 			for each(var atlas:TextureAtlas in m_starlingTextureAtlases)
 			{
-				var texture : Texture = atlas.getTexture(TextureID);
+				var texture : Texture = atlas.getTexture(textureID);
 				if (texture)
 					return texture;
 			}
@@ -110,23 +132,22 @@ package com.xtdstudios.DMT.starlingConverter
 		{
 			var result 	: DisplayObject;
 			var i		: int;
-			if (assetDef.children.length>0) 
+			var children:Vector.<AssetDef> = assetDef.children;
+			var length	: int = children.length;
+			if (length>0) 
 			{
-				if (assetDef.isMovieclip)
-				{
+				if (assetDef.isMovieclip) {
 					var textures : Vector.<Texture> = new Vector.<Texture>;
-					for (i=0; i<assetDef.children.length; i++)
-					{
-						textures.push(getTextureByID(assetDef.children[i].textureID));
-					}
+					for (i=0; i<length; i++) textures.push(getTextureByID(children[i].textureID));
 					result = new StarlingMovieClipProxy(textures);
 				}
-				else
-				{
+				else if(assetDef.isButton) {
+					result = new StarlingButtonProxy(Texture(getTextureByID(children[0].textureID)), "", Texture(getTextureByID(children[1].textureID)));
+				}
+				else {
 					result = new StarlingSpriteProxy();
-					for (i=0; i<assetDef.children.length; i++)
-					{
-						(result as Sprite).addChild(convertWithChildren(assetDef.children[i]));
+					for (i=0; i<length; i++) {
+						(result as Sprite).addChild(convertWithChildren(children[i]));
 					}
 				}
 				
@@ -134,7 +155,7 @@ package com.xtdstudios.DMT.starlingConverter
 			else  
 			{
 				if (assetDef.textureID!=null && assetDef.textureID!="")
-					result = new StarlingImageProxy(getTextureByID(assetDef.textureID));
+					result = new StarlingImageProxy(getTextureByID(assetDef.textureID) as Texture);
 				else
 					result = new StarlingSpriteProxy();
 			}
@@ -142,6 +163,8 @@ package com.xtdstudios.DMT.starlingConverter
 			if (result)
 			{ 
 				var rasterizedAssetData : RasterizedAssetData = assetDef.rasterizedAssetData;
+				result.scaleX = rasterizedAssetData.textureScaleX;
+				result.scaleY = rasterizedAssetData.textureScaleY;
 				result.x = Math.round(rasterizedAssetData.x);
 				result.y = Math.round(rasterizedAssetData.y);
 				result.alpha = rasterizedAssetData.alpha;
@@ -158,32 +181,54 @@ package com.xtdstudios.DMT.starlingConverter
 			
 			return result;
 		}
+
+		private function extractAllTextures(assetDef:AssetDef, extractInto:Array):void
+		{
+			var i:int;
+			var children:Vector.<AssetDef> = assetDef.children;
+			var length	: int = children.length;
+			if (length>0) {
+				if (assetDef.isMovieclip || assetDef.isButton) for (i=0; i<length; i++) extractInto.push(getTextureByID(children[i].textureID));
+				else for (i=0; i<length; i++) extractAllTextures(children[i], extractInto);
+			} else  {
+				if (assetDef.textureID!=null && assetDef.textureID!="")
+					extractInto.push(getTextureByID(assetDef.textureID) as Texture);
+			}
+		}
+		
+		public function getTexturesByUniqueAlias(uniqueAlias:String):Array
+		{
+			if (! uniqueAlias)
+				throw new IllegalOperationError("unable to convert, invalid uniqueAlias");
+			
+			var assetDef : AssetDef;
+			assetDef = m_assetGroup.getAssetDef(uniqueAlias);
+			
+			var extractInto : Array = new Array();
+			if (assetDef) {
+				extractAllTextures(assetDef, extractInto);
+				return extractInto;
+			} else throw new IllegalOperationError("uniqueAlias was not found, " + uniqueAlias);
+		}
 		
 		public function convert(uniqueAlias:String):Object
 		{
 			if (! uniqueAlias)
 				throw new IllegalOperationError("unable to convert, invalid uniqueAlias");
 			
-			var assetDef 	: AssetDef;
-			assetDef = m_assetGroup.getAssetDef(uniqueAlias);
+			var assetDef : AssetDef = m_assetGroup.getAssetDef(uniqueAlias);
 				
-			if (assetDef)
-				return convertWithChildren(assetDef);
-			else
-				throw new IllegalOperationError("assetDef was not found, " + uniqueAlias);
+			if (assetDef) return convertWithChildren(assetDef);
+			else throw new IllegalOperationError("uniqueAlias was not found, " + uniqueAlias);
 		}
 		
 		public function dispose():void
 		{
-			if (m_starlingTextureAtlases)
-			{
-				while (m_starlingTextureAtlases.length>0)
-				{
-					m_starlingTextureAtlases.pop().dispose();
-				}
+			if (m_starlingTextureAtlases) {
+				while (m_starlingTextureAtlases.length>0) m_starlingTextureAtlases.pop().dispose();
 				m_starlingTextureAtlases = null;
 			}
-
+			
 			m_textureIDs = null;
 			m_assetGroup = null;
 		}
