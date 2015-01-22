@@ -19,12 +19,13 @@ package com.xtdstudios.DMT.raster
 
 	public class RasterizationResultTree
 	{
-		private var m_children				: Vector.<RasterizationResultTree>;
+		private var m_children			: Vector.<RasterizationResultTree>;
 
 		public var graphicsBitmapData 	: BitmapData = null;
 		public var rasterizedAssetData	: RasterizedAssetData;
 		public var parent				: RasterizationResultTree;
 		public var isMovieClip			: Boolean;
+		public var isButton				: Boolean;
 		
 		public function RasterizationResultTree()
 		{
@@ -36,19 +37,13 @@ package com.xtdstudios.DMT.raster
 
 		public function dispose():void
 		{
-			if (graphicsBitmapData!=null)
-			{
+			if (graphicsBitmapData!=null) {
 				graphicsBitmapData.dispose();
 				graphicsBitmapData = null;
 			}
 			
-			if (m_children!=null)
-			{
-				while (m_children.length>0)
-				{
-					m_children.pop();
-				}
-				
+			if (m_children!=null) {
+				while (m_children.length>0) m_children.pop();
 				m_children = null;
 			}
 		}

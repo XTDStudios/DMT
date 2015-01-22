@@ -23,6 +23,7 @@ package com.xtdstudios.DMT
 		private var m_uniqueAlias			: String;
 		private var m_textureID				: String;
 		private var m_isMovieclip			: Boolean;
+		private var m_isButton				: Boolean;
 		
 		private var m_children				: Vector.<AssetDef>;
 		private var m_rasterizedAssetData  	: RasterizedAssetData;
@@ -39,13 +40,19 @@ package com.xtdstudios.DMT
 		{
 			return m_isMovieclip;
 		}
+		
+		public function get isButton():Boolean
+		{
+			return m_isButton;
+		}
 
-		static public function createAssetDef(isMovieClip:Boolean, rasterizedAssetData:RasterizedAssetData=null): AssetDef
+		static public function createAssetDef(isMovieClip:Boolean, isButton:Boolean, rasterizedAssetData:RasterizedAssetData=null): AssetDef
 		{
 			var assetDef: AssetDef = new AssetDef();
 			assetDef.m_rasterizedAssetData = rasterizedAssetData;
 			assetDef.m_uniqueAlias = assetDef.className;
 			assetDef.m_isMovieclip = isMovieClip;
+			assetDef.m_isButton = isButton;
 			
 			return assetDef;
 		}
@@ -63,6 +70,7 @@ package com.xtdstudios.DMT
 				uniqueAlias: m_uniqueAlias,
 				textureID: m_textureID ? m_textureID : "",
 				isMovieclip: m_isMovieclip,
+				isButton: m_isButton,
 				children: children,
 				rasterizedAssetData: m_rasterizedAssetData.toJson()
 			}
@@ -74,6 +82,7 @@ package com.xtdstudios.DMT
 			m_uniqueAlias = jsonData.uniqueAlias;
 			m_textureID = jsonData.textureID;
 			m_isMovieclip = jsonData.isMovieclip;
+			m_isButton = jsonData.isButton;
 			m_rasterizedAssetData = new RasterizedAssetData();
 			m_rasterizedAssetData.fromJson(jsonData.rasterizedAssetData);
 

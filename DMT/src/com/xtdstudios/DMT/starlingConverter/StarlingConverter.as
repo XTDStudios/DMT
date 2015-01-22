@@ -126,28 +126,24 @@ package com.xtdstudios.DMT.starlingConverter
 		
 		private function convertWithChildren(assetDef:AssetDef):DisplayObject
 		{
-			var result 	: DisplayObject;
-			var i		: int;
-			if (assetDef.children.length>0) 
+			var result 		: DisplayObject;
+			var children	: Vector.<AssetDef> = assetDef.children;
+			var l			: uint = children.length;
+			var i			: int;
+			if (l>0) 
 			{
-				if (assetDef.isMovieclip)
-				{
+				if (assetDef.isMovieclip) {
 					var textures : Vector.<Texture> = new Vector.<Texture>;
-					for (i=0; i<assetDef.children.length; i++)
-					{
-						textures.push(getTextureByID(assetDef.children[i].textureID));
-					}
+					for (i=0; i<l; i++) textures.push(getTextureByID(children[i].textureID));
 					result = new StarlingMovieClipProxy(textures);
 				}
-				else
-				{
-					result = new StarlingSpriteProxy();
-					for (i=0; i<assetDef.children.length; i++)
-					{
-						(result as Sprite).addChild(convertWithChildren(assetDef.children[i]));
-					}
+				else if(assetDef.isButton) {
+					result = new StarlingButtonProxy(Texture(getTextureByID(children[0].textureID)), "", Texture(getTextureByID(children[1].textureID)));
 				}
-				
+				else {
+					result = new StarlingSpriteProxy();
+					for (i=0; i<l; i++) (result as Sprite).addChild(convertWithChildren(children[i]));
+				}
 			} 
 			else  
 			{
@@ -181,27 +177,26 @@ package com.xtdstudios.DMT.starlingConverter
 
 		private function extractAllTextures(assetDef:AssetDef, extractInto:Array):void
 		{
-			if (assetDef.children.length>0) 
+			var children:Vector.<AssetDef> = assetDef.children;
+			var l:uint = children.length;
+			if (l>0) 
 			{
 				var i:int;
-				if (assetDef.isMovieclip)
-				{
-					for (i=0; i<assetDef.children.length; i++)
-					{
-						extractInto.push(getTextureByID(assetDef.children[i].textureID));
+				var child:AssetDef;
+				if (assetDef.isMovieclip || assetDef.isButton) {
+					for (i = 0; i < l; i++) {
+						child = children[i];
+						extractInto.push(getTextureByID(child.textureID));
 					}
 				}
-				else
-				{
-					for (i=0; i<assetDef.children.length; i++)
-					{
-						extractAllTextures(assetDef.children[i], extractInto);
+				else {
+					for (i=0; i<l; i++) {
+						child = children[i];
+						extractAllTextures(child, extractInto);
 					}
 				}
-				
 			} 
-			else  
-			{
+			else {
 				if (assetDef.textureID!=null && assetDef.textureID!="")
 					extractInto.push(getTextureByID(assetDef.textureID) as Texture);
 			}
@@ -212,8 +207,7 @@ package com.xtdstudios.DMT.starlingConverter
 			if (! uniqueAlias)
 				throw new IllegalOperationError("unable to convert, invalid uniqueAlias");
 			
-			var assetDef 	: AssetDef;
-			assetDef = m_assetGroup.getAssetDef(uniqueAlias);
+			var assetDef : AssetDef = m_assetGroup.getAssetDef(uniqueAlias);
 			
 			var extractInto : Array = new Array();
 			if (assetDef) 
@@ -232,8 +226,7 @@ package com.xtdstudios.DMT.starlingConverter
 			if (! uniqueAlias)
 				throw new IllegalOperationError("unable to convert, invalid uniqueAlias");
 			
-			var assetDef 	: AssetDef;
-			assetDef = m_assetGroup.getAssetDef(uniqueAlias);
+			var assetDef : AssetDef = m_assetGroup.getAssetDef(uniqueAlias);
 				
 			if (assetDef)
 				return convertWithChildren(assetDef);

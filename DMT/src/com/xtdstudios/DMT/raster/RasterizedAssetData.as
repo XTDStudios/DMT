@@ -24,18 +24,18 @@ package com.xtdstudios.DMT.raster
 
 	public class RasterizedAssetData implements ISerializable
 	{
-		public var originalInstanceName:String="";
-		public var x:Number=0;
-		public var y:Number=0;
-		public var alpha:Number=1;
-		public var pivotX:Number=0;
-		public var pivotY:Number=0;
-		public var textureScaleX:Number=1;
-		public var textureScaleY:Number=1;
-		public var isCustomClass:Boolean=false;
-		public var originalPosRectangle:Rectangle;
-		public var frame:Rectangle;
-		public var aggregatedMatrix:Matrix=new Matrix();
+		public var originalInstanceName	:String="";
+		public var x					:Number=0;
+		public var y					:Number=0;
+		public var alpha				:Number=1;
+		public var pivotX				:Number=0;
+		public var pivotY				:Number=0;
+		public var textureScaleX		:Number=1;
+		public var textureScaleY		:Number=1;
+		public var isCustomClass		:Boolean=false;
+		public var originalPosRectangle	:Rectangle;
+		public var frame				:Rectangle;
+		public var aggregatedMatrix		:Matrix=new Matrix();
 
 		private var m_originalClassName:String;
 
@@ -56,13 +56,13 @@ package com.xtdstudios.DMT.raster
 
 		public function toJson():Object
 		{
-			var result:Object={
+			var result:Object = {
 				name: originalInstanceName,
-				x: Math.round(x * 1000) / 1000,
-				y: Math.round(y * 1000) / 1000,
-				alpha: Math.round(alpha * 1000) / 1000,
-				pivotX: Math.round(pivotX * 1000) / 1000,
-				pivotY: Math.round(pivotY * 1000) / 1000,
+				x: Math.round(x * 1000) * 0.001,
+				y: Math.round(y * 1000) * 0.001,
+				alpha: Math.round(alpha * 1000) * 0.001,
+				pivotX: Math.round(pivotX * 1000) * 0.001,
+				pivotY: Math.round(pivotY * 1000) * 0.001,
 				isCustomClass: isCustomClass
 			}
 
