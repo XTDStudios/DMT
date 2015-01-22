@@ -37,10 +37,9 @@ package com.xtdstudios.DMT
 			if (rasterizationResultTree.graphicsBitmapData==null)
 				return null;
 			
-			var rasterizedAssetData : RasterizedAssetData;
+			var rasterizedAssetData : RasterizedAssetData = rasterizationResultTree.rasterizedAssetData;
+			var tmpParent			: RasterizationResultTree = rasterizationResultTree.parent;
 			var name				: String;
-			
-			rasterizedAssetData = rasterizationResultTree.rasterizedAssetData;
 			
 			// we look at the class name of the captued object, 
 			// if it's just a MovieClip or Shape, we can't tell if it's uniqe
@@ -48,8 +47,7 @@ package com.xtdstudios.DMT
 			if (rasterizedAssetData.isCustomClass==true)
 			{
 				name = "c_" + rasterizedAssetData.originalClassName;
-				if (rasterizationResultTree.parent && rasterizationResultTree.parent.isMovieClip)
-					name = name + "_fr" + rasterizationResultTree.parent.getChildIndex(rasterizationResultTree);
+				if (tmpParent && tmpParent.isMovieClip) name = name + "_fr" + tmpParent.getChildIndex(rasterizationResultTree);
 			}
 			else
 			{

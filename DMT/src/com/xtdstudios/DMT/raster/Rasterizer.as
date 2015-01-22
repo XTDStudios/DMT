@@ -16,6 +16,7 @@ limitations under the License.
 package com.xtdstudios.DMT.raster
 {
 	import com.xtdstudios.common.DisplayObjectUtils;
+	import flash.display.SimpleButton;
 	
 	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
@@ -27,7 +28,6 @@ package com.xtdstudios.DMT.raster
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	import flash.utils.Dictionary;
 	import flash.utils.getQualifiedClassName;
 
 	public class Rasterizer
@@ -121,14 +121,15 @@ package com.xtdstudios.DMT.raster
 			return result;
 		}
 		
-		private function rasterizeWithChildren( currentDispObj:DisplayObject, 
-												topDispObj:DisplayObject, 
-												maxDepth:int=-1, 
-												currentDepth:int=-1, 
-												currentMatrix:Matrix = null, 
-												currentScaleX:Number=1.0, 
-												currentScaleY:Number=1.0,
-												isFramesMode:Boolean=false):RasterizationResultTree
+		private function rasterizeWithChildren( currentDispObj	:DisplayObject, 
+												topDispObj		:DisplayObject, 
+												maxDepth		:int=-1, 
+												currentDepth	:int=-1, 
+												currentMatrix	:Matrix = null, 
+												currentScaleX	:Number=1.0, 
+												currentScaleY	:Number=1.0,
+												isFramesMode	:Boolean = false
+												):RasterizationResultTree
 		{
 			var result			: RasterizationResultTree;
 			var resultData		: RasterizedAssetData;
@@ -138,11 +139,9 @@ package com.xtdstudios.DMT.raster
 			
 			currentDepth++;
 			
-			if (currentMatrix==null)
-				currentMatrix = new Matrix();
+			if (currentMatrix==null) currentMatrix = new Matrix();
 
-			if (isFramesMode==false)
-			{
+			if (isFramesMode==false) {
 				currentScaleX = currentScaleX * currentDispObj.scaleX;
 				currentScaleY = currentScaleY * currentDispObj.scaleY;
 				
@@ -171,21 +170,20 @@ package com.xtdstudios.DMT.raster
 			var hasFilters		: Boolean = currentDispObj.filters.length>0;
 			var inDepthRange	: Boolean = (maxDepth==-1 || currentDepth<maxDepth);
 			var asMovieClip		: MovieClip = currentDispObj as MovieClip;
+			var asSimpleButton	: SimpleButton = currentDispObj as SimpleButton;
 			var totalFrames		: int = asMovieClip ? asMovieClip.totalFrames : 1;
 			
 			if (isFramesMode==false && totalFrames==1 && dispObjCont!=null && inDepthRange && hasFilters==false && (checkIfShouldStop(dispObjCont.name)==false))
 			{
 				var numChildren : int = dispObjCont.numChildren;
-				if (numChildren>0)
+				if (numChildren > 0)
 				{
 					child = dispObjCont.getChildAt(0);
 					
 					// if we have only ONE child and it's a shape that was not trasformed
 					// we can capture its parent
-					if (numChildren!=1 || (child is Shape)==false || (DisplayObjectUtils.isIdentMatrix(child.transform.matrix)==false))
-					{
-						while (dispObjCont.numChildren>0) 
-						{
+					if (numChildren!=1 || (child is Shape)==false || (DisplayObjectUtils.isIdentMatrix(child.transform.matrix)==false)) {
+						while (dispObjCont.numChildren>0) {
 							child = dispObjCont.getChildAt(0);
 							result.addChild(rasterizeWithChildren(child, topDispObj, maxDepth, currentDepth, currentMatrix, currentScaleX, currentScaleY, isFramesMode));
 							dispObjCont.removeChildAt(0);
@@ -196,18 +194,21 @@ package com.xtdstudios.DMT.raster
 			} 
 			
 			// ********** DRAW ***********
-			if (totalFrames>1 && isFramesMode==false)
-			{
+			if (asMovieClip && asSimpleButton == null && totalFrames>1 && isFramesMode==false) {
 				result.isMovieClip = true;
+				result.isButton = false;
 				// first part of the AIR bug fix, We must go to the empty frame 
 				// at the end to prevent miss drawing the frames
-				if (m_emptyLastFrameWorkaround)
-					asMovieClip.gotoAndStop(totalFrames);
-				
+				if (m_emptyLastFrameWorkaround) asMovieClip.gotoAndStop(totalFrames);
 				
 				var frameWidth  : Number = 0;
 				var frameHeight : Number = 0;
-				var i			: uint;
+				var i			: uint = 0;
+				
+				var frameResultData 		: RasterizationResultTree;
+				var rasterizedAssetData 	: RasterizedAssetData;
+				var graphicsBitmapData 		: BitmapData;
+				
 				for (i=1; i<=totalFrames; i++)
 				{
 					asMovieClip.gotoAndStop(i);
@@ -215,24 +216,23 @@ package com.xtdstudios.DMT.raster
 					// This is a workaround for AIR bug: https://bugbase.adobe.com/index.cfm?event=bug&id=3340012
 					if (m_emptyLastFrameWorkaround==false || i<totalFrames)
 					{
-						var frameResultData : RasterizationResultTree = rasterizeWithChildren(asMovieClip, topDispObj, maxDepth, currentDepth, currentMatrix, currentScaleX, currentScaleY, true);
-
-						if (frameResultData.graphicsBitmapData==null)
-						{
-							throw new IllegalOperationError("MovieClip " + asMovieClip.name + " has an empty frame at frame " + i.toString());
-						}
+						frameResultData 	= rasterizeWithChildren(asMovieClip, topDispObj, maxDepth, currentDepth, currentMatrix, currentScaleX, currentScaleY, true);
+						rasterizedAssetData = frameResultData.rasterizedAssetData;
+						graphicsBitmapData 	= frameResultData.graphicsBitmapData;
 						
-						frameResultData.rasterizedAssetData.pivotX = Math.ceil(frameResultData.rasterizedAssetData.pivotX);
-						frameResultData.rasterizedAssetData.pivotY = Math.ceil(frameResultData.rasterizedAssetData.pivotY);
-
-						frameWidth = Math.max(frameWidth, frameResultData.rasterizedAssetData.pivotX+frameResultData.graphicsBitmapData.width);
-						frameHeight = Math.max(frameHeight, frameResultData.rasterizedAssetData.pivotY+frameResultData.graphicsBitmapData.height);
+						if (graphicsBitmapData==null) throw new IllegalOperationError("MovieClip " + asMovieClip.name + " has an empty frame at frame " + i.toString());
 						
-						frameResultData.rasterizedAssetData.frame = new Rectangle(frameResultData.rasterizedAssetData.pivotX, frameResultData.rasterizedAssetData.pivotY, 0, 0);
-						frameResultData.rasterizedAssetData.x = 0;
-						frameResultData.rasterizedAssetData.pivotX = 0;
-						frameResultData.rasterizedAssetData.y = 0;
-						frameResultData.rasterizedAssetData.pivotY = 0;
+						rasterizedAssetData.pivotX = Math.ceil(rasterizedAssetData.pivotX);
+						rasterizedAssetData.pivotY = Math.ceil(rasterizedAssetData.pivotY);
+
+						frameWidth = Math.max(frameWidth, rasterizedAssetData.pivotX+graphicsBitmapData.width);
+						frameHeight = Math.max(frameHeight, rasterizedAssetData.pivotY+graphicsBitmapData.height);
+						
+						rasterizedAssetData.frame = new Rectangle(rasterizedAssetData.pivotX, rasterizedAssetData.pivotY, 0, 0);
+						rasterizedAssetData.x = 0;
+						rasterizedAssetData.y = 0;
+						rasterizedAssetData.pivotX = 0;
+						rasterizedAssetData.pivotY = 0;
 						
 						result.addChild(frameResultData);
 					}
@@ -244,17 +244,31 @@ package com.xtdstudios.DMT.raster
 				
 				// set the size of the frame
 				var frame : Rectangle;
-				for (i=0; i<result.numChildren; i++)
+				for (i = 0; i < result.numChildren; i++)
 				{
-					frame = result.getChildAt(i).rasterizedAssetData.frame;
+					frameResultData = result.getChildAt(i);
+					rasterizedAssetData = frameResultData.rasterizedAssetData;
+					frame = rasterizedAssetData.frame;
 					frame.width = frameWidth;
 					frame.height = frameHeight;
 				}
+			}
+			else if (asSimpleButton && asMovieClip == null) {
+				result.isMovieClip = false;
+				result.isButton = true;
 				
+				// UP STATE
+				frameResultData = rasterize(asSimpleButton.upState, 1);
+				result.addChild(frameResultData);
+				
+				// DOWN STATE
+				frameResultData = rasterize(asSimpleButton.downState, 1);
+				result.addChild(frameResultData);
 			}
 			else
 			{
 				result.isMovieClip = false;
+				result.isButton = false;
 				result.graphicsBitmapData = draw(currentDispObj, topDispObj, resultData, currentMatrix);
 			}
 			

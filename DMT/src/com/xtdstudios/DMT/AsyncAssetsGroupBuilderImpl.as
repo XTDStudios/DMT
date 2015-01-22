@@ -86,7 +86,7 @@ package com.xtdstudios.DMT
 		private function extractTexturesAndBuildAssetDef(rasterizationResultTree : RasterizationResultTree):AssetDef
 		{
 			var resultAssetDef : AssetDef;
-			resultAssetDef = AssetDef.createAssetDef(rasterizationResultTree.isMovieClip, rasterizationResultTree.rasterizedAssetData);
+			resultAssetDef = AssetDef.createAssetDef(rasterizationResultTree.isMovieClip, rasterizationResultTree.isButton, rasterizationResultTree.rasterizedAssetData);
 			
 			// convert it to Captured Asset 
 			var textureID : String = m_textureIDGenerator.generateTextureID(rasterizationResultTree);
@@ -100,9 +100,11 @@ package com.xtdstudios.DMT
 			resultAssetDef.textureID = textureID;
 			
 			// extracting all the children's textures too
-			for (var i:int=0; i<rasterizationResultTree.numChildren; i++)
+			var childCount:uint = rasterizationResultTree.numChildren;
+			var children:Vector.<AssetDef> = resultAssetDef.children;
+			for (var i:int=0; i<childCount; i++)
 			{
-				resultAssetDef.children.push(extractTexturesAndBuildAssetDef(rasterizationResultTree.getChildAt(i)));
+				children.push(extractTexturesAndBuildAssetDef(rasterizationResultTree.getChildAt(i)));
 			}
 			
 			return resultAssetDef;
@@ -154,7 +156,7 @@ package com.xtdstudios.DMT
 				
 				runnablesVector.push(rasterizeRunnable);
 				runnablesVector.push(m_atlasGenerator);
-				var runnableList 		: RunnablesList = new RunnablesList(runnablesVector, false);
+				var runnableList : RunnablesList = new RunnablesList(runnablesVector, false);
 				
 				m_rasterizePseudoThread = new PseudoThread(runnableList);
 				m_rasterizePseudoThread.addEventListener(ProgressEvent.PROGRESS, onProgress);
@@ -179,11 +181,11 @@ package com.xtdstudios.DMT
 				m_assetsGroup.addAtlas(atlas);
 			
 			// we're done, free it all
-			m_rasterizer = null;
-			m_capturedAssetsDictionary = null;
-			m_textureIDGenerator = null;
-			m_atlasGenerator = null;
-			m_isFinishedRasterizing = true;
+			m_rasterizer				= null;
+			m_capturedAssetsDictionary 	= null;
+			m_textureIDGenerator 		= null;
+			m_atlasGenerator 			= null;
+			m_isFinishedRasterizing 	= true;
 			
 			m_assetsGroup.addEventListener(AssetGroupEvent.READY, onAssetsGroupReady);
 			m_assetsGroup.markReady();
@@ -223,7 +225,7 @@ package com.xtdstudios.DMT
 				m_assetsGroup = null;
 			}
 			
-			m_rasterizer = null;
+			m_rasterizer 				= null;
 			m_textureIDGenerator		= null;
 			m_capturedAssetsDictionary	= null;
 			m_atlasGenerator 			= null;
