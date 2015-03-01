@@ -38,6 +38,7 @@ package com.xtdstudios.DMT.raster
 		private var m_transparentBitmaps		: Boolean;
 		private var m_allow4096Textures 		: Boolean;
 		private var m_scaleEffects				: Boolean;
+		private var m_bitmapPadding				: int;
 		private var m_emptyLastFrameWorkaround	: Boolean;
 
 		public var stopRasterNames			    : Vector.<String>;
@@ -47,6 +48,7 @@ package com.xtdstudios.DMT.raster
 			m_emptyLastFrameWorkaround = false; // changed to false, the bug was fixed -> https://bugbase.adobe.com/index.cfm?event=bug&id=3340012
 			m_transparentBitmaps = true;
 			m_scaleEffects = true;
+			m_bitmapPadding = 1;
 		}
 		
 		public function set emptyLastFrameWorkaround(value:Boolean):void
@@ -62,6 +64,16 @@ package com.xtdstudios.DMT.raster
 		public function set scaleEffects(value:Boolean):void
 		{
 			m_scaleEffects = value;
+		}
+
+		public function get bitmapPadding():int
+		{
+			return m_bitmapPadding;
+		}
+
+		public function set bitmapPadding(value:int):void
+		{
+			m_bitmapPadding = value;
 		}
 
 		public function get bitmapBgColor():int
@@ -312,10 +324,10 @@ package com.xtdstudios.DMT.raster
 				
 				// Add one pixel to the size if we can (To prevent sharp edges)
 				if (bounds.width<2048 || (m_allow4096Textures && bounds.width<4096))
-					bounds.width = bounds.width+1;
+					bounds.width = bounds.width+m_bitmapPadding;
 
 				if (bounds.height<2048 || (m_allow4096Textures && bounds.height<4096))
-					bounds.height = bounds.height+1;
+					bounds.height = bounds.height+m_bitmapPadding;
 				
 				// we know the bitmap size, get some memory for that
 				bitmapData = new BitmapData(bounds.width, bounds.height, m_transparentBitmaps, bitmapBgColor);
