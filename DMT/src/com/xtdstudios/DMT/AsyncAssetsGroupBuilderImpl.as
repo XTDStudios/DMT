@@ -83,6 +83,16 @@ package com.xtdstudios.DMT
 			m_rasterizer.scaleEffects = value;
 		}
 
+		public function get bitmapPadding():int
+		{
+			return m_rasterizer.bitmapPadding;
+		}
+
+		public function set bitmapPadding(value:int):void
+		{
+			m_rasterizer.bitmapPadding = value;
+		}
+
 		private function extractTexturesAndBuildAssetDef(rasterizationResultTree : RasterizationResultTree):AssetDef
 		{
 			var resultAssetDef : AssetDef;

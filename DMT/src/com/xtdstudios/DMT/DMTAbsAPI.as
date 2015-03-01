@@ -30,6 +30,8 @@ package com.xtdstudios.DMT
 	{
 		private var m_progress						: Number;
 		private var m_inProgress					: Boolean;
+		private var m_scaleEffects					: Boolean;
+		private var m_bitmapPadding 				: int;
 		private var m_maxDepth						: int;
 		private var m_stopRasterNames				: Vector.<String>;
 
@@ -43,6 +45,8 @@ package com.xtdstudios.DMT
 			m_useCache = useCache;
 			m_stopRasterNames = new Vector.<String>;
 			m_stopRasterNames.push('stop_raster');
+			m_bitmapPadding = 1;
+			m_scaleEffects = true;
 
 			if (useCache)
 			{
@@ -74,11 +78,6 @@ package com.xtdstudios.DMT
 		public function get inProgress():Boolean
 		{
 			return m_inProgress;
-		}
-
-		public function get stopRasterNames():Vector.<String>
-		{
-			return m_stopRasterNames;
 		}
 
 		protected function getAssetsGroup(assetsGroupName: String): AssetsGroup {
@@ -190,13 +189,40 @@ package com.xtdstudios.DMT
 		{
 			return m_assetsGroupsManager.isCacheExist(assetsGroupName);
 		}
-		
+
+		public function get scaleEffects():Boolean
+		{
+			return m_scaleEffects;
+		}
+
+		public function set scaleEffects(value:Boolean):void
+		{
+			m_scaleEffects = value;
+		}
+
+		public function get stopRasterNames():Vector.<String> {
+			return m_stopRasterNames;
+		}
+
+		public function set stopRasterNames(value:Vector.<String>):void {
+			m_stopRasterNames = value;
+		}
+
+		public function get bitmapPadding():int {
+			return m_bitmapPadding;
+		}
+
+		public function set bitmapPadding(value:int):void {
+			m_bitmapPadding = value;
+		}
+
 		private function processVectors(assetsGroupName: String, isTransparent:Boolean, allow4096Textures:Boolean, matrixAccuracyPercent:Number):void
 		{
 			// Assets Group Builder
 			m_assetsGroupBuilder = m_assetsGroupsManager.build(assetsGroupName, isTransparent, allow4096Textures, matrixAccuracyPercent);
 			m_assetsGroupBuilder.stopRasterNames = m_stopRasterNames;
-			m_assetsGroupBuilder.scaleEffects = true;
+			m_assetsGroupBuilder.scaleEffects = m_scaleEffects;
+			m_assetsGroupBuilder.bitmapPadding = m_bitmapPadding;
 
 			var itemsToRaster : Vector.<ItemToRaster> = getItemsToRaster(assetsGroupName);
 			if (itemsToRaster.length == 0) {
