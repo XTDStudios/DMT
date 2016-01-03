@@ -46,7 +46,7 @@ package com.xtdstudios.DMT
 			return m_dictionary[textureID] as CapturedAsset;
 		}
 		
-		public function registerCapturedAsset(id:String, capturedAssetBitmap:BitmapData, frame:Rectangle = null):void
+		public function registerCapturedAsset(id:String, capturedAssetBitmap:BitmapData):void
 		{
 			if (id==null || id=="")
 			{
@@ -55,7 +55,7 @@ package com.xtdstudios.DMT
 			
 			if (m_dictionary[id]==null)
 			{
-				var newCapturedAsset : CapturedAsset = new CapturedAsset(id, capturedAssetBitmap, frame);
+				var newCapturedAsset : CapturedAsset = new CapturedAsset(id, capturedAssetBitmap);
 				m_dictionary[id] = newCapturedAsset;		
 				m_count++;
 			}

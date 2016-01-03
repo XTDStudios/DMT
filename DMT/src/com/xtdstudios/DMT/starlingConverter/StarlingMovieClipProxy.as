@@ -15,7 +15,8 @@ limitations under the License.
 */
 package com.xtdstudios.DMT.starlingConverter
 {
-	import flash.geom.Rectangle;
+import flash.geom.Point;
+import flash.geom.Rectangle;
 	
 	import starling.display.MovieClip;
 	import starling.textures.Texture;
@@ -23,15 +24,19 @@ package com.xtdstudios.DMT.starlingConverter
 	public class StarlingMovieClipProxy extends MovieClip
 	{
 		public var originalPosRectangle : Rectangle;
+		private var m_pivots : Vector.<Point>;
 
-		public function StarlingMovieClipProxy(textures:Vector.<Texture>, fps:Number=30)
+		public function StarlingMovieClipProxy(textures:Vector.<Texture>, pivots:Vector.<Point>, fps:Number=30)
 		{
+			m_pivots = pivots;
 			super(textures, fps);
 		}
 		
 		override public function set texture(value:Texture):void
 		{
 			super.texture = value;
+			this.pivotX = m_pivots[this.currentFrame].x;
+			this.pivotY = m_pivots[this.currentFrame].y;
 			readjustSize();
 		}
 	}

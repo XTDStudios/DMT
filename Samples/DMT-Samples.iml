@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="Flex" version="4">
+  <component name="FlexBuildConfigurationManager" active="Startup">
+    <configurations>
+      <configuration name="Startup" target-platform="Mobile" pure-as="true" main-class="Startup" output-file="Startup.swf" output-folder="$MODULE_DIR$/bin-debug">
+        <dependencies>
+          <entries>
+            <entry library-name="Starling" library-level="application">
+              <dependency linkage="Merged" />
+            </entry>
+            <entry library-name="XTDCommon" library-level="application">
+              <dependency linkage="Merged" />
+            </entry>
+            <entry module-name="DMT" build-configuration-name="DMT">
+              <dependency linkage="Merged" />
+            </entry>
+          </entries>
+          <sdk name="adobe-air-sdk-20" />
+        </dependencies>
+        <compiler-options>
+          <map>
+            <entry key="compiler.locale" value="" />
+          </map>
+          <option name="additionalOptions" value="-swf-version=16" />
+        </compiler-options>
+        <packaging-air-desktop />
+        <packaging-android enabled="true" use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/src/Startup-app.xml" package-file-name="Startup">
+          <files-to-package>
+            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/assets" path-in-package="assets" />
+          </files-to-package>
+        </packaging-android>
+        <packaging-ios enabled="true" use-generated-descriptor="false" custom-descriptor-path="$MODULE_DIR$/src/Startup-app.xml" package-file-name="Startup">
+          <files-to-package>
+            <FilePathAndPathInPackage file-path="$MODULE_DIR$/src/assets" path-in-package="assets" />
+          </files-to-package>
+        </packaging-ios>
+      </configuration>
+    </configurations>
+    <compiler-options />
+  </component>
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+    </content>
+    <orderEntry type="jdk" jdkName="adobe-air-sdk-20" jdkType="Flex SDK Type (new)" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" exported="" name="Starling" level="application" />
+    <orderEntry type="library" exported="" name="XTDCommon" level="application" />
+    <orderEntry type="module" module-name="DMT" exported="" />
+  </component>
+</module>

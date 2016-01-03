@@ -34,7 +34,6 @@ package com.xtdstudios.DMT.raster
 		public var textureScaleY:Number=1;
 		public var isCustomClass:Boolean=false;
 		public var originalPosRectangle:Rectangle;
-		public var frame:Rectangle;
 		public var aggregatedMatrix:Matrix=new Matrix();
 
 		private var m_originalClassName:String;
@@ -69,9 +68,6 @@ package com.xtdstudios.DMT.raster
 			if (originalPosRectangle)
 				result.originalPos=RectangleUtils.rectAsObj(originalPosRectangle);
 
-			if (frame)
-				result.frame=RectangleUtils.rectAsObj(frame);
-
 			if (aggregatedMatrix)
 				result.aggregatedMatrix=MatrixUtils.matrixAsObj(aggregatedMatrix);
 
@@ -90,9 +86,6 @@ package com.xtdstudios.DMT.raster
 
 			if (jsonData.hasOwnProperty('originalPos'))
 				originalPosRectangle=new Rectangle(jsonData.originalPos.x, jsonData.originalPos.y, jsonData.originalPos.w, jsonData.originalPos.h);
-
-			if (jsonData.hasOwnProperty('frame'))
-				frame=new Rectangle(jsonData.frame.x, jsonData.frame.y, jsonData.frame.w, jsonData.frame.h);
 
 			if (jsonData.hasOwnProperty('aggregatedMatrix'))
 				aggregatedMatrix=new Matrix(jsonData.aggregatedMatrix.a, jsonData.aggregatedMatrix.b, jsonData.aggregatedMatrix.x, jsonData.aggregatedMatrix.d, jsonData.aggregatedMatrix.tx, jsonData.aggregatedMatrix.ty);

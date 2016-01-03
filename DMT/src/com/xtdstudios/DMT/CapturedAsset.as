@@ -22,13 +22,11 @@ package com.xtdstudios.DMT
 	{
 		private var m_bitmapData	: BitmapData;
 		private var m_id			: String;
-		private var m_frame			: Rectangle;
-		
-		public function CapturedAsset(id:String, bitmapData:BitmapData, frame:Rectangle = null)
+
+		public function CapturedAsset(id:String, bitmapData:BitmapData)
 		{
 			m_bitmapData = bitmapData;
 			m_id = id;
-			m_frame = frame;
 		}
 
 		public function get id():String
@@ -39,11 +37,6 @@ package com.xtdstudios.DMT
 		public function get bitmapData():BitmapData
 		{
 			return m_bitmapData;
-		}
-
-		public function get frame():Rectangle
-		{
-			return m_frame;
 		}
 	}
 }

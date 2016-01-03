@@ -103,7 +103,7 @@ package com.xtdstudios.DMT
 			if (textureID!=null)
 			{
 				// the texture will be registered ONLY if it's not in the dictionary
-				m_capturedAssetsDictionary.registerCapturedAsset(textureID, rasterizationResultTree.graphicsBitmapData, rasterizationResultTree.rasterizedAssetData.frame); 
+				m_capturedAssetsDictionary.registerCapturedAsset(textureID, rasterizationResultTree.graphicsBitmapData);
 			}
 			
 			// put this texture ID into the assetDef (It's ok to put null, this way we know there's no texture for this asset)

@@ -36,8 +36,7 @@ package com.xtdstudios.DMT.atlas
 		private var m_name			: String;
 		private var m_bitmapData	: BitmapData;
 		private var m_regions		: Dictionary;
-		private var m_frames		: Dictionary;
-		
+
 		private var m_width         : int;
 		private var m_height        : int;
 		private var m_transparent   : Boolean;
@@ -48,7 +47,6 @@ package com.xtdstudios.DMT.atlas
 
 		private function init():void {
 			m_regions = new Dictionary();
-			m_frames = new Dictionary();
 		}
 
 		static public function getAtlas(name:String, bitmapData:BitmapData): Atlas
@@ -69,10 +67,6 @@ package com.xtdstudios.DMT.atlas
 			{
 				var regionRect : Rectangle = m_regions[textureId];
 				regions[textureId] = { x:regionRect.x, y:regionRect.y, w:regionRect.width, h:regionRect.height };
-				if (m_frames[textureId]) {
-					var frameRect : Rectangle = m_frames[textureId];
-					regions[textureId].frame = {x:frameRect.x, y:frameRect.y, w:frameRect.width, h:frameRect.height};
-				}
 			}
 
 			return {
@@ -95,19 +89,11 @@ package com.xtdstudios.DMT.atlas
 
 
 			var regionRect : Rectangle;
-			var frameRect  : Rectangle;
 			var regions    : Object = jsonData.regions;
 			for (var textureId:String in regions) {
 				var regionData : Object = regions[textureId];
 				regionRect = new Rectangle(regionData.x, regionData.y, regionData.w, regionData.h);
-				if (regionData.hasOwnProperty('frame')) {
-					var frameData : Object = regionData.frame;
-					frameRect = new Rectangle(frameData.x, frameData.y, frameData.w, frameData.h);
-				}
-				else {
-					frameRect = null;
-				}
-				addRegion(textureId, regionRect, frameRect);
+				addRegion(textureId, regionRect);
 			}
 		}
 
@@ -166,18 +152,9 @@ package com.xtdstudios.DMT.atlas
 			return m_regions;
 		}
 		
-		public function getFrame(textureID:String):Rectangle
-		{
-			return m_frames[textureID];
-		}
-
-		public function addRegion(textureID:String, rect:Rectangle, frame:Rectangle):void
+		public function addRegion(textureID:String, rect:Rectangle):void
 		{
 			m_regions[textureID] = rect;
-
-			if (frame) {
-				m_frames[textureID] = frame;
-			}
 		}
 		
 		public function disposeBitmapData():void
@@ -194,7 +171,6 @@ package com.xtdstudios.DMT.atlas
 			disposeBitmapData();
 			
 			m_regions = null;
-			m_frames = null;
 		}
 		
 	}

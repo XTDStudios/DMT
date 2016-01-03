@@ -9,8 +9,6 @@
     <gif>0</gif>
     <jpeg>0</jpeg>
     <png>0</png>
-    <qt>0</qt>
-    <rnwk>0</rnwk>
     <swc>0</swc>
     <flashDefaultName>0</flashDefaultName>
     <projectorWinDefaultName>1</projectorWinDefaultName>
@@ -19,8 +17,6 @@
     <gifDefaultName>1</gifDefaultName>
     <jpegDefaultName>1</jpegDefaultName>
     <pngDefaultName>1</pngDefaultName>
-    <qtDefaultName>1</qtDefaultName>
-    <rnwkDefaultName>1</rnwkDefaultName>
     <swcDefaultName>1</swcDefaultName>
     <flashFileName>../src/assets/MovieClipExampleAssets.swf</flashFileName>
     <projectorWinFileName>MovieClipExampleAssets.exe</projectorWinFileName>
@@ -29,17 +25,16 @@
     <gifFileName>MovieClipExampleAssets.gif</gifFileName>
     <jpegFileName>MovieClipExampleAssets.jpg</jpegFileName>
     <pngFileName>MovieClipExampleAssets.png</pngFileName>
-    <qtFileName>MovieClipExampleAssets.mov</qtFileName>
-    <rnwkFileName>MovieClipExampleAssets.smil</rnwkFileName>
     <swcFileName>MovieClipExampleAssets.swc</swcFileName>
+    <publishFormat id="BBC1F406-65F2-4219-9304-FA48C7549E44">0</publishFormat>
   </PublishFormatProperties>
   <PublishHtmlProperties enabled="true">
     <VersionDetectionIfAvailable>0</VersionDetectionIfAvailable>
-    <VersionInfo>11,4,0,0;11,3,0,0;11,2,0,0;11,1,0,0;10,3,0,0;10,2,153,0;10,1,52,0;9,0,124,0;8,0,24,0;7,0,14,0;6,0,79,0;5,0,58,0;4,0,32,0;3,0,8,0;2,0,1,12;1,0,0,1;</VersionInfo>
+    <VersionInfo>17,0,0,0;16,0,0,0;14,0,0,0;13,0,0,0;12,0,0,0;11,9,0,0;11,8,0,0;11,7,0,0;11,6,0,0;11,5,0,0;11,4,0,0;11,3,0,0;11,2,0,0;11,1,0,0;10,3,0,0;10,2,153,0;10,1,52,0;9,0,124,0;8,0,24,0;7,0,14,0;6,0,79,0;5,0,58,0;4,0,32,0;3,0,8,0;2,0,1,12;1,0,0,1;</VersionInfo>
     <UsingDefaultContentFilename>1</UsingDefaultContentFilename>
     <UsingDefaultAlternateFilename>1</UsingDefaultAlternateFilename>
-    <ContentFilename>MovieClipExampleAssets.xfl_content.html</ContentFilename>
-    <AlternateFilename>MovieClipExampleAssets.xfl_alternate.html</AlternateFilename>
+    <ContentFilename>MovieClipExampleAssets_content.html</ContentFilename>
+    <AlternateFilename>MovieClipExampleAssets_alternate.html</AlternateFilename>
     <UsingOwnAlternateFile>0</UsingOwnAlternateFile>
     <OwnAlternateFilename></OwnAlternateFilename>
     <Width>350</Width>
@@ -108,23 +103,11 @@
         <swc-path>$(AppConfig)/ActionScript 3.0/libs</swc-path>
         <linkage>merge</linkage>
       </library-path-entry>
-      <library-path-entry>
-        <swc-path>$(AppConfig)/ActionScript 3.0/libs/11.0/textLayout.swc</swc-path>
-        <linkage usesDefault="true">rsl</linkage>
-        <rsl-url>http://fpdownload.adobe.com/pub/swz/tlf/2.0.0.232/textLayout_2.0.0.232.swz</rsl-url>
-        <policy-file-url>http://fpdownload.adobe.com/pub/swz/crossdomain.xml</policy-file-url>
-        <rsl-url>textLayout_2.0.0.232.swz</rsl-url>
-      </library-path-entry>
     </LibraryPath>
     <LibraryVersions>
-      <library-version>
-        <swc-path>$(AppConfig)/ActionScript 3.0/libs/11.0/textLayout.swc</swc-path>
-        <feature name="tlfText" majorVersion="2" minorVersion="0" build="232"/>
-        <rsl-url>http://fpdownload.adobe.com/pub/swz/tlf/2.0.0.232/textLayout_2.0.0.232.swz</rsl-url>
-        <policy-file-url>http://fpdownload.adobe.com/pub/swz/crossdomain.xml</policy-file-url>
-        <rsl-url>textLayout_2.0.0.232.swz</rsl-url>
-      </library-version>
     </LibraryVersions>
+    <EnableTelemetry>0</EnableTelemetry>
+    <TelemetryPassword></TelemetryPassword>
   </PublishFlashProperties>
   <PublishJpegProperties enabled="true">
     <Width>350</Width>
@@ -135,23 +118,6 @@
     <Quality>80</Quality>
     <MatchMovieDim>1</MatchMovieDim>
   </PublishJpegProperties>
-  <PublishRNWKProperties enabled="true">
-    <exportFlash>1</exportFlash>
-    <flashBitRate>0</flashBitRate>
-    <exportAudio>1</exportAudio>
-    <audioFormat>0</audioFormat>
-    <singleRateAudio>0</singleRateAudio>
-    <realVideoRate>100000</realVideoRate>
-    <speed28K>1</speed28K>
-    <speed56K>1</speed56K>
-    <speedSingleISDN>0</speedSingleISDN>
-    <speedDualISDN>0</speedDualISDN>
-    <speedCorporateLAN>0</speedCorporateLAN>
-    <speed256K>0</speed256K>
-    <speed384K>0</speed384K>
-    <speed512K>0</speed512K>
-    <exportSMIL>1</exportSMIL>
-  </PublishRNWKProperties>
   <PublishGifProperties enabled="true">
     <Width>350</Width>
     <Height>350</Height>
@@ -159,48 +125,23 @@
     <MatchMovieDim>1</MatchMovieDim>
     <Loop>1</Loop>
     <LoopCount>0</LoopCount>
-    <OptimizeColors>1</OptimizeColors>
-    <Interlace>0</Interlace>
     <Smooth>1</Smooth>
-    <DitherSolids>0</DitherSolids>
-    <RemoveGradients>0</RemoveGradients>
-    <TransparentOption></TransparentOption>
-    <TransparentAlpha>128</TransparentAlpha>
-    <DitherOption></DitherOption>
-    <PaletteOption></PaletteOption>
     <MaxColors>255</MaxColors>
-    <PaletteName></PaletteName>
   </PublishGifProperties>
   <PublishPNGProperties enabled="true">
-    <Width>350</Width>
-    <Height>350</Height>
-    <OptimizeColors>1</OptimizeColors>
-    <Interlace>0</Interlace>
-    <Transparent>0</Transparent>
-    <Smooth>1</Smooth>
-    <DitherSolids>0</DitherSolids>
-    <RemoveGradients>0</RemoveGradients>
     <MatchMovieDim>1</MatchMovieDim>
-    <DitherOption></DitherOption>
-    <FilterOption></FilterOption>
-    <PaletteOption></PaletteOption>
+    <Smooth>1</Smooth>
     <BitDepth>24-bit with Alpha</BitDepth>
     <MaxColors>255</MaxColors>
-    <PaletteName></PaletteName>
   </PublishPNGProperties>
-  <PublishQTProperties enabled="true">
-    <Width>350</Width>
-    <Height>350</Height>
-    <MatchMovieDim>1</MatchMovieDim>
-    <UseQTSoundCompression>0</UseQTSoundCompression>
-    <AlphaOption></AlphaOption>
-    <LayerOption></LayerOption>
-    <QTSndSettings>00000000</QTSndSettings>
-    <ControllerOption>0</ControllerOption>
-    <Looping>0</Looping>
-    <PausedAtStart>0</PausedAtStart>
-    <PlayEveryFrame>0</PlayEveryFrame>
-    <Flatten>1</Flatten>
-  </PublishQTProperties>
+  <PublishProperties id="BBC1F406-65F2-4219-9304-FA48C7549E44" name="SVG Image" enabled="true">
+    <Property name="copy">true</Property>
+    <Property name="default">true</Property>
+    <Property name="embed">false</Property>
+    <Property name="filename">Untitled-1.svg</Property>
+    <Property name="imagesPath">images</Property>
+    <Property name="includeHiddenLayers">true</Property>
+    <Property name="version">0.1</Property>
+  </PublishProperties>
 </flash_profile>
 </flash_profiles>

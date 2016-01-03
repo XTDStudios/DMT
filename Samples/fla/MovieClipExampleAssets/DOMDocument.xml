@@ -1,7 +1,7 @@
-<DOMDocument xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://ns.adobe.com/xfl/2008/" width="350" height="350" currentTimeline="1" xflVersion="2.2" creatorInfo="Adobe Flash Professional CS6" platform="Windows" versionInfo="Saved by Adobe Flash Windows 12.0 build 537" majorVersion="12" buildNumber="537" timelineLabelWidth="276" viewAngle3D="36.6569635931076" nextSceneIdentifier="2" playOptionsPlayLoop="false" playOptionsPlayPages="false" playOptionsPlayFrameActions="false" autoSaveHasPrompted="true">
+<DOMDocument xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://ns.adobe.com/xfl/2008/" width="350" height="350" currentTimeline="1" xflVersion="2.6" creatorInfo="Adobe Flash Professional CC" platform="Windows" versionInfo="Saved by Adobe Flash Windows 15.0 build 173" majorVersion="15" buildNumber="173" rulerVisible="true" timelineLabelWidth="276" viewAngle3D="36.6569635931076" nextSceneIdentifier="2" playOptionsPlayLoop="false" playOptionsPlayPages="false" playOptionsPlayFrameActions="false" autoSaveHasPrompted="true" filetypeGUID="DD0DDBBF-5BEF-45B2-9F24-A3048D2A676F">
      <symbols>
-          <Include href="MovieClipExample.xml" itemID="5136da43-000001da" lastModified="1362870093"/>
-          <Include href="rectShape.xml" loadImmediate="false" itemID="5136da69-000001dd" lastModified="1362870088"/>
+          <Include href="MovieClipExample.xml" itemID="5136da43-000001da" lastModified="1451856209"/>
+          <Include href="rectShape.xml" loadImmediate="false" itemID="5136da69-000001dd" lastModified="1451856326"/>
           <Include href="rectShape_gfx.xml" loadImmediate="false" itemID="513bbf3f-00000551" lastModified="1362870101"/>
      </symbols>
      <timelines>
@@ -10,7 +10,13 @@
                     <DOMLayer name="Layer 1" color="#4FFF4F" current="true" isSelected="true">
                          <frames>
                               <DOMFrame index="0" keyMode="9728">
-                                   <elements/>
+                                   <elements>
+                                        <DOMSymbolInstance libraryItemName="MovieClipExample" selected="true">
+                                             <transformationPoint>
+                                                  <Point/>
+                                             </transformationPoint>
+                                        </DOMSymbolInstance>
+                                   </elements>
                               </DOMFrame>
                          </frames>
                     </DOMLayer>
@@ -19,7 +25,11 @@
      </timelines>
      <swatchLists>
           <swatchList>
+               <swatchListInfo name="Default Swatches"/>
+
                <swatches>
+                    <swatchListInfo name="Default Swatches"/>
+
                     <SolidSwatchItem/>
                     <SolidSwatchItem/>
                     <SolidSwatchItem/>
@@ -277,7 +287,11 @@
      </swatchLists>
      <extendedSwatchLists>
           <swatchList>
+               <swatchListInfo name="Default Swatches"/>
+
                <swatches>
+                    <swatchListInfo name="Default Swatches"/>
+
                     <LinearGradientSwatchItem>
                          <GradientEntry color="#FFFFFF" ratio="0"/>
                          <GradientEntry ratio="1"/>
@@ -324,6 +338,10 @@
      </extendedSwatchLists>
      <PrinterSettings/>
      <publishHistory>
+          <PublishItem publishSize="724" publishTime="1451856296"/>
+          <PublishItem publishSize="705" publishTime="1451856218"/>
+          <PublishItem publishSize="782" publishTime="1451854835"/>
+          <PublishItem publishSize="777" publishTime="1451854524"/>
           <PublishItem publishSize="796" publishTime="1362870110"/>
           <PublishItem publishSize="792" publishTime="1362870095"/>
           <PublishItem publishSize="808" publishTime="1362869724"/>
@@ -340,9 +358,5 @@
           <PublishItem publishSize="762" publishTime="1362868827"/>
           <PublishItem publishSize="762" publishTime="1362868296"/>
           <PublishItem publishSize="294" publishTime="1362868046"/>
-          <PublishItem publishSize="1404" publishTime="1362867983"/>
-          <PublishItem publishSize="1404" publishTime="1362867959"/>
-          <PublishItem publishSize="1399" publishTime="1362867948"/>
-          <PublishItem publishSize="1393" publishTime="1362867940"/>
      </publishHistory>
 </DOMDocument>

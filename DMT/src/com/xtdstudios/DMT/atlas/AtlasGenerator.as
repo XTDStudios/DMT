@@ -271,7 +271,7 @@ package com.xtdstudios.DMT.atlas
 				// we've copied the captured image to the atlast, no need for it anymore. dispose!
 				bitmapData.dispose();
 				
-				resultAtlas.addRegion(capturedAsset.id, rect, capturedAsset.frame);
+				resultAtlas.addRegion(capturedAsset.id, rect);
 				m_processedRectangles++;
 			}
 			

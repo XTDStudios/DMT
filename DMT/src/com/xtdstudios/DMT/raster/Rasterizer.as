@@ -217,9 +217,7 @@ package com.xtdstudios.DMT.raster
 					asMovieClip.gotoAndStop(totalFrames);
 				
 				
-				var frameWidth  : Number = 0;
-				var frameHeight : Number = 0;
-				var i			: uint;
+				var i : uint;
 				for (i=1; i<=totalFrames; i++)
 				{
 					asMovieClip.gotoAndStop(i);
@@ -236,33 +234,12 @@ package com.xtdstudios.DMT.raster
 						
 						frameResultData.rasterizedAssetData.pivotX = Math.ceil(frameResultData.rasterizedAssetData.pivotX);
 						frameResultData.rasterizedAssetData.pivotY = Math.ceil(frameResultData.rasterizedAssetData.pivotY);
-
-						frameWidth = Math.max(frameWidth, frameResultData.rasterizedAssetData.pivotX+frameResultData.graphicsBitmapData.width);
-						frameHeight = Math.max(frameHeight, frameResultData.rasterizedAssetData.pivotY+frameResultData.graphicsBitmapData.height);
-						
-						frameResultData.rasterizedAssetData.frame = new Rectangle(frameResultData.rasterizedAssetData.pivotX, frameResultData.rasterizedAssetData.pivotY, 0, 0);
 						frameResultData.rasterizedAssetData.x = 0;
-						frameResultData.rasterizedAssetData.pivotX = 0;
 						frameResultData.rasterizedAssetData.y = 0;
-						frameResultData.rasterizedAssetData.pivotY = 0;
-						
+
 						result.addChild(frameResultData);
 					}
 				}
-				
-				// round it up
-				frameWidth = Math.ceil(frameWidth);
-				frameHeight = Math.ceil(frameHeight);
-				
-				// set the size of the frame
-				var frame : Rectangle;
-				for (i=0; i<result.numChildren; i++)
-				{
-					frame = result.getChildAt(i).rasterizedAssetData.frame;
-					frame.width = frameWidth;
-					frame.height = frameHeight;
-				}
-				
 			}
 			else
 			{

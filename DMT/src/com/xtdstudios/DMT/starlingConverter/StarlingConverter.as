@@ -23,7 +23,8 @@ package com.xtdstudios.DMT.starlingConverter
 	
 	import flash.errors.IllegalOperationError;
 	import flash.events.Event;
-	import flash.geom.Rectangle;
+import flash.geom.Point;
+import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
 	
 	import starling.core.Starling;
@@ -81,13 +82,12 @@ package com.xtdstudios.DMT.starlingConverter
 					{
 						m_textureIDs.push(textureID);
 						var region : Rectangle = regions[textureID];
-						var frame  : Rectangle = atlas.getFrame(textureID);
-						textureAtlas.addRegion(textureID, region, frame);
+						textureAtlas.addRegion(textureID, region);
 					}
 					m_starlingTextureAtlases.push(textureAtlas);
 				}
 //				trace("'" + m_assetGroup.name + "' Atlases memory (" + atlases.length.toString() + " bitmaps):", Memory.toString(atlasMem), "and", Memory.toString(atlasMem*1.333), "on the GPU");
-//				trace("Overall memory usage: " + Memory.getUsedMemeoryStr());
+//				trace("Overall memory usage: " + Memory.getUsedMemoryStr());
 				
 			}
 			catch (e:Error)
@@ -133,11 +133,13 @@ package com.xtdstudios.DMT.starlingConverter
 				if (assetDef.isMovieclip)
 				{
 					var textures : Vector.<Texture> = new Vector.<Texture>;
+					var pivots   : Vector.<Point> = new Vector.<Point>;
 					for (i=0; i<assetDef.children.length; i++)
 					{
 						textures.push(getTextureByID(assetDef.children[i].textureID));
+						pivots.push(new Point(assetDef.children[i].rasterizedAssetData.pivotX, assetDef.children[i].rasterizedAssetData.pivotY));
 					}
-					result = new StarlingMovieClipProxy(textures);
+					result = new StarlingMovieClipProxy(textures, pivots);
 				}
 				else
 				{

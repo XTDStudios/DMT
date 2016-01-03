@@ -1,4 +1,4 @@
-<DOMSymbolItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://ns.adobe.com/xfl/2008/" name="rectShape" itemID="5136da69-000001dd" lastModified="1362870088">
+<DOMSymbolItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://ns.adobe.com/xfl/2008/" name="rectShape" itemID="5136da69-000001dd" lastModified="1451856326">
   <timeline>
     <DOMTimeline name="rectShape">
       <layers>
@@ -6,16 +6,13 @@
           <frames>
             <DOMFrame index="0" keyMode="9728">
               <elements>
-                <DOMSymbolInstance libraryItemName="rectShape_gfx" selected="true">
+                <DOMSymbolInstance libraryItemName="rectShape_gfx">
                   <matrix>
                     <Matrix tx="-50" ty="-50"/>
                   </matrix>
                   <transformationPoint>
                     <Point x="50" y="50"/>
                   </transformationPoint>
-                  <filters>
-                    <DropShadowFilter quality="3"/>
-                  </filters>
                 </DOMSymbolInstance>
               </elements>
             </DOMFrame>

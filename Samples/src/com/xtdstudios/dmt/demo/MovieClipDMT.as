@@ -20,12 +20,14 @@ package com.xtdstudios.dmt.demo
 	import flash.display.DisplayObject;
 	import flash.display.MovieClip;
 	import flash.events.Event;
-	
-	import starling.core.Starling;
+
+import starling.animation.IAnimatable;
+
+import starling.core.Starling;
 	import starling.display.MovieClip;
 	import starling.display.Sprite;
 	
-	public class MovieClipDMT extends starling.display.Sprite
+	public class MovieClipDMT extends starling.display.Sprite implements IAnimatable
 	{
 		[Embed(source="/assets/MovieClipExampleAssets.swf", symbol="MovieClipExample")]				
 		public var MovieClipExampleClass:Class; 
@@ -35,11 +37,12 @@ package com.xtdstudios.dmt.demo
 		
 		private var m_flashMC				: flash.display.MovieClip;
 		private var m_starlingMC			: starling.display.MovieClip;
+		private var m_angle					: Number;
 		 
 		public function MovieClipDMT()
 		{
 			super();
-			
+			m_angle = 0;
 			name = "MovieClip DMT";
 			initFlash();
 			doRasterize();
@@ -73,8 +76,20 @@ package com.xtdstudios.dmt.demo
 		
 		private function dmtComplete(event:flash.events.Event): void {
 			initStarlingObjects();
+			Starling.current.juggler.add(this);
 		}
-		
+
+		public function advanceTime(time:Number):void {
+			m_angle = m_angle + time;
+			if (m_flashMC) {
+				m_flashMC.rotation = m_angle * 180 / Math.PI;
+			}
+
+			if (m_starlingMC) {
+				m_starlingMC.rotation = m_angle;
+			}
+		}
+
 		private function initStarlingObjects(): void {
 			m_flashMC.gotoAndPlay(1);
 			

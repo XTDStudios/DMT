@@ -6,7 +6,7 @@ package
 		public static const NATIVE_APP  	: Boolean = true;	
 		
 		// cache must use (AIR File API) so only native apps can save cache
-		public static const USE_CACHE 		: Boolean = true && NATIVE_APP;  
+		public static const USE_CACHE 		: Boolean = false && NATIVE_APP;
 		
 		// make sure that you change the cache version if you changed your loaded assets
 		public static const CACHE_VERSION	: String = "1";	
