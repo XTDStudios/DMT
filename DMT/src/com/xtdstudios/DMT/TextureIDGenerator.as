@@ -32,7 +32,7 @@ package com.xtdstudios.DMT
 		
 		public function generateTextureID(rasterizationResultTree:RasterizationResultTree):String
 		{
-			// some items in the tree are just DisplayObjectcontainers without graphics
+			// some items in the tree are just DisplayObjectContainers without graphics
 			// no need for a texture, return null
 			if (rasterizationResultTree.graphicsBitmapData==null)
 				return null;

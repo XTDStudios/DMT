@@ -63,7 +63,7 @@ package com.xtdstudios.DMT.raster
 				pivotX: Math.round(pivotX * 1000) / 1000,
 				pivotY: Math.round(pivotY * 1000) / 1000,
 				isCustomClass: isCustomClass
-			}
+			};
 
 			if (originalPosRectangle)
 				result.originalPos=RectangleUtils.rectAsObj(originalPosRectangle);

@@ -177,7 +177,7 @@ package com.xtdstudios.DMT
 		public function get assetsGroup():AssetsGroup
 		{
 			if (m_assetsGroup.ready)
-				return m_assetsGroup
+				return m_assetsGroup;
 			else
 				return null;
 		}

@@ -27,7 +27,6 @@ package com.xtdstudios.DMT.raster
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	import flash.utils.Dictionary;
 	import flash.utils.getQualifiedClassName;
 
 	public class Rasterizer
@@ -192,7 +191,7 @@ package com.xtdstudios.DMT.raster
 				{
 					child = dispObjCont.getChildAt(0);
 					
-					// if we have only ONE child and it's a shape that was not trasformed
+					// if we have only ONE child and it's a shape that was not transformed
 					// we can capture its parent
 					if (numChildren!=1 || (child is Shape)==false || (DisplayObjectUtils.isIdentMatrix(child.transform.matrix)==false))
 					{
@@ -268,7 +267,7 @@ package com.xtdstudios.DMT.raster
 			var bounds			: Rectangle; 
 			var bitmapData	 	: BitmapData; 
 
-			// get bouds
+			// get bounds
 			bounds = DisplayObjectUtils.getBoundsRect(currentDispObj, topDispObj);
 			if (bounds.width>0 && bounds.height>0)
 			{ 
