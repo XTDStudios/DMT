@@ -23,6 +23,7 @@ package com.xtdstudios.DMT.persistency
 		function loadAssetsGroup(groupName: String): AssetsGroup;
 		function deleteAssetsGroup(groupName:String): void;
 		function isExist(groupName:String): Boolean;
+		function getInfo():String;
 
 		function dispose():void;
 	}

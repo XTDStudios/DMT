@@ -84,7 +84,10 @@ package com.xtdstudios.DMT
 			return m_assetGroupsDict;
 		}
 		
-		
+		public function getCacheInfo():String {
+			return m_assetsGroupPersistencyManager.getInfo();
+		}
+
 		public function loadFromCache(groupName:String): AssetsGroup {
 			if (!m_assetsGroupPersistencyManager)
 				throw new IllegalOperationError("It is not possible to load cache, because the cache is OFF");

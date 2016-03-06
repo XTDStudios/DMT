@@ -39,7 +39,11 @@ package com.xtdstudios.DMT.persistency.impl
 			var fileName : String = assetsGroupName+"_version_"+m_version+".json";
 			return m_baseDir.resolvePath(fileName);
 		}
-		
+
+		public function getInfo():String {
+			return "[Version]=" + m_version + ", [Location]=" + m_baseDir.nativePath;
+		}
+
 		public function saveAssetsGroup(assetsGroup: AssetsGroup):void
 		{
 			var json : Object = {

@@ -108,7 +108,7 @@ package com.xtdstudios.DMT
 			// do we have cache?
 			if (m_useCache && m_assetsGroupsManager.isCacheExist(assetsGroupName)==true)
 			{
-				trace("=== USING CACHE ===");
+				trace("=== DMT IS USING CACHE ===> " + m_assetsGroupsManager.getCacheInfo());
 				try {
 					assetsGroup = m_assetsGroupsManager.loadFromCache(assetsGroupName);
 				} catch (e: Error) {
