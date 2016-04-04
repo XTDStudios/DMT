@@ -29,7 +29,7 @@ package com.xtdstudios.DMT
 		function set stopRasterNames(value:Vector.<String>):void;
 		function rasterize(displayObject:DisplayObject, uniqueAlias:String=null, maxDepth:int=-1, fitToRect:Rectangle=null, bestFitWithoutStretching:Boolean=true):void;
 		function rasterizeVector(displayObjects:Vector.<DisplayObject>, maxDepth:int=-1, fitToRect:Rectangle=null, bestFitWithoutStretching:Boolean=true):void;
-		function generate():AssetsGroup;
+		function generate(fps:int=60):AssetsGroup;
 		function get assetsGroup():AssetsGroup;
 		function dispose():void;
 	}

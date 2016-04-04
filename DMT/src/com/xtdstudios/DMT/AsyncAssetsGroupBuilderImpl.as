@@ -154,7 +154,7 @@ package com.xtdstudios.DMT
 			});
 		}
 		
-		public function generate(): AssetsGroup 
+		public function generate(fps:int = 1): AssetsGroup
 		{
 			if (! m_rasterizePseudoThread)
 			{
@@ -166,7 +166,7 @@ package com.xtdstudios.DMT
 				runnablesVector.push(m_atlasGenerator);
 				var runnableList 		: RunnablesList = new RunnablesList(runnablesVector, false);
 				
-				m_rasterizePseudoThread = new PseudoThread(runnableList);
+				m_rasterizePseudoThread = new PseudoThread(runnableList, fps);
 				m_rasterizePseudoThread.addEventListener(ProgressEvent.PROGRESS, onProgress);
 				m_rasterizePseudoThread.addEventListener(Event.COMPLETE, processAtlases);
 				m_rasterizePseudoThread.start();				
