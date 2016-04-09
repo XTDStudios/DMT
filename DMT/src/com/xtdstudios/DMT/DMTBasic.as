@@ -15,7 +15,9 @@ limitations under the License.
 */
 package com.xtdstudios.DMT
 {
-	import com.xtdstudios.DMT.starlingConverter.StarlingConverter;
+import com.xtdstudios.DMT.persistency.IAssetsGroupPersistencyManager;
+import com.xtdstudios.DMT.persistency.IByteArrayPersistencyManager;
+import com.xtdstudios.DMT.starlingConverter.StarlingConverter;
 	
 	import flash.display.DisplayObject;
 	
@@ -29,11 +31,11 @@ package com.xtdstudios.DMT
 		protected var m_dataName		: String;
 		
 		
-		public function DMTBasic(dataName:String, useCache:Boolean=true, cacheVersion:String="1")
+		public function DMTBasic(dataName:String, useCache:Boolean=true, cacheVersion:String="1", byteArrayPersistencyManager:IByteArrayPersistencyManager = null, assetsGroupPersistencyManager:IAssetsGroupPersistencyManager = null)
 		{
 			m_itemsToRaster = new Vector.<ItemToRaster>;
 			m_dataName = dataName;
-			super(useCache, cacheVersion);
+			super(useCache, cacheVersion, byteArrayPersistencyManager, assetsGroupPersistencyManager);
 		}
 		
 		public function process(isTransparent:Boolean=true, maxDepth:int=-1, allow4096Textures:Boolean=false, matrixAccuracyPercent:Number=1.0):Boolean {
