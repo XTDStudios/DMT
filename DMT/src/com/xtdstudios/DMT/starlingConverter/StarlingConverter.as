@@ -102,7 +102,6 @@ import flash.geom.Rectangle;
 		private function stickAtlasAndTextureTogether(atlas:Atlas, texture:Texture):void {
 			atlas.addEventListener(Event.COMPLETE, function (e:Event):void {
 				texture.root.uploadBitmapData(atlas.bitmapData);						
-				atlas.disposeBitmapData();
 			});
 			
 		}
