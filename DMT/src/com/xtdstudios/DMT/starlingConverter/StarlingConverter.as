@@ -63,7 +63,7 @@ import flash.geom.Rectangle;
 					
 					texture = Texture.fromBitmapData(atlas.bitmapData, false, false);
 					
-					if (reLoadWhenContextLost && Starling.handleLostContext)
+					if (reLoadWhenContextLost)
 					{
 						atlas.disposeBitmapData();
 						stickAtlasAndTextureTogether(atlas, texture);
